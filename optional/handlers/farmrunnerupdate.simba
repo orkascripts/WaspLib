@@ -1111,7 +1111,7 @@ begin
   Result := Self.Find;
   if Result then Exit;
 
-  RSInterface.Close();
+  GameInterface.Close();
 
   for attempt := 0 to attempts do
   begin
@@ -1234,7 +1234,7 @@ begin
   if not GameClient.IsLoggedIn then
     Exit(EPatchState.FAILED);
 
-  RSInterface.Close();
+  GameInterface.Close();
   Inventory.SetSelectedSlot(-1);
 
   if Self.Complete then
@@ -1818,7 +1818,7 @@ begin
     Exit;
 
   for i := 0 to High(slots) do begin
-    RSInterface.Close();
+    GameInterface.Close();
 
     if not Self.CurrentPatch.FindLeprechaun(lepPT) then
 
@@ -2033,7 +2033,7 @@ begin
   if not ChooseOption.Select('Exchange') then
     Exit;
 
-  if not WaitUntil(RSInterface.IsOpen, 15, 7500) then
+  if not WaitUntil(GameInterface.IsOpen, 15, 7500) then
     Exit;
 
   if BankPin.IsOpen then
@@ -2055,7 +2055,7 @@ begin
 
   WaitUntil((SRL.CountColor(CTS2(2154272, 1, 0.01, 0.01), invyboxes[Self.CompostMethod]) > 30), 115, 5000);
 
-  RSInterface.Close(True);
+  GameInterface.Close(True);
 end;
 
 procedure TFarmRun.DepositCompost;
@@ -2072,7 +2072,7 @@ begin
   if not ChooseOption.Select('Exchange') then
     Exit;
 
-  if not WaitUntil(RSInterface.IsOpen(), 15, 15000) then
+  if not WaitUntil(GameInterface.IsOpen(), 15, 15000) then
     Exit;
 
   if BankPin.IsOpen then
@@ -2089,7 +2089,7 @@ begin
 
   WaitUntil((SRL.CountColor(CTS2(2154272, 1, 0.01, 0.01), invyboxes[Self.CompostMethod]) = 0), 115, 5000);
 
-  RSInterface.Close(True);
+  GameInterface.Close(True);
 end;
 
 procedure TFarmRun.DropBuckets();
@@ -2652,7 +2652,7 @@ begin
         if Inventory.ContainsItem('Xeric''s talisman') then
         begin
           Inventory.ClickItem(item, 'Rub');
-          WaitUntil(RSInterface.IsOpen(), 10, 5000);
+          WaitUntil(GameInterface.IsOpen(), 10, 5000);
           b := ([219,92,293,101]);
           Mouse.Click(b, MOUSE_LEFT);
         end
@@ -2677,7 +2677,7 @@ begin
         wait(250,500);
         if not Inventory.ClickItem(item, 'Teleport') then
           Equipment.ClickItem(item, 'Teleport');
-        WaitUntil(RSInterface.IsOpen(), 10, 5000);
+        WaitUntil(GameInterface.IsOpen(), 10, 5000);
         b := ([235,144,278,148]);
         Mouse.Click(b, MOUSE_LEFT);
       end;
@@ -2862,7 +2862,7 @@ begin
       end;
        Wait(800,1600);
        WaitUntil(Minimap.PercentBlack < 25, 15, 5000);
-       RSInterface.Close();
+       GameInterface.Close();
     end else if ('quetzal' in item) then begin
     if (c <= 0) then begin
       Self.WriteMsg('Out of quetzal charges. Skipping patch.');

@@ -157,12 +157,12 @@ function TFairyRing.Close(pressEscape: Boolean): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
-  Result := RSInterface.ClickClose(pressEscape);
+  Result := GameInterface.ClickClose(pressEscape);
 end;
 
 function TFairyRing.Close(chance: Double = BioHash): Boolean; overload;
 begin
-  Result := RSInterface.Close(chance);
+  Result := GameInterface.Close(chance);
 end;
 
 
@@ -272,7 +272,7 @@ Example:
 *)
 function TFairyRing.Open(): Boolean;
 begin
-  if RSInterface.IsOpen() and not RSInterface.Close() then
+  if GameInterface.IsOpen() and not GameInterface.Close() then
     Exit;
 
   if Self.IsOpen() then
@@ -310,7 +310,7 @@ Example:
 *)
 function TFairyRing.WalkOpen(): Boolean;
 begin
-  if RSInterface.IsOpen() and not RSInterface.Close() then
+  if GameInterface.IsOpen() and not GameInterface.Close() then
     Exit;
 
   if Self.IsOpen() then
@@ -899,7 +899,7 @@ function TFairyRing.Teleport(code: String): Boolean;
 var
   contextMenuTeleport: Boolean;
 begin
-  if RSInterface.IsOpen() and not RSInterface.Close() then
+  if GameInterface.IsOpen() and not GameInterface.Close() then
     Exit;
 
   code := code.Replace(' ', '',).Upper();
@@ -956,7 +956,7 @@ var
   contextMenuTeleport: Boolean;
   pos: TPoint;
 begin
-  if RSInterface.IsOpen() and not RSInterface.Close() then
+  if GameInterface.IsOpen() and not GameInterface.Close() then
     Exit;
 
   code := code.Replace(' ', '',).Upper();

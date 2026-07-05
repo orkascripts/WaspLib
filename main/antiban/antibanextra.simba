@@ -36,20 +36,20 @@ begin
   if Self.GetCurrentTab() = tab then
     Exit(True);
 
-  if RSInterface.IsOpen() and _InventoryIterfaceIsOpen() then
-    RSInterface.Close();
+  if GameInterface.IsOpen() and _InventoryIterfaceIsOpen() then
+    GameInterface.Close();
 
   Result := inherited(tab);
 end;
 
 function TCollectBox.Close(chance: Double = BioHash): Boolean; overload;
 begin
-  Result := RSInterface.Close(chance);
+  Result := GameInterface.Close(chance);
 end;
 
 function TGrandExchange.Close(chance: Double): Boolean; overload;
 begin
-  Result := RSInterface.Close(chance);
+  Result := GameInterface.Close(chance);
 end;
 
 

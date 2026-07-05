@@ -360,8 +360,8 @@ begin
     Exit;
 
   if not Antiban.BioDice(EBioBehavior.CONSUME_IN_BANK) and
-     RSInterface.IsOpen() then
-     RSInterface.Close();
+     GameInterface.IsOpen() then
+     GameInterface.Close();
 
   if (consumableHandler^.Delay.Length > 0) then
     while not consumableHandler^.Delay.IsFinished() do

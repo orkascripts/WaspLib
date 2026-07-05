@@ -8,7 +8,7 @@
   {$I WaspLib/optional/interfaces/mainscreen/fairyring.simba}
 {$ENDIF}
 {$IFNDEF SKUNK_TELEPORTSV2}
-  {$I WaspLib/optional/handlers/teleports/rsteleportsv2.simba}
+  {$I WaspLib/optional/handlers/teleports/teleportsv2.simba}
 {$ENDIF}
 {$IFNDEF WL_GROUPING_INCLUDED}
   {$I WaspLib/optional/interfaces/gametabs/grouping.simba}
@@ -397,14 +397,14 @@ begin
     Exit;
   end;
 
-  if not WaitUntil(RSInterface.IsOpen(), 200, 5000) then
+  if not WaitUntil(GameInterface.IsOpen(), 200, 5000) then
   begin
     WriteLn('Could not open jewellery box interface');
     Exit;
   end;
 
   Keyboard.send(teleportLocation.interfaceHotkey);
-  Result := WaitUntil((not RSInterface.IsOpen()) and (not minimap.inpoh), 200, 5000);
+  Result := WaitUntil((not GameInterface.IsOpen()) and (not minimap.inpoh), 200, 5000);
 end;
 
 function TUniversalTransportV2.handleFairyRingTeleport(constref teleportLocation: TTeleportLocation; usePOH: Boolean = false): Boolean;

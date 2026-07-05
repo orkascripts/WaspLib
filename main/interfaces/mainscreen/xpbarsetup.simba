@@ -27,8 +27,8 @@ function TXPBarSetup.IsOpen(): Boolean;
 var
   Count: Int32;
 begin
-  if RSInterface.IsOpen(EInterfaceType.CLASSIC) then
-    Count := SRL.CountColor(CTS0(2070783, 0), RSInterface.Bounds);
+  if GameInterface.IsOpen(EInterfaceType.CLASSIC) then
+    Count := SRL.CountColor(CTS0(2070783, 0), GameInterface.Bounds);
   Result :=  (Count >= 2800) and (Count <= 4200);
 end;
 
@@ -37,7 +37,7 @@ begin
   if Self.IsOpen then
     Exit(True);
 
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
     Exit(False);
 
   Mouse.Move(Minimap.Orbs[EMinimapOrb.EXPERIENCE]);
@@ -50,7 +50,7 @@ begin
   if not Self.IsOpen() then
     Exit(True);
 
-  Result := RSInterface.Close(pressEscape);
+  Result := GameInterface.Close(pressEscape);
 end;
 
 

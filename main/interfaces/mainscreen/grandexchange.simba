@@ -8,13 +8,13 @@
 (*
 function TGrandExchange.Open(): Boolean; override;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if (Self.IsOpen or BankPin.IsOpen) then Exit(True)
-    else RSInterface.Close();
+    else GameInterface.Close();
   end;
 
-  if RSObjects.GEExchange.Click then
+  if GameObjects.GEExchange.Click then
   begin
     Minimap.WaitMoving;
     Result := WaitUntil((Self.IsOpen or BankPin.IsOpen),
@@ -35,10 +35,10 @@ end;
 // Walks to GE and attempts to open it while walking.
 function TGrandExchange.WalkOpen(): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if (Self.IsOpen or BankPin.IsOpen) then Exit(True)
-    else RSInterface.Close();
+    else GameInterface.Close();
   end;
 
   if GameObjects.GEExchange.WalkClick then

@@ -762,7 +762,7 @@ begin
     isDepositBox := False;
   end;
 
-  if not isBank and not isDepositBox and not RSInterface.IsOpen() then
+  if not isBank and not isDepositBox and not GameInterface.IsOpen() then
     Exit;
 
   if not isDepositBox and (isBank or Bank.IsOpen()) then
@@ -805,7 +805,7 @@ var
   item: TBankItem;
   isBank, isDepositBox: Boolean;
 begin
-  if not RSInterface.IsOpen() then
+  if not GameInterface.IsOpen() then
     Exit;
 
   isBank := Bank.IsOpen();
@@ -827,7 +827,7 @@ var
   item: TItem;
   isBank, isDepositBox: Boolean;
 begin
-  if not RSInterface.IsOpen() then
+  if not GameInterface.IsOpen() then
     Exit;
 
   isBank := Bank.IsOpen();

@@ -22,7 +22,7 @@ var
   RunePouch : TRunePouch;
 
 function TRunePouch.IsOpen(): Boolean; begin
-  Result := RSInterface.IsOpen(EInterfaceType.CLASSIC) and
+  Result := GameInterface.IsOpen(EInterfaceType.CLASSIC) and
             (SRL.CountColor(2586039, Self.Bounds) > 600);
 end;
 

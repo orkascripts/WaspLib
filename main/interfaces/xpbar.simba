@@ -24,8 +24,8 @@ begin
 
   Self.Tracker.IsSetup := (Result > 0) and (Result >= Self.Tracker.Current);
 
-  if not Self.Tracker.IsSetup and (Self.Tracker.Current = 0) and RSInterface.IsOpen() then
-    if RSInterface.Close() then
+  if not Self.Tracker.IsSetup and (Self.Tracker.Current = 0) and GameInterface.IsOpen() then
+    if GameInterface.Close() then
     begin
       Self.IsSetup := False;
       Exit(Self.Read());
@@ -42,7 +42,7 @@ begin
     Exit;
   end;
 
-  if not WL.GameSettings.XPBarIsSetup and not RSInterface.IsOpen() then
+  if not WL.GameSettings.XPBarIsSetup and not GameInterface.IsOpen() then
   begin
     Mouse.Click(Minimap.Orbs[EMinimapOrb.EXPERIENCE], MOUSE_LEFT);
 

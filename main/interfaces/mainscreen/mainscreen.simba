@@ -159,7 +159,7 @@ begin
   case GameClient.Mode of
     EClientMode.FIXED:
       begin
-        b := RSInterface.Bounds;
+        b := GameInterface.Bounds;
         b.X1 := b.X2 - 30;
         b.Y1 := b.Y2 - 30;
       end;
@@ -195,7 +195,7 @@ begin
   case GameClient.Mode of
     EClientMode.FIXED:
       begin
-        b := RSInterface.Bounds;
+        b := GameInterface.Bounds;
         b.X1 := b.X2 - 90;
         b.Y1 := b.Y2 - 30;
       end;

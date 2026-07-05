@@ -362,7 +362,7 @@ var
 begin
   shouldExit := True;
 
-  if (GameClient.Mode = EClientMode.FIXED) and RSInterface.IsOpen() then
+  if (GameClient.Mode = EClientMode.FIXED) and GameInterface.IsOpen() then
     Exit;
 
   if Self.Filter.UpText then
@@ -404,7 +404,7 @@ var
 begin
   shouldExit := True;
 
-  if (GameClient.Mode = EClientMode.FIXED) and RSInterface.IsOpen() then
+  if (GameClient.Mode = EClientMode.FIXED) and GameInterface.IsOpen() then
     Exit;
 
   if Self.Filter.UpText then
@@ -2136,17 +2136,17 @@ var
 
 function TBank.Hover(GameObject: TGameObject): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then Exit;
+  if GameInterface.IsOpen() then Exit;
   Result := GameObject.Hover();
 end;
 
 function TBank.Open(GameObject: TGameObject): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   Result := GameObject.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
@@ -2159,18 +2159,18 @@ end;
 
 function TBank.WalkHover(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then Exit;
+  if GameInterface.IsOpen() then Exit;
 
   Result := GameObject.WalkHover();
 end;
 
 function TBank.WalkOpen(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   Result := GameObject.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
@@ -2184,17 +2184,17 @@ end;
 
 function TBank.Hover(rsNPC: TNPC): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then Exit;
+  if GameInterface.IsOpen() then Exit;
   Result := rsNPC.Hover();
 end;
 
 function TBank.Open(rsNPC: TNPC): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   Result := rsNPC.SelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
@@ -2207,7 +2207,7 @@ end;
 
 function TBank.WalkHover(rsNPC: TNPC): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
     Exit;
 
   Result := rsNPC.WalkHover();
@@ -2215,11 +2215,11 @@ end;
 
 function TBank.WalkOpen(rsNPC: TNPC): Boolean; overload;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   Result := rsNPC.WalkSelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
@@ -2278,17 +2278,17 @@ end;
 
 function TDepositBox.Hover(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then Exit;
+  if GameInterface.IsOpen() then Exit;
   Result := GameObject.Hover();
 end;
 
 function TDepositBox.Open(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   if GameObject.Click() or ChooseOption.Select(['Deposit B', 'Bank D']) then
@@ -2300,17 +2300,17 @@ end;
 
 function TDepositBox.WalkHover(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then Exit;
+  if GameInterface.IsOpen() then Exit;
   Result := GameObject.WalkHover();
 end;
 
 function TDepositBox.WalkOpen(GameObject: TGameObject): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   if GameObject.WalkClick() or ChooseOption.Select(['Deposit B', 'Bank D']) then

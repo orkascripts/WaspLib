@@ -183,7 +183,7 @@ function TCollectBox.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then Exit(True);
 
-  Result := RSInterface.Close(pressEscape);
+  Result := GameInterface.Close(pressEscape);
 end;
 
 function TCollectBox.GetUsedSlots(): TIntegerArray;
@@ -338,11 +338,11 @@ end;
 
 function TCollectBox.Open(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   if walkerObject = nil then
@@ -367,11 +367,11 @@ end;
 
 function TCollectBox.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if Self.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   if walkerObject = nil then
@@ -402,11 +402,11 @@ type
 
 function TCollectBoxes.Open(mapObj: PRSMapObject = nil): Boolean; override;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if CollectBox.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close(True);
+    GameInterface.Close(True);
   end;
 
   if mapObj = nil then
@@ -417,16 +417,16 @@ begin
     Exit;
 
   Minimap.WaitMoving();
-  Result := WaitUntil(RSInterface.IsOpen(), 300, 3000) and (CollectBox.IsOpen() or BankPin.IsOpen());
+  Result := WaitUntil(GameInterface.IsOpen(), 300, 3000) and (CollectBox.IsOpen() or BankPin.IsOpen());
 end;
 
 function TCollectBoxes.WalkOpen(mapObj: PRSMapObject = nil): Boolean; override;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if CollectBox.IsOpen() or BankPin.IsOpen() then
       Exit(True);
-    RSInterface.Close(True);
+    GameInterface.Close(True);
   end;
 
   if mapObj = nil then
@@ -437,7 +437,7 @@ begin
     Exit;
 
   Minimap.WaitMoving();
-  Result := WaitUntil(RSInterface.IsOpen(), 300, 3000) and (CollectBox.IsOpen() or BankPin.IsOpen());
+  Result := WaitUntil(GameInterface.IsOpen(), 300, 3000) and (CollectBox.IsOpen() or BankPin.IsOpen());
 end;
 
 

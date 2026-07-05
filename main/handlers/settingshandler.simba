@@ -322,7 +322,7 @@ var
 begin
   settingsCornerColor := CTS1(9346462, 0);
 
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     Self.DebugLn('OpenSettings -> Settings already open');
     Exit(True);
@@ -338,7 +338,7 @@ begin
   if settingsBorder.Len > 0 then
   begin
     Mouse.Click(settingsBorder.Bounds.Middle.Random(-15, 30, -4, 5, True), MOUSE_LEFT);
-    if WaitUntil(RSInterface.IsOpen(), 75, 2000) then
+    if WaitUntil(GameInterface.IsOpen(), 75, 2000) then
       Exit(True);
   end;
 end;
@@ -571,7 +571,7 @@ begin
       Self.ToggleSetting(iterStr, False);
       Wait(200, 450);
     end;
-    RSInterface.Close(True);
+    GameInterface.Close(True);
   end;
 end;
 

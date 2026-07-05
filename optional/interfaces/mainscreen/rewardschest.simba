@@ -121,7 +121,7 @@ begin
   if not Self.IsOpen() then
     Exit(True);
 
-  Result := RSInterface.Close(pressEscape);
+  Result := GameInterface.Close(pressEscape);
 end;
 
 function TRewardsChest.Close(chance: Double = BioHash): Boolean; overload;
@@ -133,7 +133,7 @@ begin
   else
     pressEscape := SRL.Dice(chance);
 
-  Result := RSInterface.Close(pressEscape);
+  Result := GameInterface.Close(pressEscape);
 end;
 
 

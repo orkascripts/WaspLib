@@ -806,11 +806,11 @@ end;
 
 function TPOHHandler.OpenNexus(): Boolean;
 begin
-  if RSInterface.IsOpen() then
+  if GameInterface.IsOpen() then
   begin
     if PortalNexus.IsOpen() then
       Exit(True);
-    RSInterface.Close();
+    GameInterface.Close();
   end;
 
   if Self.RoomObjects[ERSRoomObject.NEXUS].Coordinates = [] then
