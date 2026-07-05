@@ -16,7 +16,7 @@ type
     DialBoxes: array [EFairyRingDial] of TBox;
     TravelLog: TInterface;
     Item: TItem;
-    FairyRings: TObjectV2;
+    FairyRings: TGameObjectV2;
   end;
 
 procedure TFairyRing.SetupFairyRings();

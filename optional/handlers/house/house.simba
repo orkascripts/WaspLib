@@ -54,7 +54,7 @@ THouseHandler = record(TSRLBaseRecord)
   Loader: THouseLoader;
   Walker: TWalkerV2;
 
-  Objects: array [EHouseObject] of TObjectV2;
+  Objects: array [EHouseObject] of TGameObjectV2;
 
   Downscale: Int32;
   Similarity: Double;
@@ -72,8 +72,8 @@ The core record used to handle navigating a POH.
     Loader: THouseLoader;
     Walker: TWalkerV2;
 
-    Objects: array [EHouseObject] of TObjectV2;
-    Teleports: array [EHouseTeleport] of TObjectV2;
+    Objects: array [EHouseObject] of TGameObjectV2;
+    Teleports: array [EHouseTeleport] of TGameObjectV2;
 
     Downscale: Int32;
     Similarity: Double;
@@ -84,7 +84,7 @@ The core record used to handle navigating a POH.
     Graph: TWebGraphV2;
     IsSetup: Boolean;
 
-    Entrance: TObjectV2;
+    Entrance: TGameObjectV2;
 
     TeleportMode: EHouseTeleportMode;
     CapeTab: EGameTab;
@@ -169,7 +169,7 @@ begin
     end;
 end;
 
-function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TObjectV2;
+function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TGameObjectV2;
 var
   idx, coordinate: TPoint;
   room: THouseRoom;

@@ -8,7 +8,7 @@
   {$I WaspLib/optional/interfaces/mainscreen/fairyring.simba}
 {$ENDIF}
 {$IFNDEF SKUNK_TELEPORTS}
-  {$I WaspLib/optional/handlers/teleports/rsteleports.simba}
+  {$I WaspLib/optional/handlers/teleports/teleports.simba}
 {$ENDIF}
 {$IFNDEF WL_GROUPING_INCLUDED}
   {$I WaspLib/optional/interfaces/gametabs/grouping.simba}

@@ -8,7 +8,7 @@ type
   EMushTreeButton = EMushTreeLocation; //deprecated
 
   TMushTree = record(TTitledInterface)
-    Mushrooms: TObjectV2;
+    Mushrooms: TGameObjectV2;
   end;
 
 procedure TMushtree.Setup(); override;
