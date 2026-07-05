@@ -3,7 +3,7 @@
 Compile tests every script under the specified directory.
 Returns the scripts that failed compiling.
 *)
-{$I SRL-T/osr.simba}
+{$I SRL-T/main.simba}
 {$H-}
 
 const
