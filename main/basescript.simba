@@ -31,7 +31,7 @@ TBaseScript can be used as is or inherited from to extend it's functionality.
 
 Example:
 ```pascal
-TBaseWalkECript = record(TBaseScript)
+TBaseWalkerScript = record(TBaseScript)
   RSW: TWalker;
 end;
 ```
@@ -442,28 +442,28 @@ end;
 
 
 (*
-## type TBaseWalkECript
+## type TBaseWalkerScript
 Record that holds common variables for most scripts that use walker.
 This record extends **TBaseScript** and has all of it's variables too.
-The extra variables that are part of **TBaseWalkECript** are:
+The extra variables that are part of **TBaseWalkerScript** are:
  - **RSW**: TWalker variable that holds our walker, for more information check the following page: https://ollydev.github.io/SRL-Development/walker.html?highlight=walker
 *)
 type
-  TBaseWalkECript = record(TBaseScript)
+  TBaseWalkerScript = record(TBaseScript)
     RSW: TWalker;
   end;
 
 (*
 ## BaseWalkECript.Init
 ```pascal
-procedure TBaseWalkECript.Init(MaxActions: Int32; MaxTime: Int64); override;
+procedure TBaseWalkerScript.Init(MaxActions: Int32; MaxTime: Int64); override;
 ```
 Method used to setup the variables of TBaseScript.
 If **MaxActions** and **MaxTime** serve the same purpose of TBaseScript.Init().
 
 Can be used as is or overriden to do additional tasks.
 *)
-procedure TBaseWalkECript.Init(maxActions: UInt32; maxTime: UInt64); override;
+procedure TBaseWalkerScript.Init(maxActions: UInt32; maxTime: UInt64); override;
 begin
   inherited;
 
@@ -473,7 +473,7 @@ end;
 (*
 ## type TBaseBankScript
 Record that holds common variables for most scripts that use a bank.
-This record inherits from **TBaseWalkECript** and which inherits from **TBaseScript's**.
+This record inherits from **TBaseWalkerScript** and which inherits from **TBaseScript's**.
 The extra variables that are part of **TBaseBankScript** are:
  - **Self.ScriptBank**: PRSObject pointer that points to our current bank TObject, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-Tobject
  - **Self.ScriptBanker**: PRSNPC pointer that points to our current banker TNPC, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-Tmmdot
@@ -485,7 +485,7 @@ The extra variables that are part of **TBaseBankScript** are:
  - **CollectTimer**: TCountDown variable used to reset **CollectEmpty** after a couple of minutes.
 *)
 type
-  TBaseBankScript = record(TBaseWalkECript)
+  TBaseBankScript = record(TBaseWalkerScript)
     BankTab: Int32;
 
     ItemLeftAmount: Int32;
