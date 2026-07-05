@@ -362,10 +362,10 @@ begin
   if Stats.MouseOver(Skill) then
   begin
     Mouse.Click(MOUSE_LEFT);
-    WaitUntil(RSInterface.IsOpen(ERSInterfaceType.SCROLL), 100, 3000);
+    WaitUntil(RSInterface.IsOpen(EInterfaceType.SCROLL), 100, 3000);
     Self.BioWait(time);
 
-    while RSInterface.IsOpen(ERSInterfaceType.SCROLL) do
+    while RSInterface.IsOpen(EInterfaceType.SCROLL) do
       RSInterface.Close();
 
     if ReturnToCurrentTab then

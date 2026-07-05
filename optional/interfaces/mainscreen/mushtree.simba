@@ -4,8 +4,8 @@
 {$ENDIF}
 
 type
-  ERSMushTreeLocation = (HOUSE_ON_THE_HILL, VERDANT_VALLEY, STICKY_SWAMP, MUSHROOM_MEADOW);
-  ERSMushTreeButton = ERSMushTreeLocation; //deprecated
+  EMushTreeLocation = (HOUSE_ON_THE_HILL, VERDANT_VALLEY, STICKY_SWAMP, MUSHROOM_MEADOW);
+  EMushTreeButton = EMushTreeLocation; //deprecated
 
   TMushTree = record(TTitledInterface)
     Mushrooms: TObjectV2;
@@ -69,7 +69,7 @@ begin
   Result := Self.FindButtons([[200, 52]]);
 end;
 
-function TMushTree.GetButton(location: ERSMushTreeLocation): TGameButton;
+function TMushTree.GetButton(location: EMushTreeLocation): TGameButton;
 var
   buttons: TGameButtonArray;
 begin
@@ -79,7 +79,7 @@ begin
     Result := buttons[location];
 end;
 
-function TMushTree.ClickButton(location: ERSMushTreeLocation): Boolean;
+function TMushTree.ClickButton(location: EMushTreeLocation): Boolean;
 var
   buttons: TGameButtonArray;
 begin
@@ -91,7 +91,7 @@ begin
 end;
 
 
-function TMushTree.GetCoordinate(location: ERSMushTreeLocation): TPoint;
+function TMushTree.GetCoordinate(location: EMushTreeLocation): TPoint;
 begin
   Result := Self.Mushrooms.Coordinates[Ord(location)];
 end;
@@ -114,7 +114,7 @@ begin
 end;
 
 
-function TMushTree.Teleport(location: ERSMushTreeLocation): Boolean;
+function TMushTree.Teleport(location: EMushTreeLocation): Boolean;
 begin
   if Map.Position().InRange(Self.GetCoordinate(location), 60) then Exit(True);
   if not Self.Open() then Exit;
@@ -122,7 +122,7 @@ begin
   Result := WaitUntil(Map.Position().InRange(Self.GetCoordinate(location), 60), 300, 5000);
 end;
 
-function TMushTree.WalkTeleport(location: ERSMushTreeLocation): Boolean;
+function TMushTree.WalkTeleport(location: EMushTreeLocation): Boolean;
 begin
   if Map.Position().InRange(Self.GetCoordinate(location), 60) then Exit(True);
   if not Self.WalkOpen() then Exit;

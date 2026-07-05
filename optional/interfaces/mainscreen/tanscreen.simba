@@ -50,7 +50,7 @@ end;
 function TTanScreen.IsOpen(waitTime: Int32 = -1; interval: Int32 = -1): Boolean;
   function IsOpen(): Boolean;
   begin
-    Result := RSInterface.IsOpen(ERSInterfaceType.CLASSIC) and
+    Result := RSInterface.IsOpen(EInterfaceType.CLASSIC) and
              (SRL.CountColor(CTS0(2070783), Self.Bounds) = 755);
   end;
 begin

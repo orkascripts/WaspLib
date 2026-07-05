@@ -172,7 +172,7 @@ Example:
 *)
 function TAnvil.IsOpen(): Boolean;
 begin
-  Result := RSInterface.IsOpen(ERSInterfaceType.CLASSIC) and
+  Result := RSInterface.IsOpen(EInterfaceType.CLASSIC) and
             (SRL.CountColor(CTS0(65280, 0), Self.Bounds) >= 300);
 end;
 

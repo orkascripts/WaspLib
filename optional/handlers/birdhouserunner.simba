@@ -12,13 +12,13 @@
 {$SCOPEDENUMS ON}
 type
 
-  ERSLogType = (
+  ELogType = (
     REGULAR_LOGS, OAK_LOGS, WILLOW_LOGS, TEAK_LOGS, MAPLE_LOGS, MAHOGANY_LOGS, YEW_LOGS, MAGIC_LOGS, REDWOOD_LOGS
   );
 
   EScriptState = (DO_NOTHING, TELEPORTING, NAVIGATING, CLICK_MUSHROOM, USE_MUSHROOM, BUILD_BIRDHOUSE, INTERACT_BIRDHOUSES );
   EScriptAfterState = (NOTHING, WALK_BANK, WITHDRAW_NEXT_RUN, TAKING_BOAT, WALK_MUSHROOM, TELEPORT_MUSHROOM, FINISHED );
-  ERSMushroomLocation = (VERD_VALLEY, HILL_HOUSE, SHROOM_MEADOW); //Names have been changed to protect the globals of the same name
+  EMushroomLocation = (VERD_VALLEY, HILL_HOUSE, SHROOM_MEADOW); //Names have been changed to protect the globals of the same name
 
   TBirdhouse = record
     BirdhouseObject : TGameObject;
@@ -27,14 +27,14 @@ type
 
   TMushroom = record
     Mushroom : TGameObject;
-    location : ERSMushroomLocation;
+    location : EMushroomLocation;
   end;
 {$SCOPEDENUMS OFF}
 
   CurrBirdhouse = ^TBirdhouse;
 
   TBirdHouseInclude = record
-    LogType, SuggestedLogType : ERSLogType;
+    LogType, SuggestedLogType : ELogType;
     Seed : TItem;
     BirdHousesFilled : Int8;
     //VerdValleySouthBirdHouse, VerdValleyNorthBirdHouse, MushMeadowBirdhouse, TarBirdHouse : TBirdhouse;
@@ -62,22 +62,22 @@ type
 var
   BirdHouseRunner : TBirdHouseInclude;
   BHWriteDebug : Boolean := true;
-  BHIncludeGUILogType : ERSLogType := ERSLogType.MAPLE_LOGS;
+  BHIncludeGUILogType : ELogType := ELogType.MAPLE_LOGS;
   BHIncludeGUISeed : TItem := 'Potato seed';
   BHIncludeGUIRunIntervalMinutes : Int32 := 51;
   BHIncludeGUIUseBestLog : Boolean := false;
   BHIncludeGUICraftWhileNav : Boolean := false;
 
-function TMushroom.GetMushButton() : ERSMushTreeButton;
+function TMushroom.GetMushButton() : EMushTreeButton;
 begin
   case Self.location of
-    ERSMushroomLocation.HILL_HOUSE : Result := ERSMushTreeBUtton.VERDANT_VALLEY;
-    ERSMushroomLocation.VERD_VALLEY : Result := ERSMushTreeBUtton.MUSHROOM_MEADOW;
-    ERSMushroomLocation.SHROOM_MEADOW : Result := ERSMushTreeBUtton.HOUSE_ON_THE_HILL;
+    EMushroomLocation.HILL_HOUSE : Result := EMushTreeBUtton.VERDANT_VALLEY;
+    EMushroomLocation.VERD_VALLEY : Result := EMushTreeBUtton.MUSHROOM_MEADOW;
+    EMushroomLocation.SHROOM_MEADOW : Result := EMushTreeBUtton.HOUSE_ON_THE_HILL;
   end;
 end;
 
-function TMushTree.Click(mushroom : ERSMushTreeButton) : Boolean;
+function TMushTree.Click(mushroom : EMushTreeButton) : Boolean;
 begin
   Result := Self.GetButton(mushroom).Click();
 end;
@@ -113,22 +113,22 @@ begin
     Result := ATPA[0];
 end;
 
-function TBirdHouseInclude.GetLogString(log : ERSLogType) : string;
+function TBirdHouseInclude.GetLogString(log : ELogType) : string;
 begin
   case log of
-    ERSLogType.REGULAR_LOGS : Result := "Logs";
+    ELogType.REGULAR_LOGS : Result := "Logs";
     else
       Result := ToStr(Log).Before("_") + " logs";
   end;
 end;
 
-function TBirdHouseInclude.GetBirdhouseItem(log : ERSLogType) : TItem;
+function TBirdHouseInclude.GetBirdhouseItem(log : ELogType) : TItem;
 var
   baseBirdHouse : TItem := "Bird house";
 
 begin
   case log of
-    ERSLogType.REGULAR_LOGS : Result := baseBirdHouse;
+    ELogType.REGULAR_LOGS : Result := baseBirdHouse;
     else
       Result := ToStr(Log).Before("_") + " " + baseBirdHouse;
   end;
@@ -375,9 +375,9 @@ begin
     Finder.ColorClusters += [CTS2(3233415, 13, 0.19, 0.65), CTS2(5605773, 38, 0.05, 0.59), 30];
   end;
 
-  HouseHillShroom.location := ERSMushroomLocation.HILL_HOUSE;
-  VerdValleyShroom.location := ERSMushroomLocation.VERD_VALLEY;
-  MushMeadowShroom.location := ERSMushroomLocation.SHROOM_MEADOW;
+  HouseHillShroom.location := EMushroomLocation.HILL_HOUSE;
+  VerdValleyShroom.location := EMushroomLocation.VERD_VALLEY;
+  MushMeadowShroom.location := EMushroomLocation.SHROOM_MEADOW;
 
   Self.Mushrooms := [HouseHillShroom, VerdValleyShroom, MushMeadowShroom];
   Self.MushIndex := 0;
@@ -949,30 +949,30 @@ begin
   Result := true;
 end;
 
-function TBirdHouseInclude.GetLogForHunterLevel(level : Int32) : ERSLogType;
+function TBirdHouseInclude.GetLogForHunterLevel(level : Int32) : ELogType;
 var
   craftLevel : Int32 := Stats.GetLevel(ESkill.CRAFTING, false);
 
 begin
   Self.DebugLn("Detected hunter level: " + ToStr(level) + " detected crafting level: " + ToStr(craftLevel));
   if (level >= 89) and (craftLevel >= 90) then
-    Result := ERSLogType.REDWOOD_LOGS
+    Result := ELogType.REDWOOD_LOGS
   else if (level >= 74) and (craftLevel >= 75) then
-    Result := ERSLogType.MAGIC_LOGS
+    Result := ELogType.MAGIC_LOGS
   else if (level >= 59) and (craftLevel >= 60) then
-    Result := ERSLogType.YEW_LOGS
+    Result := ELogType.YEW_LOGS
   else if (level >= 49) and (craftLevel >= 50) then
-    Result := ERSLogType.MAHOGANY_LOGS
+    Result := ELogType.MAHOGANY_LOGS
   else if (level >= 44) and (craftLevel >= 45) then
-    Result := ERSLogType.MAPLE_LOGS
+    Result := ELogType.MAPLE_LOGS
   else if (level >= 34) and (craftLevel >= 35) then
-    Result := ERSLogType.TEAK_LOGS
+    Result := ELogType.TEAK_LOGS
   else if (level >= 24) and (craftLevel >= 25) then
-    Result := ERSLogType.WILLOW_LOGS
+    Result := ELogType.WILLOW_LOGS
   else if (level >= 14) and (craftLevel >= 15) then
-    Result := ERSLogType.OAK_LOGS
+    Result := ELogType.OAK_LOGS
   else
-    Result := ERSLogType.REGULAR_LOGS;
+    Result := ELogType.REGULAR_LOGS;
 end;
 
 function TBank.FindAny(items: TItemArray): Boolean; overload;
@@ -990,7 +990,7 @@ begin
   end;
 end;
 
-function TBirdHouseInclude.GetNextBestLogInBank(currLog : ERSLogType) : ERSLogType;
+function TBirdHouseInclude.GetNextBestLogInBank(currLog : ELogType) : ELogType;
 var
   i : Int32;
   tempBox : TBox;
@@ -1001,10 +1001,10 @@ begin
 
   for i := Ord(currLog) downto 0 do
   begin
-    foundBankItem.Item := Self.GetLogString(ERSLogType(i));
+    foundBankItem.Item := Self.GetLogString(ELogType(i));
 
     if Bank.FindItem(foundBankItem, tempBox) then
-      Exit(ERSLogType(i));
+      Exit(ELogType(i));
   end;
 
   Self.DebugLn("Couldn't find any other logs");
@@ -1226,7 +1226,7 @@ var
   itemList : TBankItemArray;
   i, itemNumNeeded : Int32;
   itemName : string;
-  nextBestLog : ERSLogType;
+  nextBestLog : ELogType;
   transporter: TUniversalTransport;
 
 begin
@@ -1294,7 +1294,7 @@ end;
 
 //If you don't use the GUI's TScriptForm.CreateBirdhouseRunSettings
 //Use this to set the values directly.
-procedure TBirdHouseInclude.Setup(log : ERSLogType; seedItem : TItem; useBestLog : Boolean = false; interval : UInt32 = (50 * ONE_MINUTE); needClockwork : Boolean = true);
+procedure TBirdHouseInclude.Setup(log : ELogType; seedItem : TItem; useBestLog : Boolean = false; interval : UInt32 = (50 * ONE_MINUTE); needClockwork : Boolean = true);
 begin
   with Self do
   begin
@@ -1347,7 +1347,7 @@ function TScriptForm.CreateBirdhouseRunSettings(): TTabSheet;
     combobox: TComboBox;
   begin
     combobox := sender;
-    BirdHouseRunner.LogType := ERSLogType(comboBox.getItemIndex());
+    BirdHouseRunner.LogType := ELogType(comboBox.getItemIndex());
   end;
 
   procedure TScriptForm._BHIncludeOnRadioChanged(sender: TObject);

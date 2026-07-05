@@ -4,35 +4,35 @@
 {$ENDIF}
 
 type
-  ERSPrayerArray = array of ERSPrayer;
+  EPrayerArray = array of EPrayer;
 
 const
-  RANGED_PRAYERS: ERSPrayerArray = [
-    ERSPrayer.RIGOUR,
-    ERSPrayer.EAGLE_EYE,
-    ERSPrayer.HAWK_EYE,
-    ERSPrayer.SHARP_EYE
+  RANGED_PRAYERS: EPrayerArray = [
+    EPrayer.RIGOUR,
+    EPrayer.EAGLE_EYE,
+    EPrayer.HAWK_EYE,
+    EPrayer.SHARP_EYE
   ];
 
-  MELEE_PRAYERS: ERSPrayerArray = [
-    ERSPrayer.PIETY,
-    ERSPrayer.CHIVALRY,
-    ERSPrayer.INCREDIBLE_REFLEXES,
-    ERSPrayer.ULTIMATE_STRENGTH,
-    ERSPrayer.IMPROVED_REFLEXES,
-    ERSPrayer.SUPERHUMAN_STRENGTH,
-    ERSPrayer.CLARITY_OF_THOUGHT,
-    ERSPrayer.BURST_OF_STRENGTH
+  MELEE_PRAYERS: EPrayerArray = [
+    EPrayer.PIETY,
+    EPrayer.CHIVALRY,
+    EPrayer.INCREDIBLE_REFLEXES,
+    EPrayer.ULTIMATE_STRENGTH,
+    EPrayer.IMPROVED_REFLEXES,
+    EPrayer.SUPERHUMAN_STRENGTH,
+    EPrayer.CLARITY_OF_THOUGHT,
+    EPrayer.BURST_OF_STRENGTH
   ];
 
-  MAGIC_PRAYERS: ERSPrayerArray = [
-    ERSPrayer.AUGURY,
-    ERSPrayer.MYSTIC_MIGHT,
-    ERSPrayer.MYSTIC_LORE,
-    ERSPrayer.MYSTIC_WILL
+  MAGIC_PRAYERS: EPrayerArray = [
+    EPrayer.AUGURY,
+    EPrayer.MYSTIC_MIGHT,
+    EPrayer.MYSTIC_LORE,
+    EPrayer.MYSTIC_WILL
   ];
 
-function ERSPrayerArray.Find(const value: ERSPrayer): Int32; constref;
+function EPrayerArray.Find(const value: EPrayer): Int32; constref;
 begin
   for Result := 0 to High(Self) do
     if (value = Self[Result]) then
@@ -40,4 +40,3 @@ begin
 
   Result := -1;
 end;
-

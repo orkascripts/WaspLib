@@ -991,8 +991,8 @@ end;
 //TODO: NEED TO REVIEW EVERYTHING BELOW. This is probably all useless or not used.
 function TPrayer.HasProperPrayers(): Boolean;
 var
-  prayer: ERSPrayer;
-  activePrayers: ERSPrayerArray;
+  prayer: EPrayer;
+  activePrayers: EPrayerArray;
 begin
   if CombatHandler.CombatStyle.CombatType = ECombatType.UNKNOWN then
     CombatHandler.CombatStyle.GetCombatType;

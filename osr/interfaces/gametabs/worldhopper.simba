@@ -276,7 +276,7 @@ begin
   if not Logout.Open() then Exit;
 
   if not Logout.IsWorldSwitcherOpen() then
-    Logout.GetButton(ERSLogoutButton.WORLD_SWITCHER).Click(MOUSE_LEFT);
+    Logout.GetButton(ELogoutButton.WORLD_SWITCHER).Click(MOUSE_LEFT);
   WaitUntil((current := Self.GetCurrentWorld()) <> 0, 200, 12000);
 
   if doSorting and not Self.SortWorlds() then Exit;

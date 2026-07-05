@@ -51,7 +51,7 @@ begin
   for i := 1 to attempts do
   begin
     Self.ClearEnter();
-    if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not GameClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then
+    if Self.GetButton(ELogoutButton.CLICK_HERE).Click() and WaitUntil(not GameClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then
       Exit(True);
   end;
 end;

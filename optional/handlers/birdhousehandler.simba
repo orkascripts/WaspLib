@@ -79,7 +79,7 @@ type
 
   TBirdHouse = record
     State: EBirdHouseState;
-    MushTree: ERSMushTreeLocation;
+    MushTree: EMushTreeLocation;
     Obj: TObjectV2;
   end;
 
@@ -165,7 +165,7 @@ begin
     with Self.Houses[loc] do
     begin
       i := Ord(loc);
-      MushTree := ERSMushTreeLocation(1 + (i div 2) * 2);
+      MushTree := EMushTreeLocation(1 + (i div 2) * 2);
 
       Obj.SetupEx([0.8,0.8, 5], [COORDINATES[i]]);
       Obj.SetupUpText(['Space', 'house']);

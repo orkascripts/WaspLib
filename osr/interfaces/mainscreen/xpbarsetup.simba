@@ -27,7 +27,7 @@ function TXPBarSetup.IsOpen(): Boolean;
 var
   Count: Int32;
 begin
-  if RSInterface.IsOpen(ERSInterfaceType.CLASSIC) then
+  if RSInterface.IsOpen(EInterfaceType.CLASSIC) then
     Count := SRL.CountColor(CTS0(2070783, 0), RSInterface.Bounds);
   Result :=  (Count >= 2800) and (Count <= 4200);
 end;

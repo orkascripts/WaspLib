@@ -1037,7 +1037,7 @@ end;
 ## GearData.GetItems
 ```pascal
 function TGearData.GetItems(key: String): TItemArray;
-function TGearData.GetItems(slot: ERSEquipmentSlot): TItemArray; overload;
+function TGearData.GetItems(slot: EEquipmentSlot): TItemArray; overload;
 ```
 Method to fetch items under a key in gear.json.
 *)
@@ -1051,10 +1051,10 @@ begin
     Result += Self.Data.getJSONArray(key).getString(i);
 end;
 
-function TGearData.GetItems(slot: ERSEquipmentSlot): TItemArray; overload;
+function TGearData.GetItems(slot: EEquipmentSlot): TItemArray; overload;
 begin
   Result := Self.GetItems(LowerCase(ToStr(slot)));
-  if slot = ERSEquipmentSlot.WEAPON then
+  if slot = EEquipmentSlot.WEAPON then
     Result += Self.GetItems('2h');
 end;
 

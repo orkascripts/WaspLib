@@ -6,7 +6,7 @@
 type
   TGear = record
     Name: String;
-    Items: array [ERSEquipmentSlot] of TItem;
+    Items: array [EEquipmentSlot] of TItem;
   end;
 
 type
@@ -14,8 +14,8 @@ type
     Sets: array of TGear;
     Config: TConfigJSON;
 
-    CurrentEquipment: array [ERSEquipmentSlot] of TItem;
-    _ValidGear: array [ERSEquipmentSlot] of TItemArray;
+    CurrentEquipment: array [EEquipmentSlot] of TItem;
+    _ValidGear: array [EEquipmentSlot] of TItemArray;
 
     _FormGearIndex: Int32;
     _FormFiltered: Boolean;
@@ -23,7 +23,7 @@ type
     _FormListBoxes: array of TListBox;
 
     _UnfiltedWeapons: TStringArray;
-    _UnfilteredLists: array [ERSEquipmentSlot] of TStringList;
+    _UnfilteredLists: array [EEquipmentSlot] of TStringList;
 
     IsSetup: Boolean;
   end;
@@ -34,7 +34,7 @@ var
   key, name: String;
   i: Int32;
   obj: TJSONObject;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   json: TJSONArray;
   arr: TStringArray;
 begin
@@ -50,11 +50,11 @@ begin
     obj := Self.Config.GetObject(key);
     Sets[i].Name := key;
 
-    for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+    for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
       Sets[i].Items[slot] := obj.getString(ToStr(slot).Lower());
   end;
 
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
   begin
     Self._ValidGear[slot] := GearData.GetItems(slot);
     Self._UnfilteredLists[slot].Init();
@@ -62,7 +62,7 @@ begin
 
     name := ToStr(slot).ToLower();
 
-    if slot <> ERSEquipmentSlot.WEAPON then
+    if slot <> EEquipmentSlot.WEAPON then
     begin
       Self._UnfilteredLists[slot].BeginUpdate();
       Self._UnfilteredLists[slot].Add('None');
@@ -153,7 +153,7 @@ function TGearHandler.Add(gear: TGear): Boolean;
 var
   i: Int32;
   obj: TJSONObject;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
 begin
   Self.Setup();
 
@@ -166,7 +166,7 @@ begin
   Self.Sets += gear;
 
   obj.Init();
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
     obj.Put(ToStr(slot).Lower(), ToStr(gear.Items[slot]));
 
   Self.Config.Put(gear.Name, obj, True);
@@ -182,7 +182,7 @@ function TGearHandler.Edit(idx: Int32; gear: TGear): Boolean;
 var
   i: Int32;
   obj: TJSONObject;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   keys: TStringList;
 begin
   Self.Setup();
@@ -203,7 +203,7 @@ begin
   Self.Config.Remove(keys.GetStrings(idx));
 
   obj.Init();
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
     obj.Put(ToStr(slot).Lower(), ToStr(gear.Items[slot]));
 
   Self.Config.Put(gear.Name, obj, True);
@@ -270,7 +270,7 @@ begin
 end;
 
 
-procedure TScriptForm._RefreshList(combobox: TCombobox; slot: ERSEquipmentSlot);
+procedure TScriptForm._RefreshList(combobox: TCombobox; slot: EEquipmentSlot);
 begin
   if not GearHandler._FormFiltered then Exit;
   combobox.getItems().BeginUpdate();
@@ -283,7 +283,7 @@ var
   combobox, cb: TComboBox;
   parent: TPanel;
   gear: TGear;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   name: String;
 begin
   parent := sender;
@@ -295,7 +295,7 @@ begin
   begin
     combobox.getItems().Add(gear.Name);
 
-    for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+    for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
     begin
       name := ToStr(slot).ToLower();
       cb := parent.GetChild(name + '_slot_combobox');
@@ -315,7 +315,7 @@ var
   combobox: TComboBox;
   parent: TPanel;
   button: TButton;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   gear: TGear;
   item: TItem;
 begin
@@ -332,7 +332,7 @@ begin
   if GearHandler._FormGearIndex <= High(GearHandler.Sets) then
     gear := GearHandler.Sets[GearHandler._FormGearIndex];
 
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
   begin
     combobox := parent.GetChild(ToStr(slot).Lower() + '_slot_combobox');
 
@@ -359,7 +359,7 @@ var
   combobox, cb: TComboBox;
   parent: TPanel;
   gear: TGear;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   name: String;
 begin
   button := sender;
@@ -367,7 +367,7 @@ begin
   combobox := parent.getChild('gear_selector_combobox');
   gear.Name := combobox.getText();
 
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
   begin
     name := ToStr(slot).ToLower();
     cb := parent.GetChild(name + '_slot_combobox');
@@ -486,7 +486,7 @@ var
   parent: TPanel;
   items: TItemArray;
   item: TItem;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   name: String;
 begin
   parent := TButton(sender).getParent();
@@ -501,7 +501,7 @@ begin
   {$ENDIF}
     ActivateClient();
 
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
   begin
     name := ToStr(slot).ToLower();
     combobox := parent.GetChild(name + '_slot_combobox');
@@ -531,12 +531,12 @@ var
   combobox: TComboBox;
   parent: TPanel;
   item: TItem;
-  slot: ERSEquipmentSlot;
+  slot: EEquipmentSlot;
   name: String;
 begin
   parent := TButton(sender).getParent();
 
-  for slot := Low(ERSEquipmentSlot) to High(ERSEquipmentSlot) do
+  for slot := Low(EEquipmentSlot) to High(EEquipmentSlot) do
   begin
     name := ToStr(slot).ToLower();
     combobox := parent.GetChild(name + '_slot_combobox');
@@ -763,7 +763,7 @@ begin
     SetLeft((save.getLeft) - TControl.AdjustToDPI(20));
     SetName('head_slot');
     SetCaption('Head');
-    _RefreshList(ComboBox, ERSEquipmentSlot.HEAD);
+    _RefreshList(ComboBox, EEquipmentSlot.HEAD);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -776,7 +776,7 @@ begin
     SetLeft(head.GetLeft());
     SetName('cape_slot');
     SetCaption('Cape');
-    _RefreshList(ComboBox, ERSEquipmentSlot.CAPE);
+    _RefreshList(ComboBox, EEquipmentSlot.CAPE);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -789,7 +789,7 @@ begin
     SetLeft(cape.GetLeft());
     SetName('ammo_slot');
     SetCaption('Ammo');
-    _RefreshList(ComboBox, ERSEquipmentSlot.AMMO);
+    _RefreshList(ComboBox, EEquipmentSlot.AMMO);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -802,7 +802,7 @@ begin
     SetLeft(ammo.GetLeft());
     SetName('body_slot');
     SetCaption('Body');
-    _RefreshList(ComboBox, ERSEquipmentSlot.BODY);
+    _RefreshList(ComboBox, EEquipmentSlot.BODY);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -815,7 +815,7 @@ begin
     SetLeft(body.GetLeft());
     SetName('legs_slot');
     SetCaption('Legs');
-    _RefreshList(ComboBox, ERSEquipmentSlot.LEGS);
+    _RefreshList(ComboBox, EEquipmentSlot.LEGS);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -828,7 +828,7 @@ begin
     SetLeft(legs.GetLeft());
     SetName('feet_slot');
     SetCaption('Feet');
-    _RefreshList(ComboBox, ERSEquipmentSlot.FEET);
+    _RefreshList(ComboBox, EEquipmentSlot.FEET);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -842,7 +842,7 @@ begin
     SetLeft(head.GetRight() + TControl.AdjustToDPI(15));
     SetName('secondary_ammo_slot');
     SetCaption('Secondary ammo');
-    _RefreshList(ComboBox, ERSEquipmentSlot.SECONDARY_AMMO);
+    _RefreshList(ComboBox, EEquipmentSlot.SECONDARY_AMMO);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -855,7 +855,7 @@ begin
     SetLeft(sammo.GetLeft());
     SetName('neck_slot');
     SetCaption('Neck');
-    _RefreshList(ComboBox, ERSEquipmentSlot.NECK);
+    _RefreshList(ComboBox, EEquipmentSlot.NECK);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -868,7 +868,7 @@ begin
     SetLeft(sammo.GetLeft());
     SetName('weapon_slot');
     SetCaption('Weapon');
-    _RefreshList(ComboBox, ERSEquipmentSlot.WEAPON);
+    _RefreshList(ComboBox, EEquipmentSlot.WEAPON);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -881,7 +881,7 @@ begin
     SetLeft(sammo.GetLeft());
     SetName('shield_slot');
     SetCaption('Shield');
-    _RefreshList(ComboBox, ERSEquipmentSlot.SHIELD);
+    _RefreshList(ComboBox, EEquipmentSlot.SHIELD);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -894,7 +894,7 @@ begin
     SetLeft(sammo.GetLeft());
     SetName('hands_slot');
     SetCaption('Hands');
-    _RefreshList(ComboBox, ERSEquipmentSlot.HANDS);
+    _RefreshList(ComboBox, EEquipmentSlot.HANDS);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;
@@ -907,7 +907,7 @@ begin
     SetLeft(sammo.GetLeft());
     SetName('ring_slot');
     SetCaption('Ring');
-    _RefreshList(ComboBox, ERSEquipmentSlot.RING);
+    _RefreshList(ComboBox, EEquipmentSlot.RING);
     SetItemIndex(0);
     ComboBox.setOnChange(@Self._OnGearChange);
   end;

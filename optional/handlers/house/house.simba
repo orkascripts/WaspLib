@@ -1421,7 +1421,7 @@ var
   imgbox: TSimbaImageBox;
   topLeft, bottomRight, offset, center: TPoint;
 begin
-  if not RSInterface.IsOpen(ERSInterfaceType.CLASSIC) then
+  if not RSInterface.IsOpen(EInterfaceType.CLASSIC) then
   begin
     MessageDlg('LayoutFinder', 'You need to open the house viewer to read the layout!', mtWarning, [mbOk]);
     Exit;
