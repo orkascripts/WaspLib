@@ -549,10 +549,10 @@ begin
 end;
 
 
-function TUniversalTransport.getConnectingBank(position: TPoint): PRSObject;
+function TUniversalTransport.getConnectingBank(position: TPoint): PGameObject;
 var
   currentMinimumDistance: Int32 := 100000;
-  currentBank: PRSObject;
+  currentBank: PGameObject;
   pathDistance: Int32;
 begin
   for currentBank in WalkerObjects.Banks do

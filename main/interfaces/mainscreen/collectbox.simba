@@ -349,9 +349,9 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Result := PRSNPC(walkerObject)^.SelectOption(['Collect']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Collect']))
+    Result := PGameNPC(walkerObject)^.SelectOption(['Collect']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Collect']))
   else
-    Result := PRSObject(walkerObject)^.SelectOption(['Collect']) or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Collect']));
+    Result := PGameObject(walkerObject)^.SelectOption(['Collect']) or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Collect']));
 
   if not Result then
     Exit;
@@ -378,9 +378,9 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Result := PRSNPC(walkerObject)^.WalkSelectOption(['Collect']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Collect']))
+    Result := PGameNPC(walkerObject)^.WalkSelectOption(['Collect']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Collect']))
   else
-    Result := PRSObject(walkerObject)^.WalkSelectOption(['Collect']) or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Collect']));
+    Result := PGameObject(walkerObject)^.WalkSelectOption(['Collect']) or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Collect']));
 
   if not Result then
     Exit;

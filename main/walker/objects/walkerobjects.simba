@@ -3,7 +3,7 @@
 Methods to handle TWalkerObjects.
 TWalkerObject can be anything that you want to interact with on the mainscreen.
 They are divided in 2 main categories and one of them in 3 sub-categories but the usage is only limited by your imagination:
-  - RSObjects (TWalkerObjects that don't have a dot on the minimap)
+  - GameObjects (TWalkerObjects that don't have a dot on the minimap)
   - MMDots:   (TWalkerObjects that have a dot on the minimap)
     -RSNPCs
     -RSGroundItems
@@ -551,16 +551,16 @@ type
 ```pascal
 TGameObject = type TWalkerObject;
 TGameObjectArray = array of TGameObject;
-PRSObject = ^TGameObject;
-PRSObjectArray = array of PRSObject;
+PGameObject = ^TGameObject;
+PGameObjectArray = array of PGameObject;
 ```
 TGameObjects are a type of {ref}`TWalkerObject`.
 This are meant to be TWalkerObjects that do not have a minimap dot so TGameObject.Filter.MinimapDot is False by default and shouldn't be changed.
 *)
   TGameObject = type TWalkerObject;
   TGameObjectArray = array of TGameObject;
-  PRSObject = ^TGameObject;
-  PRSObjectArray = array of PRSObject;
+  PGameObject = ^TGameObject;
+  PGameObjectArray = array of PGameObject;
 
 (*
 ## TGameObject.Setup
@@ -655,7 +655,7 @@ The "extended" method in particular is mostly meant for debugging and is the one
 
 Example:
 ```pascal
-WriteLn RSObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
+WriteLn GameObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
 Debug(atpa);
 ```
 *)
@@ -693,7 +693,7 @@ TGameObject method used to find a {ref}`TGameObject`. If found returns true, if 
 
 Example:
 ```pascal
-WriteLn RSObjects.GEBank.IsVisible(); //Be in ge and with a walker setup there.
+WriteLn GameObjects.GEBank.IsVisible(); //Be in ge and with a walker setup there.
 ```
 *)
 function TGameObject.IsVisible(): Boolean;
@@ -754,7 +754,7 @@ Internal method used to draw found TGameObjects in a TMufasaBitmap.
 Example:
 ```pascal
 Bitmap.FromClient()
-RSObjects.GEBank.Draw(Bitmap); //Be in ge and with a walker setup there.
+GameObjects.GEBank.Draw(Bitmap); //Be in ge and with a walker setup there.
 Bitmap.Debug();
 Bitmap.Free();
 ```
@@ -779,11 +779,11 @@ end;
 procedure TGameObject.SaveDebug();
 ```
 
-Saves a debug image of the TGameObject to Simba\Screenshots\RSObjects
+Saves a debug image of the TGameObject to Simba\Screenshots\GameObjects
 
 Example:
 ```pascal
-RSObjects.GEBank.SaveDebug(); //Be in ge and with a walker setup there.
+GameObjects.GEBank.SaveDebug(); //Be in ge and with a walker setup there.
 ```
 *)
 procedure TGameObject.SaveDebug();
@@ -803,7 +803,7 @@ begin
   Bitmap.Debug();
 
   WriteLn('Position: ', ScriptWalker^.GetMyPos(), ' ZoomLevel: ', MM2MS.ZoomLevel);
-  WriteLn('RSObject: ', Self);
+  WriteLn('GameObject: ', Self);
   Bitmap.Free();
 end;
 
@@ -1004,7 +1004,7 @@ It can update the target position while the mouse moves with **trackTarget**.
 Example:
 ```pascal
 RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
-RSObjects.GEBank.Hover(); //Be in GE with a walker setup there.
+GameObjects.GEBank.Hover(); //Be in GE with a walker setup there.
 ```
 *)
 function TGameObject.Hover(attempts: Int32 = 2; trackTarget: Boolean = TRACK_TARGET): Boolean;
@@ -1035,7 +1035,7 @@ Example:
 ```pascal
 //Be in varrock with a varrock map loaded.
 RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
-RSObjects.GEBank.WalkHover();
+GameObjects.GEBank.WalkHover();
 ```
 *)
 function TGameObject.WalkHover(attempts: Int32 = 2; trackTarget: Boolean = TRACK_TARGET): Boolean;
@@ -1074,7 +1074,7 @@ Method used to click a TGameObject target if it's found on the mainscreen.
 Example:
 ```pascal
 //Be in ge with a ge map loaded.
-WriteLn RSObjects.GEBank.Click();
+WriteLn GameObjects.GEBank.Click();
 ```
 *)
 function TGameObject.Click(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
@@ -1094,7 +1094,7 @@ Method used to select an option on a TGameObject target if it's found on the mai
 Example:
 ```pascal
 //Be in ge with a ge map loaded.
-WriteLn RSObjects.GEBank.SelectOption(['Collect']);
+WriteLn GameObjects.GEBank.SelectOption(['Collect']);
 ```
 *)
 function TGameObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
@@ -1118,7 +1118,7 @@ Method used to walk and click a TGameObject target if it's found on the mainscre
 Example:
 ```pascal
 //Be in ge with a ge map loaded, preferably far away so it has to walk.
-WriteLn RSObjects.GEBank.WalkClick();
+WriteLn GameObjects.GEBank.WalkClick();
 ```
 *)
 function TGameObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
@@ -1137,7 +1137,7 @@ Method used to walk and select an option on a TGameObject target if it's found o
 Example:
 ```pascal
 //Be in ge with a ge map loaded, preferably far away so it has to walk.
-WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
+WriteLn GameObjects.GEBank.WalkSelectOption(['Collect']);
 ```
 *)
 function TGameObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
@@ -1149,7 +1149,7 @@ begin
   Self.CurrentActionUpText := [];
 end;
 
-function PRSObjectArray.GetClosestEx(value: TPoint): PRSObject;
+function PGameObjectArray.GetClosestEx(value: TPoint): PGameObject;
 var
   i: Int32;
   closest: Double = $FFFFFF;
@@ -1172,7 +1172,7 @@ begin
   end;
 end;
 
-function PRSObjectArray.GetClosest(): PRSObject;
+function PGameObjectArray.GetClosest(): PGameObject;
 begin
   if (Self = []) or (ScriptWalker = nil) then
     Exit;
@@ -1569,7 +1569,7 @@ begin
   Bitmap.Debug();
 
   WriteLn('Position: ', ScriptWalker^.GetMyPos(), ' ZoomLevel: ', MM2MS.ZoomLevel);
-  WriteLn('RSObject: ', Self);
+  WriteLn('GameObject: ', Self);
   Bitmap.Free();
 end;
 
@@ -1918,8 +1918,8 @@ This are meant to be TMMDot that have a yellow minimap dot so TNPC.Filter.Minima
 *)
   TNPC = type TMMDot;
   TNPCArray = array of TNPC;
-  PRSNPC = ^TNPC;
-  PRSNPCArray = array of PRSNPC;
+  PGameNPC = ^TNPC;
+  PGameNPCArray = array of PGameNPC;
 
 (*
 ## type TGroundItem
@@ -2017,7 +2017,7 @@ begin
 end;
 
 
-function PRSNPCArray.GetClosestEx(value: TPoint): PRSNPC;
+function PGameNPCArray.GetClosestEx(value: TPoint): PGameNPC;
 var
   i: Int32;
   closest, current: Double;
@@ -2044,7 +2044,7 @@ begin
   end;
 end;
 
-function PRSNPCArray.GetClosest(): PRSNPC;
+function PGameNPCArray.GetClosest(): PGameNPC;
 begin
   if (Self = []) or (ScriptWalker = nil) then
     Exit;
@@ -2092,24 +2092,24 @@ end;
 (*
 ## Debug
 ```pascal
-procedure Debug(rsobject: TGameObject); overload;
+procedure Debug(GameObject: TGameObject); overload;
 procedure Debug(mmdot: TMMDot); overload;
 ```
 Methods used to debug TGameObjects and TMMDots.
 
 Example:
 ```pascal
-Debug(RSObjects.GEBank); //Run in ge with a walker map setup there.
+Debug(GameObjects.GEBank); //Run in ge with a walker map setup there.
 
 Debug(RSNPCs.LumbridgeCook); //Run in Lumbridge castle with a walker map setup there.
 ```
 *)
-procedure Debug(rsobject: TGameObject); overload;
+procedure Debug(GameObject: TGameObject); overload;
 var
   bitmap: TMufasaBitmap;
 begin
   bitmap.FromClient();
-  rsobject.Draw(bitmap);
+  GameObject.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
@@ -2134,13 +2134,13 @@ var
   DebugObjectArray: TGameObjectArray;
   DebugMMDotArray: array of TMMDot;
 
-function TBank.Hover(rsObject: TGameObject): Boolean; overload;
+function TBank.Hover(GameObject: TGameObject): Boolean; overload;
 begin
   if RSInterface.IsOpen() then Exit;
-  Result := rsObject.Hover();
+  Result := GameObject.Hover();
 end;
 
-function TBank.Open(rsObject: TGameObject): Boolean; overload;
+function TBank.Open(GameObject: TGameObject): Boolean; overload;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -2149,7 +2149,7 @@ begin
     RSInterface.Close();
   end;
 
-  Result := rsObject.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+  Result := GameObject.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
 
   if not Result then Exit;
 
@@ -2157,14 +2157,14 @@ begin
   Result := WaitUntil(Self.IsOpen() or BankPin.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
 end;
 
-function TBank.WalkHover(rsObject: TGameObject): Boolean;
+function TBank.WalkHover(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then Exit;
 
-  Result := rsObject.WalkHover();
+  Result := GameObject.WalkHover();
 end;
 
-function TBank.WalkOpen(rsObject: TGameObject): Boolean;
+function TBank.WalkOpen(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -2173,7 +2173,7 @@ begin
     RSInterface.Close();
   end;
 
-  Result := rsObject.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+  Result := GameObject.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
 
   if not Result then Exit;
 
@@ -2237,9 +2237,9 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Exit(Self.Hover(PRSNPC(walkerObject)^));
+    Exit(Self.Hover(PGameNPC(walkerObject)^));
 
-  Result := Bank.Hover(PRSObject(walkerObject)^);
+  Result := Bank.Hover(PGameObject(walkerObject)^);
 end;
 
 function TBank.Open(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2248,9 +2248,9 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Exit(Bank.Open(PRSNPC(walkerObject)^));
+    Exit(Bank.Open(PGameNPC(walkerObject)^));
 
-  Result := Bank.Open(PRSObject(walkerObject)^);
+  Result := Bank.Open(PGameObject(walkerObject)^);
 end;
 
 function TBank.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2259,9 +2259,9 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Exit(Bank.WalkHover(PRSNPC(walkerObject)^));
+    Exit(Bank.WalkHover(PGameNPC(walkerObject)^));
 
-  Result := Bank.WalkHover(PRSObject(walkerObject)^);
+  Result := Bank.WalkHover(PGameObject(walkerObject)^);
 end;
 
 function TBank.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2270,19 +2270,19 @@ begin
     walkerObject := WalkerObjects.Banks.GetClosest();
 
   if walkerObject^.Filter.MinimapDot then
-    Exit(Bank.WalkOpen(PRSNPC(walkerObject)^));
+    Exit(Bank.WalkOpen(PGameNPC(walkerObject)^));
 
-  Result := Bank.WalkOpen(PRSObject(walkerObject)^);
+  Result := Bank.WalkOpen(PGameObject(walkerObject)^);
 end;
 
 
-function TDepositBox.Hover(rsobject: TGameObject): Boolean;
+function TDepositBox.Hover(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then Exit;
-  Result := rsobject.Hover();
+  Result := GameObject.Hover();
 end;
 
-function TDepositBox.Open(rsobject: TGameObject): Boolean;
+function TDepositBox.Open(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -2291,20 +2291,20 @@ begin
     RSInterface.Close();
   end;
 
-  if rsobject.Click() or ChooseOption.Select(['Deposit B', 'Bank D']) then
+  if GameObject.Click() or ChooseOption.Select(['Deposit B', 'Bank D']) then
   begin
     Minimap.WaitMoving();
     Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
   end;
 end;
 
-function TDepositBox.WalkHover(rsobject: TGameObject): Boolean;
+function TDepositBox.WalkHover(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then Exit;
-  Result := rsobject.WalkHover();
+  Result := GameObject.WalkHover();
 end;
 
-function TDepositBox.WalkOpen(rsobject: TGameObject): Boolean;
+function TDepositBox.WalkOpen(GameObject: TGameObject): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -2313,7 +2313,7 @@ begin
     RSInterface.Close();
   end;
 
-  if rsobject.WalkClick() or ChooseOption.Select(['Deposit B', 'Bank D']) then
+  if GameObject.WalkClick() or ChooseOption.Select(['Deposit B', 'Bank D']) then
   begin
     Minimap.WaitMoving();
     Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
@@ -2326,7 +2326,7 @@ begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
 
-  Result := Self.Hover(PRSObject(walkerObject)^);
+  Result := Self.Hover(PGameObject(walkerObject)^);
 end;
 
 function TDepositBox.Open(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2334,7 +2334,7 @@ begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
 
-  Result := Self.Open(PRSObject(walkerObject)^);
+  Result := Self.Open(PGameObject(walkerObject)^);
 end;
 
 function TDepositBox.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2342,7 +2342,7 @@ begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
 
-  Result := Self.WalkHover(PRSObject(walkerObject)^);
+  Result := Self.WalkHover(PGameObject(walkerObject)^);
 end;
 
 function TDepositBox.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean; overload;
@@ -2350,7 +2350,7 @@ begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();
 
-  Result := Self.WalkOpen(PRSObject(walkerObject)^);
+  Result := Self.WalkOpen(PGameObject(walkerObject)^);
 end;
 
 
