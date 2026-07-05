@@ -12,8 +12,8 @@ Keep in mind that ProgressReport requires remote input.
 ```
 *)
 {$DEFINE WL_PROGRESS_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 (*

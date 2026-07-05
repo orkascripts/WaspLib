@@ -4,8 +4,8 @@ A library for sending messages and files to Discord channels via webhooks.
 *)
 
 {$DEFINE WL_DISCORD_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type

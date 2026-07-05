@@ -7,8 +7,8 @@ Some handy item wrappers were added for all cakes, pies and pizzas
 *)
 
 {$DEFINE WL_ITEMFINDER_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 

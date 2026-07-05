@@ -4,16 +4,16 @@ TFishingHandler is a full color fishing bot that is highly customizable.
 *)
 
 {$DEFINE WL_FISHING_HANDLER_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type
-  ERSFishingType = (NET, BIG_NET, BAIT, LURE, BARBARIAN_ROD,  CAGE, HARPOON, KARAMBWAN);
+  EFishingType = (NET, BIG_NET, BAIT, LURE, BARBARIAN_ROD,  CAGE, HARPOON, KARAMBWAN);
 
   TFishingHandler = record(TSRLBaseRecord)
     Tool, Bait: TItem;
-    FishingType: ERSFishingType;
+    FishingType: EFishingType;
 
     Option: String;
     CurrentSpot: TPoint;
@@ -55,7 +55,7 @@ begin
   Self.DisableDebugging := True;
 end;
 
-procedure TFishingHandler.Setup(fishType: ERSFishingType; timerLength: Int32 = 30000);
+procedure TFishingHandler.Setup(fishType: EFishingType; timerLength: Int32 = 30000);
 var
   found: Boolean;
   baits: TItemArray;
@@ -63,7 +63,7 @@ begin
   Self.FishingType := fishType;
 
   case fishType of
-    ERSFishingType.NET:
+    EFishingType.NET:
       begin
         baits := [];
         Self.Tool := 'Small fishing net';
@@ -71,7 +71,7 @@ begin
         Self.LeftClick := True;
       end;
 
-    ERSFishingType.BIG_NET:
+    EFishingType.BIG_NET:
       begin
         baits := [];
         Self.Tool := 'Big fishing net';
@@ -79,7 +79,7 @@ begin
         Self.LeftClick := False;
       end;
 
-    ERSFishingType.BAIT:
+    EFishingType.BAIT:
       begin
         baits := ['Fishing bait', 'Sandworms'];
         Self.Tool := 'Fishing rod';
@@ -87,7 +87,7 @@ begin
         Self.LeftClick := False;
       end;
 
-    ERSFishingType.LURE:
+    EFishingType.LURE:
       begin
         baits := ['Feather', 'Stripy feather'];
         Self.Tool := 'Fly fishing rod';
@@ -95,7 +95,7 @@ begin
         Self.LeftClick := True;
       end;
 
-    ERSFishingType.BARBARIAN_ROD:
+    EFishingType.BARBARIAN_ROD:
       begin
         baits := ['Fishing bait', 'Feather', 'Fish offcuts'];
         Self.Tool := 'Barbarian rod';
@@ -103,7 +103,7 @@ begin
         Self.LeftClick := True;
       end;
 
-    ERSFishingType.CAGE:
+    EFishingType.CAGE:
       begin
         baits := [];
         Self.Tool := 'Lobster pot';
@@ -111,7 +111,7 @@ begin
         Self.LeftClick := True;
       end;
 
-    ERSFishingType.HARPOON:
+    EFishingType.HARPOON:
       begin
         baits := [];
         Self.Tool := 'Harpoon';
@@ -119,7 +119,7 @@ begin
         Self.LeftClick := False;
       end;
 
-    ERSFishingType.KARAMBWAN:
+    EFishingType.KARAMBWAN:
       begin
         baits := ['Raw karambwanji'];
         Self.Tool := 'Karambwan vessel';
@@ -141,7 +141,7 @@ begin
       TerminateScript('Missing bait.');
   end;
 
-  if fishType = ERSFishingType.HARPOON then
+  if fishType = EFishingType.HARPOON then
   begin
     if not Inventory.ContainsAny(['Harpoon', 'Barb-tail harpoon', 'Dragon harpoon', 'Infernal harpoon', 'Crystal harpoon']) and
        not Equipment.ContainsAny(['Barb-tail harpoon', 'Dragon harpoon', 'Infernal harpoon', 'Crystal harpoon']) then

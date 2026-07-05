@@ -3,8 +3,8 @@ WaspLib is a library that extends [SRL-T](https://github.com/Torwent/SRL-T), ano
 This library along with [SRL-T](https://github.com/Torwent/SRL-T) is the core of [WaspScripts](https://waspscripts.com).
 *)
 
-{$IFNDEF SRL_OSR} {$I SRL-T/main.simba}{$ENDIF}
-{$DEFINE WL_OSR}
+{$IFNDEF SRL_MAIN} {$I SRL-T/main.simba}{$ENDIF}
+{$DEFINE WL_MAIN}
 
 {$IFNDEF WL_UTILS} {$I utils.simba} {$ENDIF}
 {$SCOPEDENUMS ON}

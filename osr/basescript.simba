@@ -6,8 +6,8 @@ They also contain template functions and procedures that can be used as is or ov
 *)
 
 {$DEFINE WL_BASESCRIPT_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 (*

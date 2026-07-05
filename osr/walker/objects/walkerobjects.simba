@@ -40,8 +40,8 @@ You cannot disable Filter.Walker, Filter.MinimapDot, Filter.Finder all at the sa
 ```
 *)
 {$DEFINE WL_WALKEROBJECT_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 const

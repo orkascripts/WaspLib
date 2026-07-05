@@ -1,6 +1,6 @@
 {$DEFINE WL_ALCH_HANDLER_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type

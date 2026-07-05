@@ -1,6 +1,6 @@
 {$DEFINE CJ_BIRDHOUSE_RUNNER}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 {$IFNDEF ANDREW_MUSHTREE_INCLUDED}
   {$I WaspLib/optional/interfaces/mainscreen/mushtree.simba}

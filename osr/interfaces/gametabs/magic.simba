@@ -4,8 +4,8 @@ Extends SRL's TMagic.
 *)
 
 {$DEFINE WL_MAGIC_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 (*

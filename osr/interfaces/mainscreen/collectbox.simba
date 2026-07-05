@@ -4,8 +4,8 @@ Methods to interact with the CollectBox.
 *)
 
 {$DEFINE WL_COLLECTBOX_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type

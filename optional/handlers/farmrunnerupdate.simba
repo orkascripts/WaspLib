@@ -1,5 +1,5 @@
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 {$IFNDEF SKUNK_UNIVERSAL_TRANSPORT}
   {$I Includes\WaspLib\optional\handlers\teleports\transport.simba}

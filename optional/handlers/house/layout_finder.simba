@@ -1,6 +1,6 @@
 {$DEFINE LAYOUT_FINDER}
 
-{$I WaspLib/osr.simba}
+{$I WaspLib/main.simba}
 {$IFNDEF WL_HOUSEMAP_INCLUDED}
   {$I WaspLib/optional/handlers/house/houseloader.simba}
 {$ENDIF}

@@ -12,7 +12,7 @@ a couple of times because Simba is bad at registering user key presses.
 Once the message "Array cleared." shows up you can start again.
 *)
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
-{$I WaspLib/osr.simba}
+{$I WaspLib/main.simba}
 
 const
   CHUNKS: array of TMapChunk := [Chunk([48,55,50,53], 0)]; //CHUNKS you want to load. Smaller the CHUNKS the faster it is. find from https://map.waspscripts.com/?m=-1&z=2&p=0&x=3116&y=3465

@@ -3,8 +3,8 @@
 Extensions to SRL's {ref}`Chat` interface.
 *)
 {$DEFINE WL_CHAT_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 function TChat.HasContinue(): Boolean;

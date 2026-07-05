@@ -1,6 +1,6 @@
 {$DEFINE SKUNK_UNIVERSAL_TRANSPORT}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 {$SCOPEDENUMS ON}

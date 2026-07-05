@@ -8,8 +8,8 @@ for general purpose combat this should be enough!
 *)
 
 {$DEFINE WL_COMBAT_HANDLER_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 {$IFNDEF WL_LOOT_HANDLER_INCLUDED}

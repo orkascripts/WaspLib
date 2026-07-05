@@ -5,7 +5,7 @@ Simple tool to get the player coordinate.
 
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
 {$I SRL-T/osr.simba}
-{$I WaspLib/osr.simba}
+{$I WaspLib/main.simba}
 
 const
   USE_KEYBOARD = True;

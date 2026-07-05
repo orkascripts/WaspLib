@@ -1,6 +1,6 @@
 {$DEFINE WL_ANTIBAN_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 procedure TAntiban.OnStartAntibanTask({$H-}task: PAntibanTask);{$H+}

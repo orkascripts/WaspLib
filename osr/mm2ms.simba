@@ -3,8 +3,8 @@
 Methods to handle MM2MS (Minimap to MainScreen). Extends SRL's MM2MS.
 *)
 {$DEFINE WL_MM2MS_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type

@@ -355,7 +355,7 @@ Very basic example of a full TScriptForm setup:
 Example:
 ```pascal
 {$I SRL-T/osr.simba}
-{$I WaspLib/osr.simba}
+{$I WaspLib/main.simba}
 
 type
   TMyScriptForm = record(TScriptForm)

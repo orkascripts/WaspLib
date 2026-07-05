@@ -6,8 +6,8 @@ Made by @Yolandi, modified by @Torwent.
 World hopper is resposible for hopping worlds with the logged in world hopper in the logout tab.
 *)
 {$DEFINE YOLANDI_WORLDHOPPER_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 type

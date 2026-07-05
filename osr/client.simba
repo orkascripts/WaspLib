@@ -14,8 +14,8 @@ WLSettings.RemoteInput.Enabled := False;
 end;
 *)
 {$DEFINE WL_GameClient_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 procedure TGameClient.Setup(); override;

@@ -9,7 +9,7 @@ there's some basic instructions on the file.
 {.$DEFINE SRL_DISABLE_REMOTEINPUT}
 {$DEFINE SCRIPT_GUI}
 {$I SRL-T/osr.simba}
-{$I WaspLib/osr.simba}
+{$I WaspLib/main.simba}
 {$I WaspLib/optional/handlers/house/house.simba}
 
 {$IFDEF SCRIPT_GUI}

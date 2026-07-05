@@ -6,8 +6,8 @@ This extends SRL's TInventory and related methods.
 *)
 
 {$DEFINE WL_INVENTORY_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$IFNDEF WL_MAIN}
+  {$I WaspLib/main.simba}
 {$ENDIF}
 
 const
