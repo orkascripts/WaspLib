@@ -10,10 +10,10 @@ The POH Map is what's responsible for mapping a user's POH.
 
 type
 (*
-(ERSHouseRoom)=
-## type ERSHouseRoom
+(EHouseRoomSprite)=
+## type EHouseRoomSprite
 ```pascal
-ERSHouseRoom = (
+EHouseRoomSprite = (
   UNKNOWN, GARDEN, SUPERIOR_GARDEN, MENAGERIE_OPEN, MENAGERIE_CLOSED,
   STUDY_PARLOUR, KITCHEN_BEDROOM, ACHIEVEMENT_GALLERY, QUEST_NEXUS, COMBAT,
   COSTUME, ALTAR, PORTAL, WORKSHOP
@@ -21,13 +21,13 @@ ERSHouseRoom = (
 ```
 *)
 {$SCOPEDENUMS ON}
-  ERSHouseRoom = (
+  EHouseRoomSprite = (
     UNKNOWN, GARDEN, SUPERIOR_GARDEN, MENAGERIE_OPEN, MENAGERIE_CLOSED,
     STUDY_PARLOUR, KITCHEN_BEDROOM, ACHIEVEMENT_GALLERY, QUEST_NEXUS, COMBAT,
     COSTUME, ALTAR, PORTAL, WORKSHOP
   );
 
-  ERSHouseDecoration = (
+  EHouseDecor = (
     WOOD, STONE, WHITE_STONE, FREMENNIK_WOOD, TROPICAL_WOOD, FANCY_STONE, DEATHLY, TWISTED, HOSIDIUS, WINTER
   );
 
@@ -39,9 +39,9 @@ type
   TPOHMap = record
     AMOUNT, SIZE: Int32;
     Map: TMufasaBitmap;
-    Rooms: array of array of ERSHouseRoom;
+    Rooms: array of array of EHouseRoomSprite;
     RoomsMap: TMufasaBitmap;
-    ERoomBitmaps: array [ERSHouseRoom] of TMufasaBitmap;
+    ERoomBitmaps: array [EHouseRoomSprite] of TMufasaBitmap;
     GrassColor: Int32;
   end;
 ```
@@ -51,9 +51,9 @@ All `TPOHMap` methods are helper methods for the {ref}`TPOHHandler` and you shou
   TPOHMap = record
     AMOUNT, SIZE: Int32;
     Map: TMufasaBitmap;
-    Rooms: array of array of ERSHouseRoom;
+    Rooms: array of array of EHouseRoomSprite;
     RoomsMap: TMufasaBitmap;
-    ERoomBitmaps: array [ERSHouseRoom] of TMufasaBitmap;
+    ERoomBitmaps: array [EHouseRoomSprite] of TMufasaBitmap;
     GrassColor: Int32;
   end;
 
@@ -67,11 +67,11 @@ You do not have to call it yourself.
 *)
 procedure TPOHMap.Free();
 var
-  room: ERSHouseRoom;
+  room: EHouseRoomSprite;
 begin
   Self.Map.Free();
   Self.RoomsMap.Free();
-  for room := Low(ERSHouseRoom) to High(ERSHouseRoom) do
+  for room := Low(EHouseRoomSprite) to High(EHouseRoomSprite) do
     if Self.ERoomBitmaps[room] <> nil then
       Self.ERoomBitmaps[room].Free();
 end;
@@ -107,9 +107,9 @@ end;
 (*
 ## TPOHMap.GetRoomBitmapBox()
 ```pascal
-function TPOHMap.GetRoomBitmapBox(room: ERSHouseRoom): TBox;
+function TPOHMap.GetRoomBitmapBox(room: EHouseRoomSprite): TBox;
 ```
-Internal method used to get the box of the {ref}`ERSHouseRoom` you pass in.
+Internal method used to get the box of the {ref}`EHouseRoomSprite` you pass in.
 
 This box is a box of the following image:
 
@@ -119,11 +119,11 @@ Example:
 ```pascal
 {$I WaspLib/optional/handlers/poh.simba}
 begin
-  WriteLn POH.Map.GetRoomBitmapBox(ERSHouseRoom.SUPERIOR_GARDEN);
+  WriteLn POH.Map.GetRoomBitmapBox(EHouseRoomSprite.SUPERIOR_GARDEN);
 end;
 ```
 *)
-function TPOHMap.GetRoomBitmapBox(room: ERSHouseRoom): TBox;
+function TPOHMap.GetRoomBitmapBox(room: EHouseRoomSprite): TBox;
 var
   i: Int32;
 begin
@@ -134,9 +134,9 @@ end;
 (*
 ## TPOHMap.GetRoomBitmap()
 ```pascal
-function TPOHMap.GetRoomBitmap(room: ERSHouseRoom; color: Int32 = -1): TMufasaBitmap;
+function TPOHMap.GetRoomBitmap(room: EHouseRoomSprite; color: Int32 = -1): TMufasaBitmap;
 ```
-Internal method used to retrieve a bitmap of the {ref}`ERSHouseRoom` you pass in.
+Internal method used to retrieve a bitmap of the {ref}`EHouseRoomSprite` you pass in.
 
 Example:
 ```pascal
@@ -144,13 +144,13 @@ Example:
 var
   bmp: TMufasaBitmap;
 begin
-  bmp := POH.Map.GetRoomBitmap(ERSHouseRoom.SUPERIOR_GARDEN);
+  bmp := POH.Map.GetRoomBitmap(EHouseRoomSprite.SUPERIOR_GARDEN);
   bmp.Debug();
   bmp.Free();
 end;
 ```
 *)
-function TPOHMap.GetRoomBitmap(room: ERSHouseRoom; color: Int32 = -1): TMufasaBitmap;
+function TPOHMap.GetRoomBitmap(room: EHouseRoomSprite; color: Int32 = -1): TMufasaBitmap;
 var
   b: TBox;
 begin
@@ -182,7 +182,7 @@ Example:
 var
   bmp: TMufasaBitmap;
 begin
-  bmp := POH.Map.GetRoomBitmap(ERSHouseRoom.MENAGERIE_OPEN);
+  bmp := POH.Map.GetRoomBitmap(EHouseRoomSprite.MENAGERIE_OPEN);
   bmp.Debug();
   Wait(2000);
   TPOHMap.RotateBitmap(bmp, 1);
@@ -214,19 +214,19 @@ end;
 (*
 ## TPOHMap.WriteRoom()
 ```pascal
-procedure TPOHMap.WriteRoom(room: ERSHouseRoom; index: TPoint);
+procedure TPOHMap.WriteRoom(room: EHouseRoomSprite; index: TPoint);
 ```
 Internal method used to write a room to `TPOHMap.Rooms` cache.
-This uses an `TPoint` as a room `index` in a 2D array of {ref}`ERSHouseRoom`.
+This uses an `TPoint` as a room `index` in a 2D array of {ref}`EHouseRoomSprite`.
 
 Unless you know what you are doing, you definitly should not use this for anything.
 
 Example:
 ```pascal
-POH.Map.WriteRoom(ERSHouseRoom.SUPERIOR_GARDEN, [3,3]);
+POH.Map.WriteRoom(EHouseRoomSprite.SUPERIOR_GARDEN, [3,3]);
 ```
 *)
-procedure TPOHMap.WriteRoom(room: ERSHouseRoom; index: TPoint);
+procedure TPOHMap.WriteRoom(room: EHouseRoomSprite; index: TPoint);
 begin
   if not InRange(index.X, 0, High(Self.Rooms)) then
     TerminateScript('index.X is not between 0 and ' + ToStr(High(Self.Rooms)) + ', got ' + ToStr(index));
@@ -239,7 +239,7 @@ end;
 (*
 ## TPOHMap.ReadRoom()
 ```pascal
-function TPOHMap.ReadRoom(index: TPoint): ERSHouseRoom;
+function TPOHMap.ReadRoom(index: TPoint): EHouseRoomSprite;
 ```
 Internal method used to read a cached room in `TPOHMap.Rooms`.
 This uses an `TPoint` as a room `index`.
@@ -251,7 +251,7 @@ Example:
 WriteLn POH.Map.ReadRoom([3,3]);
 ```
 *)
-function TPOHMap.ReadRoom(index: TPoint): ERSHouseRoom;
+function TPOHMap.ReadRoom(index: TPoint): EHouseRoomSprite;
 begin
   if not InRange(index.X, 0, High(Self.Rooms)) then
     TerminateScript('p.X is not between 0 and ' + ToStr(High(Self.Rooms)) + ', got ' + ToStr(index));
@@ -311,25 +311,25 @@ end;
 (*
 ## TPOHMap.DrawMap()
 ```pascal
-procedure TPOHMap.DrawMap(bmp: TMufasaBitmap; room: ERSHouseRoom; p: TPoint);
-procedure TPOHMap.DrawMap(room: ERSHouseRoom; color: Int32; p: TPoint); overload;
+procedure TPOHMap.DrawMap(bmp: TMufasaBitmap; room: EHouseRoomSprite; p: TPoint);
+procedure TPOHMap.DrawMap(room: EHouseRoomSprite; color: Int32; p: TPoint); overload;
 ```
 Methods used to draw the POH map and cache the rooms drawn in `TPOHMap.Rooms`.
 
 Example:
 ```pascal
-POH.Map.DrawMap(ERSHouseRoom.SUPERIOR_GARDEN, POH.GrassColor, [3,3]);
+POH.Map.DrawMap(EHouseRoomSprite.SUPERIOR_GARDEN, POH.GrassColor, [3,3]);
 POH.Map.Debug();
 POH.Map.PrintRooms();
 ```
 *)
-procedure TPOHMap.DrawMap(bmp: TMufasaBitmap; room: ERSHouseRoom; p: TPoint);
+procedure TPOHMap.DrawMap(bmp: TMufasaBitmap; room: EHouseRoomSprite; p: TPoint);
 begin
   Self.WriteRoom(room, p);
   Self.Map.DrawBitmap(bmp, [Self.SIZE * p.X, Self.SIZE * p.Y]);
 end;
 
-procedure TPOHMap.DrawMap(room: ERSHouseRoom; color: Int32; p: TPoint); overload;
+procedure TPOHMap.DrawMap(room: EHouseRoomSprite; color: Int32; p: TPoint); overload;
 var
   bmp: TMufasaBitmap;
 begin
@@ -359,7 +359,7 @@ end;
 (*
 ## TPOHMap.GetRoom()
 ```pascal
-function TPOHMap.GetRoom(p: TPoint): ERSHouseRoom;
+function TPOHMap.GetRoom(p: TPoint): EHouseRoomSprite;
 ```
 Helper method that returns the cached room in `TPOHMap.Rooms`with the help of
 {ref}`TPOHMap.GetPointIndex()` and {ref}`TPOHMap.ReadRoom()`.
@@ -369,7 +369,7 @@ Example:
 WriteLn POH.Map.GetRoom(POH.GetPos());
 ```
 *)
-function TPOHMap.GetRoom(p: TPoint): ERSHouseRoom;
+function TPOHMap.GetRoom(p: TPoint): EHouseRoomSprite;
 begin
   Result := Self.ReadRoom(Self.GetPointIndex(p));
 end;
@@ -461,7 +461,7 @@ begin
     with matrixSM.ArgMax() do
     begin
       p := Point(X - (sampleSize - s), Y - (sampleSize - s)).Offset(sampleSize - 3, sampleSize - 5);
-      if Self.GetRoom(p) <> ERSHouseRoom.UNKNOWN then
+      if Self.GetRoom(p) <> EHouseRoomSprite.UNKNOWN then
         resultSM += p
       else
         Dec(i);
@@ -472,7 +472,7 @@ begin
     with matrixLG.ArgMax() do
     begin
       p := Point(X, Y).Offset(sampleSize - 3, sampleSize - 5);
-      if Self.GetRoom(p) <> ERSHouseRoom.UNKNOWN then
+      if Self.GetRoom(p) <> EHouseRoomSprite.UNKNOWN then
         resultLG += p
       else
         Dec(i);

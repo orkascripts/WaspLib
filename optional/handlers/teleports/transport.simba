@@ -368,8 +368,8 @@ var
   startPosition: TPoint := ScriptWalker^.GetMyPos();
   teleportTabName: String := teleportLocation.destination.Lower() + " teleport";
   teleportTabOption: String := 'Break';
-  spellBook : ERSSpellBook;
-  spell     : ERSSpell;
+  spellBook : ESpellBook;
+  spell     : ESpell;
 begin
   Self.DebugLn('Looking for ' + teleportTabName);
   if not useMagic then
@@ -411,19 +411,19 @@ begin
   end;
 
   case teleportLocation.teleportType of
-    ETeleportType.ANCIENT_MAGICKS: spellBook := ERSSpellBook.ANCIENT;
-    ETeleportType.ARCEUUS_MAGIC: spellBook := ERSSpellBook.ARCEUUS;
-    ETeleportType.LUNAR_MAGIC: spellBook := ERSSpellBook.LUNAR;
-    ETeleportType.NORMAL_MAGIC: spellBook := ERSSpellBook.STANDARD;
+    ETeleportType.ANCIENT_MAGICKS: spellBook := ESpellBook.ANCIENT;
+    ETeleportType.ARCEUUS_MAGIC: spellBook := ESpellBook.ARCEUUS;
+    ETeleportType.LUNAR_MAGIC: spellBook := ESpellBook.LUNAR;
+    ETeleportType.NORMAL_MAGIC: spellBook := ESpellBook.STANDARD;
   end;
 
   if Magic.GetSpellBook <> spellBook then begin
     Self.DebugLn('Not on the correct spellbook we need ' + ToStr(spellbook));
 
-    if (Stats.GetLevel(ESkill.MAGIC) >= 96) and (Magic.GetSpellBook = ERSSpellBook.LUNAR) then
+    if (Stats.GetLevel(ESkill.MAGIC) >= 96) and (Magic.GetSpellBook = ESpellBook.LUNAR) then
     begin
       Self.DebugLn('Attempting to cast spellbook swap');
-      Magic.ClickSpell(ERSSpell.SPELLBOOK_SWAP);
+      Magic.ClickSpell(ESpell.SPELLBOOK_SWAP);
       if not WaitUntil(('spell' in Chat.GetChatTitle), 100, 3000) then begin
         Self.DebugLn('Timed out casting spellbook swap');
         Exit(False);
@@ -443,11 +443,11 @@ begin
   end;
 
   case teleportLocation.destination of
-    'Watchtower Yanille': Exit(Magic.CastSpell(ERSSpell.WATCHTOWER_TELEPORT, 'Yanille'));
-    'Camelot Bank': Exit(Magic.CastSpell(ERSSpell.CAMELOT_TELEPORT, 'Seers'''));
-    //'Grand Exchange': Exit(Magic.CastSpell(ERSSpell.VARROCK_TELEPORT, 'Grand Exchange'));
+    'Watchtower Yanille': Exit(Magic.CastSpell(ESpell.WATCHTOWER_TELEPORT, 'Yanille'));
+    'Camelot Bank': Exit(Magic.CastSpell(ESpell.CAMELOT_TELEPORT, 'Seers'''));
+    //'Grand Exchange': Exit(Magic.CastSpell(ESpell.VARROCK_TELEPORT, 'Grand Exchange'));
     else
-      for spell in ERSSPELL do
+      for spell in ESpell do
         if teleportLocation.destination.Upper.Replace(' ', '').Replace('''', '') in ToStr(spell).Replace('_', '').Replace('''', '') then
           Break;
   end;
@@ -585,13 +585,13 @@ begin
   end;
 
   // to do: add more ways to get to bank
-  if Magic.CastSpell(ERSSpell.LUMBRIDGE_HOME_TELEPORT) then
+  if Magic.CastSpell(ESpell.LUMBRIDGE_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.LUMBRIDGE.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ERSSpell.EDGEVILLE_HOME_TELEPORT) then
+  else if Magic.CastSpell(ESpell.EDGEVILLE_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.EDGEVILLE.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ERSSpell.MOONCLAN_TELEPORT) then
+  else if Magic.CastSpell(ESpell.MOONCLAN_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.MOONCLAN.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ERSSpell.ARCEUUS_HOME_TELEPORT) then
+  else if Magic.CastSpell(ESpell.ARCEUUS_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.CIS_NORTH_OF_THE_ARCEUUS_LIBRARY.worldPoint, 500, 500)), 200, 15000)
   else raise "Couldn't go home!";
 

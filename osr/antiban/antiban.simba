@@ -184,26 +184,26 @@ begin
   begin
     if Self.BioDice(50) then
     begin
-      GameTabs.Open(ERSGameTab(SRL.NormalRange(Ord(ERSGameTab.COMBAT), Ord(ERSGameTab.MAGIC))));
+      GameTabs.Open(EGameTab(SRL.NormalRange(Ord(EGameTab.COMBAT), Ord(EGameTab.MAGIC))));
       System.Wait(300, 3000, wdLeft);
     end;
 
-    GameTabs.Open(ERSGameTab(Random(Ord(ERSGameTab.COMBAT), Ord(ERSGameTab.MAGIC))));
+    GameTabs.Open(EGameTab(Random(Ord(EGameTab.COMBAT), Ord(EGameTab.MAGIC))));
   end else
   begin
     if Random() < 0.50 then
     begin
-      GameTabs.Open(ERSGameTab(SRL.NormalRange(Ord(ERSGameTab.CLAN), Ord(ERSGameTab.MUSIC))));
+      GameTabs.Open(EGameTab(SRL.NormalRange(Ord(EGameTab.CLAN), Ord(EGameTab.MUSIC))));
       System.Wait(0, 2500, wdLeft);
     end;
 
-    GameTabs.Open(ERSGameTab(Random(Ord(ERSGameTab.CLAN), Ord(ERSGameTab.MUSIC))));
+    GameTabs.Open(EGameTab(Random(Ord(EGameTab.CLAN), Ord(EGameTab.MUSIC))));
   end;
 end;
 
 procedure TAntiban.ToggleTab();
 var
-  currentTab: ERSGameTab;
+  currentTab: EGameTab;
 begin
   currentTab := GameTabs.GetCurrentTab();
   Self.DebugLn('Toggling GameTabs');
@@ -352,7 +352,7 @@ end;
 
 procedure TAntiban.OpenSkill(Skill: ESkill; time: Int32; ReturnToCurrentTab: Boolean);
 var
-  Tab: ERSGameTab;
+  Tab: EGameTab;
 begin
   Self.DebugLn('Opening skill: ' + ToString(Skill));
 
@@ -387,12 +387,12 @@ end;
 procedure TAntiban.RandomAchievementTab();
 begin
   Self.DebugLn('Random Achievement Tab');
-  Achievements.OpenTab(ERSAchievementTab(Random(0, Ord(High(ERSAchievementTab)))));
+  Achievements.OpenTab(EAchievementTab(Random(0, Ord(High(EAchievementTab)))));
 end;
 
 procedure TAntiban.ToggleAchievementTabs();
 var
-  currentTab: ERSAchievementTab;
+  currentTab: EAchievementTab;
   time: Int32;
   done: Int64;
 begin
@@ -406,7 +406,7 @@ begin
   if Self.BioDice(50) then
   begin
     case Achievements.GetCurrentTab() of
-      ERSAchievementTab.QUESTS, ERSAchievementTab.DIARIES:
+      EAchievementTab.QUESTS, EAchievementTab.DIARIES:
         Achievements.RandomScroll(Achievements.GetScrollPosition() < 50);
     end;
   end;
@@ -560,13 +560,13 @@ end;
 (* TODO: Fix bank buttons
 procedure TAntiban.RandomBankButton();
 var
-  RandomButton: ERSBankButton;
+  RandomButton: EBankButton;
   BankButton: TGameButton;
 begin
   if not Bank.IsOpen then
     Exit;
 
-  RandomButton := ERSBankButton(Random(2, 10));
+  RandomButton := EBankButton(Random(2, 10));
   BankButton := Bank.GetButton(RandomButton);
   Self.DebugLn('Clicking ' + ToStr(RandomButton) + ' bank button');
   BankButton.Enable;
@@ -583,7 +583,7 @@ end;
 
 
 //by Flight
-procedure TAntiBan.HoverMSTile(dotType: ERSMinimapDot; rightClick: Boolean = False);
+procedure TAntiBan.HoverMSTile(dotType: EMinimapDot; rightClick: Boolean = False);
 var
   tries: Int32;
   a: Double;
@@ -619,19 +619,19 @@ end;
 //by Flight
 procedure TAntiban.HoverMSNPCs();
 begin
-  Self.HoverMSTile(ERSMinimapDot.NPC);
+  Self.HoverMSTile(EMinimapDot.NPC);
 end;
 
 //by Flight
 procedure TAntiban.HoverMSPlayers();
 begin
-  Self.HoverMSTile(ERSMinimapDot.PLAYER);
+  Self.HoverMSTile(EMinimapDot.PLAYER);
 end;
 
 //by Flight
 procedure TAntiban.HoverMSItems();
 begin
-  Self.HoverMSTile(ERSMinimapDot.ITEM);
+  Self.HoverMSTile(EMinimapDot.ITEM);
 end;
 
 

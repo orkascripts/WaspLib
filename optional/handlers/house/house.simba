@@ -87,7 +87,7 @@ The core record used to handle navigating a POH.
     Entrance: TObjectV2;
 
     TeleportMode: EHouseTeleportMode;
-    CapeTab: ERSGameTab;
+    CapeTab: EGameTab;
     TeleportPlace: EHouseTeleportPlace;
     HouseTeleportItem: TItem;
   end;
@@ -368,7 +368,7 @@ begin
   Self.Entrance.Finder.Colors += CTS2(6316135, 8, 0.28, 0.12);
   Self.Entrance.Finder.Colors += CTS2(9379961, 30, 0.16, 1.76);
 
-  Self.CapeTab := ERSGameTab.UNKNOWN;
+  Self.CapeTab := EGameTab.UNKNOWN;
 
   Self.IsSetup := True;
 end;
@@ -606,9 +606,9 @@ begin
       begin
         if not Magic.Open() then
           Exit;
-        if not Magic.ContainsSpell(ERSSpell.TELEPORT_TO_HOUSE) then
+        if not Magic.ContainsSpell(ESpell.TELEPORT_TO_HOUSE) then
           RaiseException('Can''t find teleport to house spell.');
-        if not Magic.CastSpell(ERSSpell.TELEPORT_TO_HOUSE, 'Cast') then
+        if not Magic.CastSpell(ESpell.TELEPORT_TO_HOUSE, 'Cast') then
           Exit;
       end;
     EHouseTeleportMode.TABLET:
@@ -624,7 +624,7 @@ begin
       end;
     EHouseTeleportMode.CAPE:
     begin
-      if Self.CapeTab <> ERSGameTab.UNKNOWN then GameTabs.Open(Self.CapeTab);
+      if Self.CapeTab <> EGameTab.UNKNOWN then GameTabs.Open(Self.CapeTab);
       if not CAPES.Interact(Self.HouseTeleportItem, 'Tele to POH') then Exit;
       Self.CapeTab := GameTabs.GetCurrentTab();
     end;

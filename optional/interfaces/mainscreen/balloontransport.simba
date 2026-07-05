@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  ERSBalloonButton = (
+  EBalloonButton = (
     GRAND_TREE_BALLOON, CASTLE_WARS_BALLOON, ENTRANA_BALLOON,
     TAVERLEY_BALLOON, CRAFTING_GUILD_BALLOON, VARROCK_BALLOON,
     CLOSE_BALLOON
@@ -32,22 +32,22 @@ begin
   alignment.MaxHeight := 334;
 end;
 
-function TBalloonTransport.GetButton(button: ERSBalloonButton): TGameButton;
+function TBalloonTransport.GetButton(button: EBalloonButton): TGameButton;
 begin
   case button of
-    ERSBalloonButton.GRAND_TREE_BALLOON:
+    EBalloonButton.GRAND_TREE_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 52, Self.Bounds().Y1 + 130, Self.Bounds().X2 - 385, Self.Bounds().Y2 - 162);
-    ERSBalloonButton.CASTLE_WARS_BALLOON:
+    EBalloonButton.CASTLE_WARS_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 62, Self.Bounds().Y1 + 235, Self.Bounds().X2 - 365, Self.Bounds().Y2 - 55);
-    ERSBalloonButton.ENTRANA_BALLOON:
+    EBalloonButton.ENTRANA_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 198, Self.Bounds().Y1 + 122, Self.Bounds().X2 - 240, Self.Bounds().Y2 - 185);
-    ERSBalloonButton.TAVERLEY_BALLOON:
+    EBalloonButton.TAVERLEY_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 265, Self.Bounds().Y1 + 58, Self.Bounds().X2 - 167, Self.Bounds().Y2 - 250);
-    ERSBalloonButton.CRAFTING_GUILD_BALLOON:
+    EBalloonButton.CRAFTING_GUILD_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 290, Self.Bounds().Y1 + 138, Self.Bounds().X2 - 140, Self.Bounds().Y2 - 155);
-    ERSBalloonButton.VARROCK_BALLOON:
+    EBalloonButton.VARROCK_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 358, Self.Bounds().Y1 + 32, Self.Bounds().X2 - 80, Self.Bounds().Y2 - 280);
-    ERSBalloonButton.CLOSE_BALLOON:
+    EBalloonButton.CLOSE_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 481, Self.Bounds().Y1 + 10, Self.Bounds().X2 - 8, Self.Bounds().Y2 - 303);
   end;
 
@@ -60,8 +60,8 @@ function TBalloonTransport.GetButtons(): TGameButtonArray;
 var
   i: Int32;
 begin
-  for i := 0 to Ord(High(ERSBalloonButton)) do
-    Result += Self.GetButton(ERSBalloonButton(i));
+  for i := 0 to Ord(High(EBalloonButton)) do
+    Result += Self.GetButton(EBalloonButton(i));
 end;
 
 function TBalloonTransport.IsOpen(): Boolean;

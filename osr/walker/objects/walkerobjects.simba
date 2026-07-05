@@ -630,7 +630,7 @@ begin
 
   Result += '  obj.Filter := [' + ToStr(Self.Filter.Walker) + ', ' +ToStr(Self.Filter.MinimapDot) + ', ' +ToStr(Self.Filter.Finder) + ', ' + ToStr(Self.Filter.UpText) + '];' + LineEnding;
   Result += '  obj.Walker := @MyWalker;' + LineEnding;
-  Result += '  obj.MapObjectType := ERSMapObjectType.OBJ;' + LineEnding;
+  Result += '  obj.MapObjectType := EGameMapObjectType.OBJ;' + LineEnding;
   Result += '  obj.TrackTarget := False;' + LineEnding;
   Result += '  Objects.Add(obj);' + LineEnding;
   Result += 'end;' + LineEnding + LineEnding;
@@ -1187,12 +1187,12 @@ type
 
 TMMDot are a type of TWalkerObject.
 This are meant to be TWalkerObjects that have a minimap dot so TMMDot.Filter.MinimapDot is True by default and shouldn't be changed.
-This also have a **DotType** variable for the type of ERSMinimapDot they have (PLAYER, NPC, ITEM) and a **DotFilter** which is used to
+This also have a **DotType** variable for the type of EMinimapDot they have (PLAYER, NPC, ITEM) and a **DotFilter** which is used to
 filter mmdots in/out of circles and/or polygons so we only focus on the TMMDots we want.
 *)
   TMMDot = record(TWalkerObject)
     ClosestDot: TPoint;
-    DotType: ERSMinimapDot;
+    DotType: EMinimapDot;
     DotFilter: TDotFilterArray;
   end;
 
@@ -1651,7 +1651,7 @@ begin
       if trackTarget then
         Mouse.OnMovingEx := @Self._UpdateTarget;
 
-      if Self.DotType = ERSMinimapDot.ITEM then
+      if Self.DotType = EMinimapDot.ITEM then
         Mouse.Move(tpa.Mean())
       else
         Mouse.Move(tpa.RandomValue());
@@ -1713,7 +1713,7 @@ begin
       if trackTarget then
         Mouse.OnMovingEx := @Self._UpdateTarget;
 
-      if Self.DotType = ERSMinimapDot.ITEM then
+      if Self.DotType = EMinimapDot.ITEM then
         Mouse.Move(tpa.Mean())
       else
         Mouse.Move(tpa.RandomValue());
@@ -1965,7 +1965,7 @@ begin
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
-  Self.DotType := ERSMinimapDot.NPC;
+  Self.DotType := EMinimapDot.NPC;
 end;
 
 procedure TNPC.SetupUpText(upText: TStringArray); override;
@@ -1981,7 +1981,7 @@ begin
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
-  Self.DotType := ERSMinimapDot.NPC;
+  Self.DotType := EMinimapDot.NPC;
 end;
 
 procedure TGroundItem.SetupUpText(upText: TStringArray); override;
@@ -1997,7 +1997,7 @@ begin
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
-  Self.DotType := ERSMinimapDot.ITEM;
+  Self.DotType := EMinimapDot.ITEM;
 end;
 
 procedure TPlayer.SetupUpText(upText: TStringArray); override;
@@ -2013,7 +2013,7 @@ begin
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
-  Self.DotType := ERSMinimapDot.PLAYER;
+  Self.DotType := EMinimapDot.PLAYER;
 end;
 
 

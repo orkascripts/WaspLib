@@ -40,7 +40,7 @@ begin
   if RSInterface.IsOpen() then
     Exit(False);
 
-  Mouse.Move(Minimap.Orbs[ERSMinimapOrb.EXPERIENCE]);
+  Mouse.Move(Minimap.Orbs[EMinimapOrb.EXPERIENCE]);
   ChooseOption.Select('Setup');
   Result := WaitUntil(Self.IsOpen, SRL.TruncatedGauss(100, 1000), 3000);
 end;

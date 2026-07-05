@@ -4,7 +4,7 @@
 {$ENDIF}
 
 
-function TGameTabs.FKeyOpen(Tab: ERSGameTab): Boolean; override;
+function TGameTabs.FKeyOpen(Tab: EGameTab): Boolean; override;
 begin
   if Antiban.BioDice(EBioBehavior.FKEY_CHANCE) then
     Result := inherited;

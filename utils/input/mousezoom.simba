@@ -475,13 +475,13 @@ begin
   RSMouseZoom.ZoomLevel := RSMouseZoom.Slider2Level(level);
 end;
 
-function TGameTabs.GetCurrentTab(): ERSGameTab; override;
+function TGameTabs.GetCurrentTab(): EGameTab; override;
 begin
   Result := inherited;
 
-  if Result <> ERSGameTab.OPTIONS then Exit;
+  if Result <> EGameTab.OPTIONS then Exit;
   if WL.GameSettings.MouseWheelConfirmed then Exit;
-  if Options.GetCurrentTab() <> ERSOptionsTab.DISPLAY then Exit;
+  if Options.GetCurrentTab() <> EOptionsTab.DISPLAY then Exit;
 
   WL.GameSettings.MouseWheel := SRL.CountColor(200, Self.Bounds) = 0;
   WL.GameSettings.MouseWheelConfirmed := True;

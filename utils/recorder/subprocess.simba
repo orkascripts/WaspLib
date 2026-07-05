@@ -311,7 +311,7 @@ var RootInterface: TRootInterface;
 type
   TGameTabs = type TInterface;
 
-  ERSGameTab = (
+  EGameTab = (
     COMBAT,
     STATS,
     QUESTS,
@@ -369,7 +369,7 @@ begin
         if (RootInterface.Width >= 948) then
         begin
           Result := Grid(14, 1, 30, 33, [3, 0], [Self.X1() - 197, Self.Y2() - 70]);
-          for I := Ord(ERSGameTab.MUSIC) downto Ord(ERSGameTab.FRIENDS) - 1 do
+          for I := Ord(EGameTab.MUSIC) downto Ord(EGameTab.FRIENDS) - 1 do
             Result[I] := Result[I-1];
         end else
         // Two rows
@@ -382,35 +382,35 @@ begin
   end;
 end;
 
-function TGameTabs.GetTabBox(Tab: ERSGameTab): TBox;
+function TGameTabs.GetTabBox(Tab: EGameTab): TBox;
 var
   Tabs: TBoxArray := Self.GetTabBoxes;
 begin
-  if (Tabs = []) or (Tab = ERSGameTab.UNKNOWN_2) then
+  if (Tabs = []) or (Tab = EGameTab.UNKNOWN_2) then
     Exit;
   Result := Tabs[Tab];
 end;
 
-function TGameTabs.GetCurrentTab(): ERSGametab;
+function TGameTabs.GetCurrentTab(): EGameTab;
 var
   Tabs: TBoxArray;
   I: Int32;
 begin
   Tabs := Self.GetTabBoxes();
 
-  if (Self.Mode = EClientMode.RESIZABLE_MODERN) and (MicroSRL.CountColor(8639715, Tabs[ERSGameTab.LOGOUT]) > 0) then
-    Exit(ERSGameTab.LOGOUT);
+  if (Self.Mode = EClientMode.RESIZABLE_MODERN) and (MicroSRL.CountColor(8639715, Tabs[EGameTab.LOGOUT]) > 0) then
+    Exit(EGameTab.LOGOUT);
 
   for I := 0 to High(Tabs) do
     if (MicroSRL.CountColor(CTS1(1778534, 22), Tabs[I]) > 50) then
-      Exit(ERSGameTab(I));
+      Exit(EGameTab(I));
 
-  Exit(ERSGameTab.UNKNOWN_2);
+  Exit(EGameTab.UNKNOWN_2);
 end;
 
 function TGameTabs.IsQuestsOpen(): Boolean;
 begin
-  Result := Self.GetCurrentTab() = ERSGameTab.QUESTS;
+  Result := Self.GetCurrentTab() = EGameTab.QUESTS;
 end;
 
 var GameTabs: TGameTabs;

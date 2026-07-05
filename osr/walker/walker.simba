@@ -1003,7 +1003,7 @@ This are TWalker methods so they will exist both on TWalker and TWalker.
 
 Example:
 ```pascal
-TPA := Minimap.GetDots(ERSMinimapDot.Player);   //find all player dots and returns their coodinates.
+TPA := Minimap.GetDots(EMinimapDot.Player);   //find all player dots and returns their coodinates.
 Debug(Minimap.GetCuboidArrayMS(TPA, [2, 3, 5], [2, 2])); //This will draw a polygon that is 2 by 3 tiles and height 5 in the mainscreen where each NPC is.
 ```
 *)

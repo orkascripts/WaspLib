@@ -9,7 +9,7 @@ Anvil interface.
 {$ENDIF}
 
 type
-  ERSAnvilButton = (
+  EAnvilButton = (
     QUANTITY_ONE, QUANTITY_FIVE, QUANTITY_TEN,
     QUANTITY_X, QUANTITY_UNSET, QUANTITY_ALL, QUANTITY_CUSTOM
   );
@@ -113,7 +113,7 @@ begin
   Result := Self.FindButtons([[37, 37]]);
 end;
 
-function TAnvil.GetButton(button: ERSAnvilButton): TGameButton;
+function TAnvil.GetButton(button: EAnvilButton): TGameButton;
 var
   buttons: TGameButtonArray;
   b: TGameButton;
@@ -125,7 +125,7 @@ begin
 
   textArray := ['1', '5', '10', 'X', '?', 'All'];
 
-  if button <> ERSAnvilButton.QUANTITY_CUSTOM then
+  if button <> EAnvilButton.QUANTITY_CUSTOM then
   begin
     for b in Buttons do
       if b.FindText(textArray[Ord(button)], FONT_PLAIN_11, [$FFFFFF, $1F98FF]) then
@@ -228,7 +228,7 @@ begin
 end;
 
 
-function TAnvil.SmithSlot(slot: Int32; quantity: ERSAnvilButton): Boolean;
+function TAnvil.SmithSlot(slot: Int32; quantity: EAnvilButton): Boolean;
 begin
   Result := Self.GetButton(quantity).Enable() and Self.ClickSlot(slot);
 end;
@@ -239,7 +239,7 @@ begin
   Result := slot > -1;
 end;
 
-function TAnvil.SmithItem(Item: TItem; Quantity: ERSAnvilButton): Boolean;
+function TAnvil.SmithItem(Item: TItem; Quantity: EAnvilButton): Boolean;
 var
   Slot: Int32;
 begin

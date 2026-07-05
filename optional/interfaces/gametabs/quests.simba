@@ -118,12 +118,12 @@ end;
 
 function TQuests.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab = ERSGameTab.QUESTS);
+  Result := (GameTabs.GetCurrentTab = EGameTab.QUESTS);
 end;
 
 function TQuests.Open(): Boolean;
 begin
-  Result := GameTabs.Open(ERSGameTab.QUESTS);
+  Result := GameTabs.Open(EGameTab.QUESTS);
 end;
 
 function TQuests.GetCurrentTab(): ERSQuestTab;
@@ -138,7 +138,7 @@ var
   i: Int32;
 begin
   for i := 0 to High(COLORS) do
-    if SRL.CountColor(COLORS[i], GameTabs.Boxes[ERSGameTab.QUESTS]) > 0 then
+    if SRL.CountColor(COLORS[i], GameTabs.Boxes[EGameTab.QUESTS]) > 0 then
       Exit(ERSQuestTab(i));
 end;
 

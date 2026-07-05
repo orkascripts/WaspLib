@@ -11,12 +11,12 @@ Extends SRL's TMagic.
 (*
 ## Magic.SpellWasCast
 ```pascal
-function TMagic.SpellWasCast(spell: ERSSpell): Boolean;
+function TMagic.SpellWasCast(spell: ESpell): Boolean;
 ```
 
 Internal helper function to decide wether we cast a spell or not.
 *)
-function TMagic.SpellWasCast(spell: ERSSpell): Boolean; override;
+function TMagic.SpellWasCast(spell: ESpell): Boolean; override;
 begin
   Result := inherited() or XPBar.EarnedXP();
 end;
@@ -24,13 +24,13 @@ end;
 (*
 ## Magic.CastSpell
 ```pascal
-function TMagic.CastSpell(spell: ERSSpell): Boolean; override;
+function TMagic.CastSpell(spell: ESpell): Boolean; override;
 ```
 
 Overrides the existing SRL TMagic.CastSpell() for better cast detection with
 the usage of WaspLib's TMagic.SpellWasCast().
 *)
-function TMagic.CastSpell(spell: ERSSpell; option: String = ''): Boolean; override;
+function TMagic.CastSpell(spell: ESpell; option: String = ''): Boolean; override;
 begin
   XPBar.EarnedXP();
   Result := inherited;
@@ -135,10 +135,10 @@ WriteLn Magic.GetBookSpellCount();
 function TMagic.GetBookSpellCount(): Int32;
 begin
   case Self.GetSpellBook() of
-    ERSSpellBook.STANDARD: Result := Ord(STANDARD_SPELL_LAST) - Ord(STANDARD_SPELL_FIRST);
-    ERSSpellBook.ARCEUUS:  Result := Ord(ARCEUUS_SPELL_LAST) - Ord(ARCEUUS_SPELL_FIRST);
-    ERSSpellBook.LUNAR:    Result := Ord(LUNAR_SPELL_LAST) - Ord(LUNAR_SPELL_FIRST);
-    ERSSpellBook.ANCIENT:  Result := Ord(ANCIENT_SPELL_LAST) - Ord(ANCIENT_SPELL_FIRST);
+    ESpellBook.STANDARD: Result := Ord(STANDARD_SPELL_LAST) - Ord(STANDARD_SPELL_FIRST);
+    ESpellBook.ARCEUUS:  Result := Ord(ARCEUUS_SPELL_LAST) - Ord(ARCEUUS_SPELL_FIRST);
+    ESpellBook.LUNAR:    Result := Ord(LUNAR_SPELL_LAST) - Ord(LUNAR_SPELL_FIRST);
+    ESpellBook.ANCIENT:  Result := Ord(ANCIENT_SPELL_LAST) - Ord(ANCIENT_SPELL_FIRST);
   end;
 
   Result += 1;

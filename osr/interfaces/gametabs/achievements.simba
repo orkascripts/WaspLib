@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  ERSAchievementTab = (
+  EAchievementTab = (
     SUMMARY,
     QUESTS,
     DIARIES,
@@ -19,7 +19,7 @@ type
     TIME_PLAYED
   );
 
-  ERSAchievementDiary = (
+  EAchievementDiary = (
     ARDOUGNE,
     DESERT,
     FALADOR,
@@ -35,11 +35,11 @@ type
   );
 
   TAchievements = record(TInterface)
-    Tabs: array [ERSAchievementTab] of TBox;
+    Tabs: array [EAchievementTab] of TBox;
     isPostSetup: Boolean;
   end;
 
-function TAchievements.GetCurrentTab(): ERSAchievementTab;
+function TAchievements.GetCurrentTab(): EAchievementTab;
 const
   COLORS: array of TCTS2Color = [
     [4418165, 11, 0.18, 0.78],
@@ -51,22 +51,22 @@ var
   i: Int32;
 begin
   for i := 0 to High(COLORS) do
-    if SRL.CountColor(COLORS[i], GameTabs.Boxes[ERSGameTab.QUESTS]) > 0 then
-      Exit(ERSAchievementTab(i));
+    if SRL.CountColor(COLORS[i], GameTabs.Boxes[EGameTab.QUESTS]) > 0 then
+      Exit(EAchievementTab(i));
 end;
 
 
 function TAchievements.GetScrollArea(scrollBar: TGameScrollBar): TBox; override;
 var
-  tab: ERSAchievementTab;
+  tab: EAchievementTab;
 begin
   tab := Self.GetCurrentTab();
-  if (tab <> ERSAchievementTab.QUESTS) and (tab <> ERSAchievementTab.DIARIES) then
+  if (tab <> EAchievementTab.QUESTS) and (tab <> EAchievementTab.DIARIES) then
     Exit(scrollBar.SliderRegion);
 
   Result := Self.Bounds;
 
-  if tab = ERSAchievementTab.QUESTS then
+  if tab = EAchievementTab.QUESTS then
   begin
     Result.X1 += 9;
     Result.Y1 += 51;
@@ -101,8 +101,8 @@ begin
 
   //boxes := Grid(3, 1, 55, 19, [7, 0], [Self.Bounds.X1+2, Self.Bounds.Y1 + 5]);
   boxes := Grid(4, 1, 41, 19, [5, 0], [Self.Bounds.X1+2, Self.Bounds.Y1 + 5]);
-  for i := 0 to Ord(High(ERSAchievementTab)) do
-    Self.Tabs[ERSAchievementTab(i)] := boxes[i];
+  for i := 0 to Ord(High(EAchievementTab)) do
+    Self.Tabs[EAchievementTab(i)] := boxes[i];
 end;
 
 procedure TAchievements.ResetAlignment();
@@ -112,8 +112,8 @@ var
 begin
   boxes := Grid(3, 1, 55, 19, [7, 0], [Self.Bounds.X1+2, Self.Bounds.Y1 + 5]);
   for i := 0 to 2 do
-    Self.Tabs[ERSAchievementTab(i)] := boxes[i];
-  Self.Tabs[ERSAchievementTab(3)] := [0,0,0,0];
+    Self.Tabs[EAchievementTab(i)] := boxes[i];
+  Self.Tabs[EAchievementTab(3)] := [0,0,0,0];
 end;
 
 procedure TAchievements.PostSetup();
@@ -128,12 +128,12 @@ end;
 
 function TAchievements.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab = ERSGameTab.QUESTS);
+  Result := (GameTabs.GetCurrentTab = EGameTab.QUESTS);
 end;
 
 function TAchievements.Open(): Boolean;
 begin
-  Result := GameTabs.Open(ERSGameTab.QUESTS);
+  Result := GameTabs.Open(EGameTab.QUESTS);
 end;
 
 
@@ -150,7 +150,7 @@ begin
     Result := Buttons[Button];
 end;
 
-function TAchievements.OpenTab(tab: ERSAchievementTab): Boolean;
+function TAchievements.OpenTab(tab: EAchievementTab): Boolean;
 var
   button: ERSSummaryButton;
 begin
@@ -159,12 +159,12 @@ begin
 
   case Self.GetCurrentTab() of
     tab: Exit(True);
-    ERSAchievementTab.SUMMARY:
-      if ((tab = ERSAchievementTab.QUESTS) or (tab = ERSAchievementTab.DIARIES)) and Antiban.BioDice(EBioBehavior.MOUSE_GRAVITY) then //MOUSE_GRAVITY is not related to this at all but I figure I could use it.
+    EAchievementTab.SUMMARY:
+      if ((tab = EAchievementTab.QUESTS) or (tab = EAchievementTab.DIARIES)) and Antiban.BioDice(EBioBehavior.MOUSE_GRAVITY) then //MOUSE_GRAVITY is not related to this at all but I figure I could use it.
       begin
         case tab of
-          ERSAchievementTab.QUESTS:  button := ERSSummaryButton.QUESTS_COMPLETED;
-          ERSAchievementTab.DIARIES: button := ERSSummaryButton.DIARIES_COMPLETED;
+          EAchievementTab.QUESTS:  button := ERSSummaryButton.QUESTS_COMPLETED;
+          EAchievementTab.DIARIES: button := ERSSummaryButton.DIARIES_COMPLETED;
         end;
 
         Self.GetButton(button).Click();
@@ -190,7 +190,7 @@ begin
   buttons.Draw(bitmap);
 end;
 
-procedure TAchievements.MakeVisible(diary : ERSAchievementDiary);
+procedure TAchievements.MakeVisible(diary : EAchievementDiary);
 var
   CurrentScroll : Int32 := Self.GetScrollPosition;
   Min, Max : Int32;
@@ -228,7 +228,7 @@ begin
   end;
 end;
 
-function TAchievements.GetDiaryBox(diary : ERSAchievementDiary): TBox;
+function TAchievements.GetDiaryBox(diary : EAchievementDiary): TBox;
 const
   EXPECTED_TEXT : TStringArray := ['Ardo', 'Dese', 'ador', 'Frem', 'Kand', 'Karam', 'Kour', 'Lumb', 'Moryt', 'Varr', 'West', 'dern'];
 var
@@ -249,12 +249,12 @@ begin
   Result := [0, 0];
 end;
 
-function TAchievements.GetDiaryLevel(diary : ERSAchievementDiary): Int32;
+function TAchievements.GetDiaryLevel(diary : EAchievementDiary): Int32;
 begin
   if not Self.Open() then Exit(-1);
   if not Self.isPostSetup then
     Self.PostSetup();
-  if not Self.OpenTab(ERSAChievementTab.DIARIES) then Exit(-1);
+  if not Self.OpenTab(EAchievementTab.DIARIES) then Exit(-1);
   Result := Round(SRL.CountColor(CTS2(1357111, 1, 0.01, 0.01), Self.GetDiaryBox(diary)) / 175);
 end;
 

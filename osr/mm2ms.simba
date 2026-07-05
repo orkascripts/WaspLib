@@ -125,7 +125,7 @@ The example below will show you how it could be used to retrieve an accurate pla
 
 Example:
 ```pascal
-P := Minimap.GetDots(ERSMinimapDot.PLAYER)[0];         //find a player dot and returns it's coodinates.
+P := Minimap.GetDots(EMinimapDot.PLAYER)[0];         //find a player dot and returns it's coodinates.
 offset := [2 , 2];                                     //Minimap dots are actually returned with a slight offset of -2, -2 when converting them to the mainscreen.
 Debug(Minimap.GetCuboidMS(P, [1, 1, 7], offset));     //This will draw a polygon around the nearest player.
 ```

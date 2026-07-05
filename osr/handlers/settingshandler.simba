@@ -646,7 +646,7 @@ begin
     if not WaitUntil(XPBar.IsEnabled(), 200, 3000) then
     begin
       Self.DebugLn('CheckXPBarSettings -> XP bar not visible, clicking orb to show it');
-      Mouse.Click(Minimap.Orbs[ERSMinimapOrb.EXPERIENCE], MOUSE_LEFT);
+      Mouse.Click(Minimap.Orbs[EMinimapOrb.EXPERIENCE], MOUSE_LEFT);
       WaitUntil(XPBar.IsEnabled(), 200, 3000);
     end;
   end
@@ -696,7 +696,7 @@ begin
     Self.Setup();
   Self.DebugLn('CheckDisplaySettings -> Checking display settings');
 
-  if not Options.OpenTab(ERSOptionsTab.DISPLAY) then
+  if not Options.OpenTab(EOptionsTab.DISPLAY) then
     Exit;
 
   if Options.GetBrightness() < 100 then
@@ -707,7 +707,7 @@ begin
 
   if GameClient.Mode <> EClientMode.FIXED then
   begin
-    if Options.GetDropDown(ERSOptionsDropDown.CLIENT_MODE).Select('Fixed', MOUSE_LEFT, True, True) then
+    if Options.GetDropDown(EOptionsDropDown.CLIENT_MODE).Select('Fixed', MOUSE_LEFT, True, True) then
     begin
       Self.DebugLn('CheckDisplaySettings -> Client mode set to fixed');
       WaitUntil(GameClient.DetectClientMode(True) = EClientMode.FIXED, 500, 5000);

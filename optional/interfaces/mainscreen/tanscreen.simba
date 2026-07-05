@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  ERSHide = (
+  EHide = (
     SOFT,
     HARD,
     SWAMP_SNAKE,
@@ -41,7 +41,7 @@ begin
   Self.HideSlots := Grid(4, 2, 95, 111, [17, 17], [Self.Bounds.X1 + 28, Self.Bounds.Y1 + 37]);
 end;
 
-function TTanScreen.GetHideBox(hide: ERSHide): TBox;
+function TTanScreen.GetHideBox(hide: EHide): TBox;
 begin
   Result := Self.HideSlots[Ord(hide)];
 end;
@@ -73,18 +73,18 @@ begin
 end;
 
 
-function TTanScreen.CanTan(hide: ERSHide): Boolean;
+function TTanScreen.CanTan(hide: EHide): Boolean;
 begin
   Result := SRL.CountColor($F8C800, Self.GetHideBox(hide)) > 0;
 end;
 
-function TTanScreen.HoverHide(hide: ERSHide): Boolean;
+function TTanScreen.HoverHide(hide: EHide): Boolean;
 begin
   if Result := Self.IsOpen() then
     Mouse.Move(Self.GetHideBox(hide));
 end;
 
-function TTanScreen.ClickHide(hide: ERSHide; option: String = 'Tan All'; waitTime: Int32 = -1): Boolean;
+function TTanScreen.ClickHide(hide: EHide; option: String = 'Tan All'; waitTime: Int32 = -1): Boolean;
 begin
   Result := Self.HoverHide(hide);
   if not Result then Exit;

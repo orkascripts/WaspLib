@@ -53,7 +53,7 @@ begin
   begin
     WL.GameSettings.MaxBrightness := Options.SetMaxBrightness();
 
-    if (MM2MS.ZoomLevel = -1) and Options.IsOpen() and (Options.GetCurrentTab() = ERSOptionsTab.DISPLAY) then
+    if (MM2MS.ZoomLevel = -1) and Options.IsOpen() and (Options.GetCurrentTab() = EOptionsTab.DISPLAY) then
       MM2MS.ZoomLevel := Options.GetZoomLevel();
   end;
 

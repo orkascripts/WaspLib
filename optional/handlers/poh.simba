@@ -199,18 +199,18 @@ end;
 (*
 ## POH.MapRoomObjects()
 ```pascal
-procedure TPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
+procedure TPOHHandler.MapRoomObjects(room: EHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
 ```
 Method responsible for mapping known {ref}`TRoomObject``TRoomObject` coordinates which later can be used to interact with them.
 *)
-procedure TPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
+procedure TPOHHandler.MapRoomObjects(room: EHouseRoomSprite; topLeft: TPoint; roomIndex: TPoint; angle: Double);
 var
   rotation: Int32;
   p, center: TPoint;
   obj: ERSRoomObject;
 begin
   case room of
-    ERSHouseRoom.SUPERIOR_GARDEN:
+    EHouseRoomSprite.SUPERIOR_GARDEN:
     begin
       roomIndex := [roomIndex.X * 32, roomIndex.Y * 32];
       center := roomIndex.Offset(16,16);
@@ -231,7 +231,7 @@ begin
         Self.RoomObjects[obj].AddCoordinates([center]);
     end;
 
-    ERSHouseRoom.ACHIEVEMENT_GALLERY:
+    EHouseRoomSprite.ACHIEVEMENT_GALLERY:
     begin
       roomIndex := [roomIndex.X * 32, roomIndex.Y * 32];
       center := roomIndex.Offset(16,16);
@@ -258,7 +258,7 @@ begin
       end;
     end;
 
-    ERSHouseRoom.QUEST_NEXUS:
+    EHouseRoomSprite.QUEST_NEXUS:
     begin
       roomIndex := [roomIndex.X * 32, roomIndex.Y * 32];
       center := roomIndex.Offset(16,16);
@@ -287,7 +287,7 @@ var
   crop, sample, rotated, bestBMP: TMufasaBitmap;
   i, j, floor, r: Int32;
   colors: TIntegerArray;
-  bestRoom: ERSHouseRoom;
+  bestRoom: EHouseRoomSprite;
   matrix: TSingleMatrix;
   match, bestMatch: Single;
   hasCoreObject: Boolean;
@@ -298,7 +298,7 @@ begin
   for i := 0 to High(minimapTPA) do
   begin
     p := minimapTPA[i];
-    if Self.Map.ReadRoom(indices[i]) <> ERSHouseRoom.UNKNOWN then
+    if Self.Map.ReadRoom(indices[i]) <> EHouseRoomSprite.UNKNOWN then
       Continue;
 
     crop := minimapBMP.Copy(p.X, p.Y, p.X + Self.Map.SIZE-1, p.Y + Self.Map.SIZE-1);
@@ -306,14 +306,14 @@ begin
     colors := crop.GetPixels(FLOOR_COLOR_OFFSETS);
     floor := colors.GetMostCommon();
 
-    for j := 1 to Ord(High(ERSHouseRoom)) do
+    for j := 1 to Ord(High(EHouseRoomSprite)) do
     begin
       case j of
         0..3: if floor <> Self.Map.GrassColor then Continue; //Gardens or OpenMenagerie
         else  if floor = Self.Map.GrassColor then Continue;
       end;
 
-      sample := Self.Map.GetRoomBitmap(ERSHouseRoom(j), floor);
+      sample := Self.Map.GetRoomBitmap(EHouseRoomSprite(j), floor);
       for r := 0 to 3 do
       begin
         rotated := TPOHMap.RotateBitmap(sample, r);
@@ -340,7 +340,7 @@ begin
 
           bestBMP := rotated;
           bestMatch := match;
-          bestRoom := ERSHouseRoom(j);
+          bestRoom := EHouseRoomSprite(j);
 
           Continue;
         end;
@@ -399,7 +399,7 @@ begin
   Self.Map.Map.ReplaceColor(0, Self.Map.GrassColor);
 
   p := [Self.Map.AMOUNT div 2, Self.Map.AMOUNT div 2];
-  Self.Map.DrawMap(ERSHouseRoom.GARDEN, Self.Map.GrassColor, p);
+  Self.Map.DrawMap(EHouseRoomSprite.GARDEN, Self.Map.GrassColor, p);
   topLeft := center.Offset(-14, -10);
   Self.MapAdjacentRooms(minimapBMP, topLeft, p, angle);
 
@@ -506,9 +506,9 @@ end;
 (*
 ## POH.GetCurrentRoom()
 ```pascal
-function TPOHHandler.GetCurrentRoom(): ERSHouseRoom;
+function TPOHHandler.GetCurrentRoom(): EHouseRoom;
 ```
-Returns the current {ref}`ERSHouseRoom` we are on.
+Returns the current {ref}`EHouseRoom` we are on.
 
 Example:
 ```pascal
@@ -516,7 +516,7 @@ POH.Setup(); //call from the northwest tile of your exit portal.
 WriteLn POH.GetCurrentRoom();
 ```
 *)
-function TPOHHandler.GetCurrentRoom(): ERSHouseRoom;
+function TPOHHandler.GetCurrentRoom(): EHouseRoomSprite;
 begin
   Result := Self.Map.GetRoom(Self.Position());
 end;

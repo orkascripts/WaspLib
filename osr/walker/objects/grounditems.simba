@@ -43,7 +43,7 @@ begin
     Finder.ClusterDistance := 3;
     Finder.Erode := 2;
     Finder.Grow := 4;
-    DotType := ERSMinimapDot.ITEM;
+    DotType := EMinimapDot.ITEM;
 
     SetupUpText(['Mark', 'of', 'grace']);
     Finder.Colors += CTS2(1912750, 10, 0.08, 0.45);
@@ -57,7 +57,7 @@ begin
   begin
     _Setup();
     ShapeArray += [[1, 1, 1], 0];
-    DotType := ERSMinimapDot.ITEM;
+    DotType := EMinimapDot.ITEM;
     SetupUpText(['Bird', 'nest']);
     DotFilter.SetupBounds([[4110, 2056], [4148, 2056], [4149, 2093], [4098, 2092], [4097, 2075]], False);
 

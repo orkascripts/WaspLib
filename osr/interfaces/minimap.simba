@@ -262,7 +262,7 @@ end;
 ```pascal
 function TMinimap.HasDotUnder(): Boolean;
 ```
-Checks if the player has a dot under it. This will include all types of ERSMinimapDot.
+Checks if the player has a dot under it. This will include all types of EMinimapDot.
 
 Example:
 ```pascal

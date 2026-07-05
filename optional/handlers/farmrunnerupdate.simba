@@ -1871,20 +1871,20 @@ procedure TFarmRun.HandleDeadPatch(); begin
     Exit;
 
   if Self.ResurrectCrop then begin
-    if (Magic.GetSpellBook = ERSSpellBook.LUNAR) then begin
-      Magic.CastSpell(ERSSpell.SPELLBOOK_SWAP);
+    if (Magic.GetSpellBook = ESpellBook.LUNAR) then begin
+      Magic.CastSpell(ESpell.SPELLBOOK_SWAP);
       if not WaitUntil(('spell' in Chat.GetChatTitle), 0, 3000) then
         Exit;
       Wait(0, 137);
       Chat.ClickOption('Arceuus');
-      if not WaitUntil((Magic.GetSpellBook = ERSSpellBook.ARCEUUS), 0, 3000) then
+      if not WaitUntil((Magic.GetSpellBook = ESpellBook.ARCEUUS), 0, 3000) then
         Exit;
     end;
 
-    if Magic.GetSpellBook <> ERSSpellBook.ARCEUUS then
+    if Magic.GetSpellBook <> ESpellBook.ARCEUUS then
       Exit;
 
-    Magic.ClickSpell(ERSSpell.RESURRECT_CROPS);
+    Magic.ClickSpell(ESpell.RESURRECT_CROPS);
     if Chat.FindMessage('to cast') then begin
       Self.ResurrectCrop := False;
       Self.WriteMsg('Out of runes for resurrect crop. Disabling.');
@@ -1962,14 +1962,14 @@ begin
     Exit;
   end;
 
-  if Magic.GetSpellBook <> ERSSpellBook.LUNAR then begin
+  if Magic.GetSpellBook <> ESpellBook.LUNAR then begin
     SBSTimer.Init(2*ONE_MINUTE);
     Wait(Round(SBSTimer.TimeRemaining/Random(2,5)*Random));
-    if Magic.GetSpellBook <> ERSSpellBook.LUNAR then begin
+    if Magic.GetSpellBook <> ESpellBook.LUNAR then begin
       Self.CleanGrimyHerbs;
       Self.NoteItems;
     end;
-    if not WaitUntil((Magic.GetSpellBook = ERSSpellBook.LUNAR), 13, SBSTimer.TimeRemaining) then begin
+    if not WaitUntil((Magic.GetSpellBook = ESpellBook.LUNAR), 13, SBSTimer.TimeRemaining) then begin
       Self.WriteMsg('Disabling cure plant because you''re one the wrong spellbook.');
       Self.CurePlant := False;
       Exit;
@@ -1979,7 +1979,7 @@ begin
   if not Self.CurrentPatch.Find() then
     Exit;
 
-  if not Magic.CastSpell(ERSSpell.CURE_PLANT) then
+  if not Magic.CastSpell(ESpell.CURE_PLANT) then
     Exit;
 
   Wait(16, 53);
@@ -2134,9 +2134,9 @@ begin
   Self.WriteMsg('Composting at ' + Self.CurrentPatch.Data.Name + ' patch.');
 
   if (Self.CompostMethod = ECompostMethod.FERTILE_SOIL) then begin
-    if not WaitUntil((Magic.GetSpellBook = ERSSpellBook.LUNAR), 1200, 2*ONE_MINUTE) then
+    if not WaitUntil((Magic.GetSpellBook = ESpellBook.LUNAR), 1200, 2*ONE_MINUTE) then
       TerminateScript('Couldn''t compost because you''re on the wrong spellbook for fertile soil.');
-    Magic.CastSpell(ERSSpell.FERTILE_SOIL);
+    Magic.CastSpell(ESpell.FERTILE_SOIL);
   end else if Self.CompostMethod = ECompostMethod.BOTTOMLESS then begin
     Inventory.MouseItem('Bottomless compost bucket');
     if Mainscreen.IsUpText('Fill ') then
@@ -2161,7 +2161,7 @@ begin
     end;
 
     if Self.CompostMethod = ECompostMethod.FERTILE_SOIL then begin
-      if not Magic.IsSelected(ERSSpell.FERTILE_SOIL) then begin
+      if not Magic.IsSelected(ESpell.FERTILE_SOIL) then begin
         Self.WriteMsg('Fertile soil spell isn''t selected anymore');
         Exit;
       end;
@@ -2611,7 +2611,7 @@ label
 var
   item            : TItem         := '';
   items           : TItemArray;
-  spell           : ERSSpell        := ERSSpell.BAKE_PIE;
+  spell           : ESpell        := ESpell.BAKE_PIE;
   b, d: TBox;
   c: Int32;
   transporter: TUniversalTransport;
@@ -2668,7 +2668,7 @@ begin
         if Inventory.ContainsItem(item) then
           Inventory.ClickItem(item, 'Outside')
         else
-          Magic.CastSpell(ERSSpell.TELEPORT_TO_HOUSE, 'Outside');
+          Magic.CastSpell(ESpell.TELEPORT_TO_HOUSE, 'Outside');
       end;
      ETravelMethod.CON_CAPE_HOSIDIUS:
       begin
@@ -2730,22 +2730,22 @@ begin
       end;
     ETravelMethod.HARMONY_ISLAND_TELEPORT:
       begin
-        if not (Magic.GetSpellBook in [ERSSpellBook.ARCEUUS, ERSSpellBook.LUNAR]) then
+        if not (Magic.GetSpellBook in [ESpellBook.ARCEUUS, ESpellBook.LUNAR]) then
           Wait(130*ONE_SECOND);
 
-        if Magic.GetSpellBook = ERSSpellBook.LUNAR then begin
-          Magic.CastSpell(ERSSpell.SPELLBOOK_SWAP);
+        if Magic.GetSpellBook = ESpellBook.LUNAR then begin
+          Magic.CastSpell(ESpell.SPELLBOOK_SWAP);
           if not WaitUntil(('spell' in Chat.GetChatTitle), 0, 3000) then
             Exit;
 
           Wait(0, 137);
           Chat.ClickOption('Arceuus');
 
-          if not WaitUntil((Magic.GetSpellBook = ERSSpellBook.ARCEUUS), 0, 3000) then
+          if not WaitUntil((Magic.GetSpellBook = ESpellBook.ARCEUUS), 0, 3000) then
             Exit;
         end;
 
-        if Magic.GetSpellBook <> ERSSpellBook.ARCEUUS then begin
+        if Magic.GetSpellBook <> ESpellBook.ARCEUUS then begin
           Self.WriteMsg('On the wrong spellbook for fenkenstrain teleport. Skipping!');
           Self.CurrentPatch.Skip := True;
           Exit;
@@ -2756,7 +2756,7 @@ begin
     ETravelMethod.CIVITAS_TELEPORT:
       begin
         wait(250,500);
-        Magic.CastSpell(ERSSpell.CIVITAS_ILLA_FORTIS_TELEPORT, 'Cast');
+        Magic.CastSpell(ESpell.CIVITAS_ILLA_FORTIS_TELEPORT, 'Cast');
       end;
     ETravelMethod.CIVITAS_TABLET:
       begin
@@ -2869,7 +2869,7 @@ begin
       Self.CurrentPatch.Skip := True;
       Exit;
     end;
-  end else if spell <> ERSSpell.BAKE_PIE then begin
+  end else if spell <> ESpell.BAKE_PIE then begin
     if Chat.FindMessage('to cast') then begin
       Self.WriteMsg('Out of runes for ' + ToStr(spell) + '. Skipping patch.');
       Self.CurrentPatch.Skip := True;
@@ -2920,13 +2920,13 @@ var
   Hits     : TItemFinderMatchArray;
 begin
   if Self.StrongholdHerbPatch then
-    Self.StrongholdDiary := Achievements.GetDiaryLevel(ERSAchievementDiary.FREMENNIK);
+    Self.StrongholdDiary := Achievements.GetDiaryLevel(EAchievementDiary.FREMENNIK);
 
   if Self.ArdyWhiteberryPatch or (((Self.ArdyHerbPatch and not Self.HerbSeedEmpty) or (Self.ArdyFlowerPatch and not Self.FlowerSeedEmpty) or (Self.ArdyAllotmentPatches and not Self.AllotmentSeedEmpty)) and Self.ArdougneTP.Contains('cape')) then
-    Self.ArdyDiary := Achievements.GetDiaryLevel(ERSAchievementDiary.ARDOUGNE);
+    Self.ArdyDiary := Achievements.GetDiaryLevel(EAchievementDiary.ARDOUGNE);
 
   if (Self.FallyHerbPatch or Self.FallyFlowerPatch or Self.FallyAllotmentPatches) and Self.FaladorTP.Contains('ring') then
-    Self.LumbyDiary := Achievements.GetDiaryLevel(ERSAchievementDiary.LUMBRIDGE_AND_DRAYNOR);
+    Self.LumbyDiary := Achievements.GetDiaryLevel(EAchievementDiary.LUMBRIDGE_AND_DRAYNOR);
 
   if Self.StrongholdHerbPatch then
   begin

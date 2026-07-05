@@ -26,7 +26,7 @@ begin
 end;
 
 //overriden to use Bank.Close with biohash.
-function TGameTabs.Open(tab: ERSGameTab): Boolean; override;
+function TGameTabs.Open(tab: EGameTab): Boolean; override;
   function _InventoryIterfaceIsOpen(): Boolean;
   begin
     Result := Bank.IsOpen(False) or DepositBox.IsOpen() or Store.IsOpen();

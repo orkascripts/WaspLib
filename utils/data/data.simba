@@ -422,15 +422,15 @@ var
 
 type
 (*
-(ERSAttackType)=
-## type ERSAttackType
+(EAttackType)=
+## type EAttackType
 ```pascal
-ERSAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
+EAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
 ```
 Enum of Attack types in game.
 Can be used to know what to pray for example.
 *)
-  ERSAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
+  EAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
 (*
 (TMonsterDrop)=
 ## type TMonsterDrop
@@ -779,11 +779,11 @@ end;
 (*
 ## TMonsterData.GetAttackTypes()
 ```pascal
-function TMonsterData.GetAttackTypes(Monster: String): array of ERSAttackType;
+function TMonsterData.GetAttackTypes(Monster: String): array of EAttackType;
 ```
-Method used to get an array of ERSAttackType used by the specified monster.
+Method used to get an array of EAttackType used by the specified monster.
 *)
-function TMonsterData.GetAttackTypes(monster: String): array of ERSAttackType;
+function TMonsterData.GetAttackTypes(monster: String): array of EAttackType;
 var
   json: TJSONArray;
   i: Int32;
@@ -792,10 +792,10 @@ begin
 
   for i := 0 to json.High() do
     case json.getString(i) of
-      'stab', 'slash', 'crush': Result += ERSAttackType.MELEE_ATTACK_TYPE;
-      'ranged':   Result += ERSAttackType.RANGED_ATTACK_TYPE;
-      'magic':    Result += ERSAttackType.MAGIC_ATTACK_TYPE;
-      'typeless': Result += ERSAttackType.TYPELESS_ATTACK_TYPE;
+      'stab', 'slash', 'crush': Result += EAttackType.MELEE_ATTACK_TYPE;
+      'ranged':   Result += EAttackType.RANGED_ATTACK_TYPE;
+      'magic':    Result += EAttackType.MAGIC_ATTACK_TYPE;
+      'typeless': Result += EAttackType.TYPELESS_ATTACK_TYPE;
     end;
 end;
 
@@ -924,22 +924,22 @@ end;
 (*
 ## WeaponData.GetAttackType
 ```pascal
-function TWeaponData.GetAttackType(weapon: String): ERSAttackType;
+function TWeaponData.GetAttackType(weapon: String): EAttackType;
 ```
-Returns the ERSAttackType of the weapon specified.
+Returns the EAttackType of the weapon specified.
 
 Example:
 ```pascal
 WriteLn TWeaponData.GetAttackType('Abyssal whip'); //This will print MELEE_ATTACK_TYPE.
 ```
 *)
-function TWeaponData.GetAttackType(weapon: String): ERSAttackType;
+function TWeaponData.GetAttackType(weapon: String): EAttackType;
 begin
   Self.Setup();
   case Self.Data.getJSONObject(weapon).getString('type') of
-    'melee':  Result := ERSAttackType.MELEE_ATTACK_TYPE;
-    'ranged': Result := ERSAttackType.RANGED_ATTACK_TYPE;
-    'magic':  Result := ERSAttackType.MAGIC_ATTACK_TYPE;
+    'melee':  Result := EAttackType.MELEE_ATTACK_TYPE;
+    'ranged': Result := EAttackType.RANGED_ATTACK_TYPE;
+    'magic':  Result := EAttackType.MAGIC_ATTACK_TYPE;
   end;
 end;
 

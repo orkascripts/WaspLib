@@ -231,22 +231,22 @@ function TAlchHandler.SelectSpell(hi: Boolean = True): Boolean;
 var
   attempt: Int32;
   spellStr: String;
-  spell: ERSSpell;
+  spell: ESpell;
 begin
   if hi then
   begin
-    spell := ERSSpell.HIGH_LEVEL_ALCHEMY;
+    spell := ESpell.HIGH_LEVEL_ALCHEMY;
     spellStr := 'h Level Alchemy -';
   end
   else
   begin
-    spell := ERSSpell.LOW_LEVEL_ALCHEMY;
+    spell := ESpell.LOW_LEVEL_ALCHEMY;
     spellStr := 'w Level Alchemy -';
   end;
 
   repeat
     if not Magic.IsSelected(spell) or
-       not GameTabs.FKeyOpen(ERSGameTab.INVENTORY)
+       not GameTabs.FKeyOpen(EGameTab.INVENTORY)
     then
       Magic.CastSpell(spell);
 
@@ -356,7 +356,7 @@ begin
   RSAlchHandler.Setup();
 end;
 
-function TMagic.FindSpell(spell: ERSSpell; out box: TBox; attempts: Int32 = 2): Boolean; override;
+function TMagic.FindSpell(spell: ESpell; out box: TBox; attempts: Int32 = 2): Boolean; override;
 var
   slots: TBoxArray;
   i: Int32;
@@ -366,8 +366,8 @@ begin
   if not Result then
     Exit;
 
-  if (spell <> ERSSpell.LOW_LEVEL_ALCHEMY) and
-     (spell <> ERSSpell.HIGH_LEVEL_ALCHEMY) then
+  if (spell <> ESpell.LOW_LEVEL_ALCHEMY) and
+     (spell <> ESpell.HIGH_LEVEL_ALCHEMY) then
     Exit;
 
   slots := Inventory.GetSlotBoxes();
@@ -379,7 +379,7 @@ begin
     end;
 end;
 
-function TMagic.MouseSpell(spell: ERSSpell): Boolean; override;
+function TMagic.MouseSpell(spell: ESpell): Boolean; override;
 var
   box: TBox;
   upText: String;

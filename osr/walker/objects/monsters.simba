@@ -74,7 +74,7 @@ begin
     Setup(80, 1, [ScriptWalker^.GetMyPos()]);
     UpText := ['level'];
 
-    DotType := ERSMinimapDot.NPC;
+    DotType := EMinimapDot.NPC;
     Filter.Walker := False;
     Filter.Finder := False;
     Filter.UpText := True;

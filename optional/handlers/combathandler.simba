@@ -304,7 +304,7 @@ var
 begin
   monster := MainScreen.PointToMM(msCoord, 0).ToPoint();
   b := Box(monster, 12, 12);
-  dots := Minimap.GetDots(ERSMinimapDot.NPC, b);
+  dots := Minimap.GetDots(EMinimapDot.NPC, b);
   if dots = [] then Exit;
 
   Result := dots.Sorted(monster)[0];
@@ -392,7 +392,7 @@ begin
 
   b := Box(p, Ceil(size), Ceil(size)).Expand(12);
 
-  if not WaitUntil(Length(tmp := Minimap.GetDots(ERSMinimapDot.ITEM, b)) > Length(dots), 300, 3000) then
+  if not WaitUntil(Length(tmp := Minimap.GetDots(EMinimapDot.ITEM, b)) > Length(dots), 300, 3000) then
     Exit(Self.Loot(tmp, attempt+1));
 
   dots := tmp.Difference(dots);
@@ -596,7 +596,7 @@ function TCombatHandler.Terminate(): Boolean;
 begin
   if not MainScreen.FindGrave() then
   begin
-    Magic.CastSpell(ERSSpell.VARROCK_TELEPORT);
+    Magic.CastSpell(ESpell.VARROCK_TELEPORT);
     Wait(10000);
   end;
 
@@ -782,12 +782,12 @@ end;
 
 function TCombatHandler.FindTaggedMonsters(): TPointArray; overload;
 begin
-  Result := Self.FindTaggedMonsters(Minimap.GetDots(ERSMinimapDot.NPC));
+  Result := Self.FindTaggedMonsters(Minimap.GetDots(EMinimapDot.NPC));
 end;
 
 function TCombatHandler.FindRoamingMonsters(): TPointArray;
 begin
-  Result := Minimap.GetDots(ERSMinimapDot.NPC).Offset(2, 2);
+  Result := Minimap.GetDots(EMinimapDot.NPC).Offset(2, 2);
   Result := Result.Difference(Self.FindTaggedMonsters(Result, [0, 0]));
 end;
 

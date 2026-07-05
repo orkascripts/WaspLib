@@ -5,11 +5,11 @@
 
 //Made by CJ
 type
-  ERSGroupingTab = (CHAT_CHANNEL, YOUR_CLAN, ANOTHER_CLAN, ACTIVITY);
-  ERSGroupingButton = (PVP_ARENA, JOIN, TELEPORT);
+  EGroupingTab = (CHAT_CHANNEL, YOUR_CLAN, ANOTHER_CLAN, ACTIVITY);
+  EGroupingButton = (PVP_ARENA, JOIN, TELEPORT);
 
   TGrouping = record(TInterface)
-    Tabs: array [ERSGroupingTab] of TBox;
+    Tabs: array [EGroupingTab] of TBox;
   end;
 
 procedure TGrouping.Setup(); override;
@@ -39,18 +39,18 @@ begin
   Self.ScrollArea.Y2 := Self.Bounds.Y2 - 47;
 
   boxes := Grid(4, 1, 41, 20, [5], [Self.Bounds.X1 + 2, Self.Bounds.Y1 + 4]);
-  for i := 0 to Ord(High(ERSGroupingTab)) do
-    Self.Tabs[ERSGroupingTab(i)] := boxes[i];
+  for i := 0 to Ord(High(EGroupingTab)) do
+    Self.Tabs[EGroupingTab(i)] := boxes[i];
 end;
 
 function TGrouping.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab = ERSGameTab.CLAN);
+  Result := (GameTabs.GetCurrentTab = EGameTab.CLAN);
 end;
 
 function TGrouping.Open(): Boolean;
 begin
-  Result := GameTabs.Open(ERSGameTab.CLAN);
+  Result := GameTabs.Open(EGameTab.CLAN);
 end;
 
 function TGrouping.GetGroupingButtons(): TGameButtonArray;
@@ -94,9 +94,9 @@ begin
     Exit(false);
   end;
 
-  if Self.GetCurrentTab() <> ERSGroupingTab.ACTIVITY then
+  if Self.GetCurrentTab() <> EGroupingTab.ACTIVITY then
   begin
-    if not WaitUntil(Self.OpenTab(ERSGroupingTab.ACTIVITY), 200, 1000) then
+    if not WaitUntil(Self.OpenTab(EGroupingTab.ACTIVITY), 200, 1000) then
     begin
       Writeln("Activity Tab not open");
       Exit;
@@ -180,20 +180,20 @@ begin
   Result := Self.FindButtons([[38,38]]);
 end;
 
-function TGrouping.GetButton(Button: ERSGroupingButton): TGameButton;
+function TGrouping.GetButton(Button: EGroupingButton): TGameButton;
 var
   Buttons: TGameButtonArray := Self.GetButtons;
 begin
-  if Length(Buttons) = Length(ERSGroupingButton) then
+  if Length(Buttons) = Length(EGroupingButton) then
     Result := Buttons[Button];
 end;
 
-function TGrouping.GetCurrentTab(): ERSGroupingTab;
+function TGrouping.GetCurrentTab(): EGroupingTab;
 var
-  tab: ERSGroupingTab;
+  tab: EGroupingTab;
   count : Int32;
 begin
-  for tab := Low(ERSGroupingTab) to High(ERSGroupingTab) do
+  for tab := Low(EGroupingTab) to High(EGroupingTab) do
   begin
     count := SRL.CountColor(2700606, Self.Tabs[tab]) + SRL.CountColor(CTS1(3686730, 5), Self.Tabs[tab]);
     if count > 50 then
@@ -201,7 +201,7 @@ begin
   end;
 end;
 
-function TGrouping.OpenTab(tab: ERSGroupingTab): Boolean;
+function TGrouping.OpenTab(tab: EGroupingTab): Boolean;
 begin
   if Self.GetCurrentTab() = tab then Exit(True);
   Mouse.Click(Self.Tabs[tab], MOUSE_LEFT);
@@ -301,10 +301,10 @@ end;
 var
   Grouping: TGrouping;
 
-function TGameTabs.GetCurrentTab(): ERSGameTab; override;
+function TGameTabs.GetCurrentTab(): EGameTab; override;
 begin
   Result := inherited;
-  if Result = ERSGameTab.UNKNOWN then Result := ERSGameTab.CLAN;
+  if Result = EGameTab.UNKNOWN then Result := EGameTab.CLAN;
 end;
 
 procedure TGameClient.ClientModeChanged(); override;
@@ -374,7 +374,7 @@ begin
     Exit;
   end;
 
-  Mouse.Click(buttons[ERSGroupingButton.TELEPORT].Bounds, MOUSE_LEFT);
+  Mouse.Click(buttons[EGroupingButton.TELEPORT].Bounds, MOUSE_LEFT);
   Result := true;
   (*
   testPoints := GetTeleportTestCoords();

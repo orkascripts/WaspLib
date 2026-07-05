@@ -186,29 +186,29 @@ const
 var
   slot, i: Int32;
   tabI, otherI: PRSItemGameTab;
-  tabE, otherE: ERSGameTab;
+  tabE, otherE: EGameTab;
 begin
   if Self.Item = 'null' then Exit(True);
 
   tabE := GameTabs.GetCurrentTab();
   case tabE of
-    ERSGameTab.INVENTORY:
+    EGameTab.INVENTORY:
       begin
         tabI := PRSItemGameTab(@Inventory);
         otherI := PRSItemGameTab(@Equipment);
-        otherE := ERSGameTab.EQUIPMENT;
+        otherE := EGameTab.EQUIPMENT;
       end;
-    ERSGameTab.EQUIPMENT:
+    EGameTab.EQUIPMENT:
       begin
         tabI := PRSItemGameTab(@Equipment);
         otherI := PRSItemGameTab(@Inventory);
-        otherE := ERSGameTab.INVENTORY;
+        otherE := EGameTab.INVENTORY;
       end;
-    ERSGameTab.COMBAT:
+    EGameTab.COMBAT:
       begin
         tabI := PRSItemGameTab(@Combat);
         otherI := PRSItemGameTab(@Inventory);
-        otherE := ERSGameTab.INVENTORY;
+        otherE := EGameTab.INVENTORY;
       end;
     else if Inventory.Open() then Exit(Self.HandleItem()) else Exit;
   end;

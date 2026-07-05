@@ -18,7 +18,7 @@ type
     Name: String;
     Hitpoints: Int32;
     MaxHit: Int32;
-    AttackTypes: array of ERSAttackType;
+    AttackTypes: array of EAttackType;
   end;
 
   TMonsterArray = array of TMonster;
@@ -38,7 +38,7 @@ begin
   Self._Setup();
   Self.Filter.MinimapDot := True;
 
-  Self.DotType := ERSMinimapDot.NPC;
+  Self.DotType := EMinimapDot.NPC;
   Self.UpText += name;
 
   Self.Hitpoints := MonsterData.GetInt(name, 'hitpoints');
