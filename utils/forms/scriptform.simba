@@ -334,8 +334,8 @@ function TScriptForm.CreateAPISettings(): TTabSheet;
 function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
 function TScriptForm.CreateAccountManager(): TTabSheet; overload;
 function TScriptForm.CreateAntibanManager(): TTabSheet;
-function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: ERSConsumable; addInfo: Boolean = True): TPanel;
-function TScriptForm.CreateConsumableSettings(consumableType: ERSConsumable): TTabSheet; overload;
+function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: EConsumable; addInfo: Boolean = True): TPanel;
+function TScriptForm.CreateConsumableSettings(consumableType: EConsumable): TTabSheet; overload;
 function TScriptForm.CreateBankSettings(): TTabSheet;
 function TScriptForm.CreateLimitSettings(owner: TControl): TPanel;
 function TScriptForm.CreateLimitSettings(owner: TControl): TPanel;
@@ -1387,7 +1387,7 @@ begin
   Self._SleepOnUseBioChange(useBio.CheckBox);
 end;
 
-function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: ERSConsumable; addInfo: Boolean = True): TPanel;
+function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: EConsumable; addInfo: Boolean = True): TPanel;
 var
   typeStr: String;
   itemArray: TItemArray;
@@ -1405,25 +1405,25 @@ begin
     y := TControl.AdjustToDPI(15);
 
   case consumableType of
-    ERSConsumable.FOOD:
+    EConsumable.FOOD:
       begin
         typeStr := 'Food';
         itemArray := FOOD_ARRAY;
       end;
 
-    ERSConsumable.PRAYER:
+    EConsumable.PRAYER:
       begin
         typeStr := 'Prayer';
         itemArray := PRAYER_ARRAY;
       end;
 
-    ERSConsumable.ENERGY:
+    EConsumable.ENERGY:
       begin
         typeStr := 'Energy';
         itemArray := ENERGY_ARRAY;
       end;
 
-    ERSConsumable.BOOST:
+    EConsumable.BOOST:
       begin
         typeStr := 'Boost';
         itemArray := BOOST_ARRAY;
@@ -1482,7 +1482,7 @@ begin
   with minPoints do
   begin
     Create(Result);
-    if consumableType = ERSConsumable.BOOST then
+    if consumableType = EConsumable.BOOST then
       SetCaption('Drink/Eat every (in minutes):')
     else
       SetCaption('Drink/Eat at:');
@@ -1490,7 +1490,7 @@ begin
     SetLeft(fullWidth + space);
     SetTop(y);
     SetWidth(w);
-    if consumableType = ERSConsumable.BOOST then
+    if consumableType = EConsumable.BOOST then
       SetText('5')
     else
       SetText('50');
@@ -1511,15 +1511,15 @@ begin
     end;
 end;
 
-function TScriptForm.CreateConsumableSettings(consumableType: ERSConsumable): TTabSheet; overload;
+function TScriptForm.CreateConsumableSettings(consumableType: EConsumable): TTabSheet; overload;
 var
   typeStr: String;
 begin
   case consumableType of
-    ERSConsumable.FOOD:   typeStr := 'Food';
-    ERSConsumable.PRAYER: typeStr := 'Prayer';
-    ERSConsumable.ENERGY: typeStr := 'Energy';
-    ERSConsumable.BOOST:  typeStr := 'Boost';
+    EConsumable.FOOD:   typeStr := 'Food';
+    EConsumable.PRAYER: typeStr := 'Prayer';
+    EConsumable.ENERGY: typeStr := 'Energy';
+    EConsumable.BOOST:  typeStr := 'Boost';
   end;
 
   Self.AddTab(typeStr + ' Settings');

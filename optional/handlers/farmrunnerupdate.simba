@@ -1753,12 +1753,12 @@ begin
     end
     else
     begin
-      if (Stats.GetLevel(ERSSkill.AGILITY) >= 74) then begin
+      if (Stats.GetLevel(ESkill.AGILITY) >= 74) then begin
         transporter.Run(RSTEleports.FOSSIL_ISLAND);
         WaitUntil(ScriptWalker^.GetMyPos().InBox([10020, 846, 10315, 1126]), 15, 10000);
       end;
 
-      if (Stats.GetLevel(ERSSkill.AGILITY) < 74) then begin
+      if (Stats.GetLevel(ESkill.AGILITY) < 74) then begin
         transporter.Run(RSTEleports.DIGSITE);
         WaitUntil((MyPos := ScriptWalker^.GetMyPos()).InBox([8448, 2342, 9273, 2895]), 15, 10000);
       end;
@@ -2930,7 +2930,7 @@ begin
 
   if Self.StrongholdHerbPatch then
   begin
-    if (Self.StrongholdDiary < 2) or (Stats.GetLevel(ERSSkill.AGILITY, True) < 73) then
+    if (Self.StrongholdDiary < 2) or (Stats.GetLevel(ESkill.AGILITY, True) < 73) then
       TerminateScript('Stronghold doesnt work without 73+ agility and hard frem diary complete');
 
     Self.WriteMsg('Stronghold diary ' + ToStr(StrongholdDiary));
@@ -3500,8 +3500,8 @@ begin
   Self.WriteMsg('Setting up farm runs');
 
   Stats.Setup();
-  Stats.GetLevel(ERSSkill.AGILITY);
-  Stats.GetLevel(ERSSkill.HITPOINTS);
+  Stats.GetLevel(ESkill.AGILITY);
+  Stats.GetLevel(ESkill.HITPOINTS);
 
    for i := 0 to High(Self.Patches) do begin
     if Self.Patches[i].Data.Name.Contains('Civitas') then
@@ -3632,11 +3632,11 @@ begin
       Login.LoginPlayer;
 
     repeat
-      if ChatButtons.GetState(ERSChatButton.GAME_CHAT) <> ERSChatButtonState.ENABLED then
-        ChatButtons.ChangeState(ERSChatButton.GAME_CHAT, ERSChatButtonState.ENABLED);
+      if ChatButtons.GetState(EChatButton.GAME_CHAT) <> EChatButtonState.ENABLED then
+        ChatButtons.ChangeState(EChatButton.GAME_CHAT, EChatButtonState.ENABLED);
 
-      if not ChatButtons.IsActive(ERSChatButton.GAME_CHAT) then
-        ChatButtons.Open(ERSChatButton.GAME_CHAT);
+      if not ChatButtons.IsActive(EChatButton.GAME_CHAT) then
+        ChatButtons.Open(EChatButton.GAME_CHAT);
 
       state := Self.CurrentPatch.GetState;
 

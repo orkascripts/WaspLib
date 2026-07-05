@@ -169,7 +169,7 @@ begin
     boxes[i].X1 := boxes[i].X1 - 15;
     boxes[i].X2 := boxes[i].X2 + 10;
 
-    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), RS_FONT_PLAIN_12);
+    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), FONT_PLAIN_12);
 
     for destination in ERSNexusDestination do
       if str.Contains(Self.Destinations[destination].Name) then

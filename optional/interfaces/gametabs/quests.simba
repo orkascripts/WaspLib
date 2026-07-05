@@ -207,12 +207,12 @@ begin
     for i := 0 to High(boxes) do
     begin
       if boxes[i].Area < 50 then Continue;
-      Str := OCR.Recognize([boxes[i].X1-5, boxes[i].Y1-3, boxes[i].X2+5, boxes[i].Y2+3], TOCRColorFilter.Create([255,65535,901389]), RS_FONT_PLAIN_12);
+      Str := OCR.Recognize([boxes[i].X1-5, boxes[i].Y1-3, boxes[i].X2+5, boxes[i].Y2+3], TOCRColorFilter.Create([255,65535,901389]), FONT_PLAIN_12);
       if Str.Count('.') > 10 then
         badCount += 1;
     end;
   end;
-  if badCount > 3 then Exit(RS_FONT_PLAIN_11) else Exit(RS_FONT_PLAIN_12);
+  if badCount > 3 then Exit(FONT_PLAIN_11) else Exit(FONT_PLAIN_12);
 end;
 
 //Outputs and caches and saves a json with keys the quests and values 0 for not started, 1 for in progress and 2 for completed

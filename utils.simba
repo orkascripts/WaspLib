@@ -35,8 +35,8 @@ var
 {$IFNDEF WL_CONFIG_INCLUDED}            {$I utils/config.simba}
 {$IFNDEF WL_SETTINGS_INCLUDED}          {$I utils/settings.simba}
 {$IFNDEF WL_ITEMS_EX_INCLUDED}          {$I utils/items/items.simba}
-{$IFNDEF WL_RSREGIONS_UTILS_INCLUDED}   {$I utils/rsregions/rsregionsutils.simba}
-{$IFNDEF WL_RSREGIONS_INCLUDED}         {$I utils/rsregions/rsregions.simba}
+{$IFNDEF WL_REGIONS_UTILS_INCLUDED}   {$I utils/rsregions/rsregionsutils.simba}
+{$IFNDEF WL_REGIONS_INCLUDED}         {$I utils/rsregions/rsregions.simba}
 {$IFNDEF WL_REMOTEINPUT_INCLUDED}       {$I utils/input/remoteinput.simba}
 {$IFNDEF WL_WEB_INCLUDED}               {$I utils/web.simba}
 {$IFNDEF WL_BITMAPS_INCLUDED}           {$I utils/bitmaps.simba}

@@ -107,7 +107,7 @@ begin
     roomImage.Init(Client.GetMBitmaps());
     roomImage.LoadFromFile(fileName);
     roomImage.SetName(ToStr(room));
-    roomImage.ReplaceColor(RS_ITEM_SHADOW, 0);
+    roomImage.ReplaceColor(ITEM_SHADOW, 0);
     Result += roomImage;
   end;
 

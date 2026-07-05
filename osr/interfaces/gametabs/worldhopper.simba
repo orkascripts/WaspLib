@@ -138,7 +138,7 @@ var
 begin
   b := Self.Bounds;
   b.Y2 := b.Y1 + 24;
-  Result := OCR.RecognizeNumber(b, TOCRColorFilter.Create([$1F98FF]), RS_FONT_BOLD_12);
+  Result := OCR.RecognizeNumber(b, TOCRColorFilter.Create([$1F98FF]), FONT_BOLD_12);
 end;
 
 (*
@@ -174,7 +174,7 @@ begin
     value := OCR.RecognizeNumber(
       tmp[i],
       TOCRColorFilter.Create([Self.SILVER, Self.YELLOW]),
-      RS_FONT_PLAIN_12
+      FONT_PLAIN_12
     );
 
     if value = 0 then
@@ -235,7 +235,7 @@ begin
   Self.DebugLn("Hopping to " + ToStr(world) + "...");
 
   filter := TOCRColorFilter.Create([$FFFFFF]);
-  if not WaitUntil(OCR.LocateText(Self.ServerMessageBox, 'Please wait', RS_FONT_PLAIN_12, filter, 1), 100, 2000) then
+  if not WaitUntil(OCR.LocateText(Self.ServerMessageBox, 'Please wait', FONT_PLAIN_12, filter, 1), 100, 2000) then
   begin
     Self.DebugLn('Hop failed: ' + Chat.GetMessage(7));
 

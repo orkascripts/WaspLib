@@ -370,7 +370,7 @@ begin
       Exit(Self.HandleLooting()); //HERE LOOP UNDER PLAYER....
     end;
 
-    if not Inventory.Consume(ERSConsumable.FOOD) then
+    if not Inventory.Consume(EConsumable.FOOD) then
     begin
       Self.DebugLn('No space to loot!');
       Exit;
@@ -418,7 +418,7 @@ begin
     Exit(Self.HandleLooting());
   end;
 
-  if not Inventory.Consume(ERSConsumable.FOOD) then
+  if not Inventory.Consume(EConsumable.FOOD) then
   begin
     Self.DebugLn('No space to loot!');
     Exit(True);

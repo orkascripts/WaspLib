@@ -951,7 +951,7 @@ end;
 
 function TBirdHouseInclude.GetLogForHunterLevel(level : Int32) : ERSLogType;
 var
-  craftLevel : Int32 := Stats.GetLevel(ERSSkill.CRAFTING, false);
+  craftLevel : Int32 := Stats.GetLevel(ESkill.CRAFTING, false);
 
 begin
   Self.DebugLn("Detected hunter level: " + ToStr(level) + " detected crafting level: " + ToStr(craftLevel));
@@ -1014,7 +1014,7 @@ end;
 function TBirdHouseInclude.WalkToIslandBank() : Boolean;
 begin
   if Self.AlwaysUseBestLog then
-    Self.SuggestedLogType := Self.GetLogForHunterLevel(Stats.GetLevel(ERSSkill.HUNTER, false));
+    Self.SuggestedLogType := Self.GetLogForHunterLevel(Stats.GetLevel(ESkill.HUNTER, false));
 
   Result := Bank.WalkOpen(GameObjects.BankChestFossilIsland);
 end;

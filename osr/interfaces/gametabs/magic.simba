@@ -135,10 +135,10 @@ WriteLn Magic.GetBookSpellCount();
 function TMagic.GetBookSpellCount(): Int32;
 begin
   case Self.GetSpellBook() of
-    ERSSpellBook.STANDARD: Result := Ord(RS_STANDARD_SPELL_LAST) - Ord(RS_STANDARD_SPELL_FIRST);
-    ERSSpellBook.ARCEUUS:  Result := Ord(RS_ARCEUUS_SPELL_LAST) - Ord(RS_ARCEUUS_SPELL_FIRST);
-    ERSSpellBook.LUNAR:    Result := Ord(RS_LUNAR_SPELL_LAST) - Ord(RS_LUNAR_SPELL_FIRST);
-    ERSSpellBook.ANCIENT:  Result := Ord(RS_ANCIENT_SPELL_LAST) - Ord(RS_ANCIENT_SPELL_FIRST);
+    ERSSpellBook.STANDARD: Result := Ord(STANDARD_SPELL_LAST) - Ord(STANDARD_SPELL_FIRST);
+    ERSSpellBook.ARCEUUS:  Result := Ord(ARCEUUS_SPELL_LAST) - Ord(ARCEUUS_SPELL_FIRST);
+    ERSSpellBook.LUNAR:    Result := Ord(LUNAR_SPELL_LAST) - Ord(LUNAR_SPELL_FIRST);
+    ERSSpellBook.ANCIENT:  Result := Ord(ANCIENT_SPELL_LAST) - Ord(ANCIENT_SPELL_FIRST);
   end;
 
   Result += 1;

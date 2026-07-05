@@ -832,9 +832,9 @@ end;
 function TPOHHandler.UsePool(): Boolean;
   function _IsMaxed(): Boolean;
   begin
-    if Minimap.GetHPLevel() < Stats.GetLevel(ERSSkill.HITPOINTS) then
+    if Minimap.GetHPLevel() < Stats.GetLevel(ESkill.HITPOINTS) then
       Exit;
-    if Minimap.GetPrayerLevel() < Stats.GetLevel(ERSSkill.PRAYER) then
+    if Minimap.GetPrayerLevel() < Stats.GetLevel(ESkill.PRAYER) then
       Exit;
 
     if Minimap.GetRunEnergy() <= 65 then

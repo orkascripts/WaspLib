@@ -67,7 +67,7 @@ var
   ocrFilter : TOCRColorFilter;
   foundBox : TBox;
 begin
-  if ocr.LocateText(Mainscreen.Bounds, "Confirm", RS_FONT_PLAIN_12, ocrFilter.Create([10066329], [1]), foundBox) = 1 then
+  if ocr.LocateText(Mainscreen.Bounds, "Confirm", FONT_PLAIN_12, ocrFilter.Create([10066329], [1]), foundBox) = 1 then
   begin
     Mouse.Click(foundBox, MOUSE_LEFT);
     if WaitUntil(Chat.HasContinue(), 100, 1200) then

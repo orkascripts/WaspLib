@@ -10,8 +10,8 @@ Methods to interact with the CollectBox.
 
 type
   // In order FindButtons returns
-  ERSCollectButton = (CLOSE, COLLECT_INVENTORY, COLLECT_BANK);
-  ERSCollectSlotBoxes = (TRADE_STATUS, OPERATION, ITEM, CHANGE);
+  ECollectButton = (CLOSE, COLLECT_INVENTORY, COLLECT_BANK);
+  ECollectSlotBoxes = (TRADE_STATUS, OPERATION, ITEM, CHANGE);
 
   TCollectBox = record(TTitledInterface)
     Items: TItemInterface;
@@ -23,12 +23,12 @@ begin
   Result := Self.FindButtons([[83, 19], [21,21]]);
 end;
 
-function TCollectBox.GetButton(button: ERSCollectButton): TGameButton;
+function TCollectBox.GetButton(button: ECollectButton): TGameButton;
 var
   buttons: TGameButtonArray;
 begin
   buttons := Self.GetButtons();
-  if Length(buttons) = Length(ERSCollectButton) then
+  if Length(buttons) = Length(ECollectButton) then
     Result := buttons[button];
 end;
 
@@ -79,12 +79,12 @@ begin
   Result += Box;
 end;
 
-function TCollectBox.GetSlotBox(slot: Int32; box: ERSCollectSlotBoxes): TBox;
+function TCollectBox.GetSlotBox(slot: Int32; box: ECollectSlotBoxes): TBox;
 var
   boxes: TBoxArray;
 begin
   boxes := Self.GetSlotBoxes(slot);
-  if Length(boxes) = Length(ERSCollectSlotBoxes) then
+  if Length(boxes) = Length(ECollectSlotBoxes) then
     Result := boxes[box];
 end;
 
@@ -197,7 +197,7 @@ begin
     Exit;
 
   // black with tolerance for when item is transparent
-  Result := SRL.CountColor(CTS1(1118740, 35), Self.GetSlotBox(Slot, ERSCollectSlotBoxes.CHANGE)) > 0;
+  Result := SRL.CountColor(CTS1(1118740, 35), Self.GetSlotBox(Slot, ECollectSlotBoxes.CHANGE)) > 0;
 end;
 
 function TCollectBox.GetSlotsWithChange(): TIntegerArray;
@@ -267,7 +267,7 @@ begin
   Self.Items.ClickSlot(slot);
 
   if Self.HasChange(slot) then
-    Mouse.Click(Self.GetSlotBox(slot, ERSCollectSlotBoxes.CHANGE), MOUSE_LEFT);
+    Mouse.Click(Self.GetSlotBox(slot, ECollectSlotBoxes.CHANGE), MOUSE_LEFT);
 
   Result := WaitUntil(Self.Items.SlotEmpty(slot) and not Self.HasChange(slot), SRL.TruncatedGauss(50, 1500), 1000);
 end;
@@ -281,7 +281,7 @@ begin
 
   if Self.HasChange(slot) then
   begin
-    Mouse.Move(Self.GetSlotBox(Slot, ERSCollectSlotBoxes.CHANGE));
+    Mouse.Move(Self.GetSlotBox(Slot, ECollectSlotBoxes.CHANGE));
     if ChooseOption.Open then
       ChooseOption.Select('Bank', MOUSE_LEFT);
   end;
@@ -295,7 +295,7 @@ var
 begin
   Result := Self.FindItem(Item, Slot);
   if Result then
-    Mouse.Move(Self.GetSlotBox(Slot, ERSCollectSlotBoxes.ITEM));
+    Mouse.Move(Self.GetSlotBox(Slot, ECollectSlotBoxes.ITEM));
 end;
 
 function TCollectBox.ClickItem(Item: TItem; Option: String = ''): Boolean;
@@ -319,7 +319,7 @@ begin
   if Self.GetFullSlots = [] then
     Exit;
 
-  Result := Self.GetButton(ERSCollectButton.COLLECT_INVENTORY).Click();
+  Result := Self.GetButton(ECollectButton.COLLECT_INVENTORY).Click();
 end;
 
 function TCollectBox.CollectToBank(): Boolean;
@@ -327,7 +327,7 @@ begin
   if Self.GetFullSlots = [] then
     Exit;
 
-  Result := Self.GetButton(ERSCollectButton.COLLECT_BANK).Click();
+  Result := Self.GetButton(ECollectButton.COLLECT_BANK).Click();
 end;
 
 

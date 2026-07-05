@@ -9,29 +9,29 @@ Methods to interact with the silver screen on a furnace.
 {$ENDIF}
 
 type
-  ERSSilverScreenButton = (QUANT_1, QUANT_5, QUANT_10, QUANT_CUSTOM, QUANT_ALL);
+  ERSSilvECreenButton = (QUANT_1, QUANT_5, QUANT_10, QUANT_CUSTOM, QUANT_ALL);
 
-  TSilverScreen = record(TTitledInterface)
+  TSilvECreen = record(TTitledInterface)
     Items: TItemInterface;
     SlotBoxes: TBoxArray;
   end;
 
 
-function TSilverScreen.GetItemBoxes(): TBoxArray;
+function TSilvECreen.GetItemBoxes(): TBoxArray;
 begin
   Result := Self.SlotBoxes;
 end;
 
-procedure TSilverScreen.Setup(); override;
+procedure TSilvECreen.Setup(); override;
 begin
   inherited;
 
-  Self.Name := 'SilverScreen';
+  Self.Name := 'SilvECreen';
   Self.Items.Name := Self.Name + '.Items';
   Self.Items.SlotBoxesFunction := @Self.GetItemBoxes;
 end;
 
-procedure TSilverScreen.SetupAlignment(); overload;
+procedure TSilvECreen.SetupAlignment(); overload;
 var
   alignment: TInterfaceAlignment;
 var
@@ -50,34 +50,34 @@ begin
   Self.SlotBoxes := jewellery.Combine(Grid(2, 4, 109, 55, [5, 1], [Self.Bounds.X2 - 233, Self.Bounds.Y1 + 40]));
 end;
 
-function TSilverScreen.GetButtons(): TGameButtonArray;
+function TSilvECreen.GetButtons(): TGameButtonArray;
 begin
   Result := Self.FindButtons([[37,37]]);
 end;
 
-function TSilverScreen.GetButton(Button: ERSSilverScreenButton): TGameButton;
+function TSilvECreen.GetButton(Button: ERSSilvECreenButton): TGameButton;
 var
   Buttons: TGameButtonArray := Self.GetButtons();
 begin
-  if (Length(Buttons) = Length(ERSSilverScreenButton)) then
+  if (Length(Buttons) = Length(ERSSilvECreenButton)) then
     Result := Buttons[Button];
 end;
 
 (*
-## SilverScreen.IsOpen
+## SilvECreen.IsOpen
 ```pascal
-function TSilverScreen.IsOpen(): Boolean;
-function TSilverScreen.IsOpen(waitTime: Int32): Boolean;
+function TSilvECreen.IsOpen(): Boolean;
+function TSilvECreen.IsOpen(waitTime: Int32): Boolean;
 ```
 Returns true if the silver crafting screen is visible. You can optionally specify a `waitTime`.
 
 Example:
 ```pascal
-if SilverScreen.IsOpen() then
-  SilverScreen.ClickItem('Unstrung symbol', -1);
+if SilvECreen.IsOpen() then
+  SilvECreen.ClickItem('Unstrung symbol', -1);
 ```
 *)
-function TSilverScreen.IsOpen(): Boolean; overload;
+function TSilvECreen.IsOpen(): Boolean; overload;
 begin
   try
     Result := Self.GetButtons[0].Visible();
@@ -85,15 +85,15 @@ begin
   end;
 end;
 
-function TSilverScreen.IsOpen(waitTime: Int32): Boolean; overload;
+function TSilvECreen.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
 (*
-## SilverScreen.Close
+## SilvECreen.Close
 ```pascal
-function TSilverScreen.Close(PressEscape: Boolean = False): Boolean;
+function TSilvECreen.Close(PressEscape: Boolean = False): Boolean;
 ```
 
 Closes the silver crafting screen.  Depending on `PressEscape` the function will
@@ -101,11 +101,11 @@ either click the button or press backspace.
 
 Example:
 ```pascal
-if SilverScreen.Close() then
+if SilvECreen.Close() then
   Writeln('Closed the silver crafting screen');
 ```
 *)
-function TSilverScreen.Close(PressEscape: Boolean = False): Boolean;
+function TSilvECreen.Close(PressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -114,9 +114,9 @@ begin
 end;
 
 (*
-## SilverScreen.SetQuantity
+## SilvECreen.SetQuantity
 ```pascal
-function TSilverScreen.SetQuantity(Amount: Int32): Boolean;
+function TSilvECreen.SetQuantity(Amount: Int32): Boolean;
 ```
 
 Sets the interface quantity to the set amount.  Acceptable parameters
@@ -124,10 +124,10 @@ include 1,5,10,X (custom amount) and -1 for 'All'.
 
 Example:
 ```pascal
-SilverScreen.SetQuantity(-1);
+SilvECreen.SetQuantity(-1);
 ```
 *)
-function TSilverScreen.SetQuantity(Amount: Int32): Boolean;
+function TSilvECreen.SetQuantity(Amount: Int32): Boolean;
 const
   ENABLED_COLOR = $FFFFFF;
   DISABLED_COLOR = 2070783;
@@ -146,22 +146,22 @@ begin
   for Button in Buttons do
   begin
     // Already selected
-    if Button.FindText(Text, RS_FONT_PLAIN_11, ENABLED_COLOR) then
+    if Button.FindText(Text, FONT_PLAIN_11, ENABLED_COLOR) then
       Exit(True);
     // Select
-    if Button.FindText(Text, RS_FONT_PLAIN_11, DISABLED_COLOR) then
+    if Button.FindText(Text, FONT_PLAIN_11, DISABLED_COLOR) then
       Exit(Button.Click());
   end;
 
   for Button in Buttons do
-    if Button.FindText('X', RS_FONT_PLAIN_11, DISABLED_COLOR) then
+    if Button.FindText('X', FONT_PLAIN_11, DISABLED_COLOR) then
       Exit(Button.Click() and Chat.AnswerQuery('Enter amount', ToString(Amount), 3000));
 end;
 
 (*
-## SilverScreen.CanCraftItem
+## SilvECreen.CanCraftItem
 ```pascal
-function TSilverScreen.CanCraftItem(Item: TItem; out ItemBox: TBox): Boolean;
+function TSilvECreen.CanCraftItem(Item: TItem; out ItemBox: TBox): Boolean;
 ```
 
 Returns if the given TItem can be crafted.  If so then a TBox of the disired item
@@ -169,11 +169,11 @@ is returned.
 
 Example:
 ```pascal
-if SilverScreen.CanCraftItem('Topaz bracelet', ItmBox) then
+if SilvECreen.CanCraftItem('Topaz bracelet', ItmBox) then
   Mouse.Move(ItmBox);
 ```
 *)
-function TSilverScreen.CanCraftItem(item: TItem; out box: TBox): Boolean;
+function TSilvECreen.CanCraftItem(item: TItem; out box: TBox): Boolean;
 const
   ORANGE_COLOR = 2070783;
   SELECTED_COLOR = $FFFFFF;
@@ -190,20 +190,20 @@ begin
 end;
 
 (*
-## SilverScreen.IsItemHighlighted
+## SilvECreen.IsItemHighlighted
 ```pascal
-function TSilverScreen.IsItemHighlighted(Item: TItem): Boolean;
+function TSilvECreen.IsItemHighlighted(Item: TItem): Boolean;
 ```
 
 Returns if the given TItem is highlighted on the silver crafting interface.
 
 Example:
 ```pascal
-if SilverScreen.IsItemHighlighted('Unstrun symbol') then
+if SilvECreen.IsItemHighlighted('Unstrun symbol') then
   Keyboard.PressKey(VK_SPACE);
 ```
 *)
-function TSilverScreen.IsItemHighlighted(Item: TItem): Boolean;
+function TSilvECreen.IsItemHighlighted(Item: TItem): Boolean;
 var
   HighlightCol: TCTS1Color := CTS1(4807018, 2);
   Box: TBox;
@@ -215,9 +215,9 @@ begin
 end;
 
 (*
-## SilverScreen.CraftItem
+## SilvECreen.CraftItem
 ```pascal
-function TSilverScreen.CraftItem(Item: TItem; Quantity: Int32; UseSpaceBar: Boolean=False): Boolean;
+function TSilvECreen.CraftItem(Item: TItem; Quantity: Int32; UseSpaceBar: Boolean=False): Boolean;
 ```
 
 Sets the desired quantity then crafts on the given TItem on the silver screen interface.
@@ -226,11 +226,11 @@ if not then the interface item is clicked.  Returns false if 'Item' is not found
 
 Example:
 ```pascal
-if SilverScreen.CraftItem('Jade amulet (u)', 10) then
+if SilvECreen.CraftItem('Jade amulet (u)', 10) then
   Writeln('Beginning crafting...');
 ```
 *)
-function TSilverScreen.CraftItem(Item: TItem; Quantity: Int32; UseSpaceBar: Boolean=False): Boolean;
+function TSilvECreen.CraftItem(Item: TItem; Quantity: Int32; UseSpaceBar: Boolean=False): Boolean;
 var
   Box: TBox;
 begin
@@ -249,7 +249,7 @@ begin
   end;
 end;
 
-procedure TSilverScreen.Draw(Bitmap: TMufasaBitmap); override;
+procedure TSilvECreen.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -260,29 +260,29 @@ begin
 end;
 
 (*
-## var SilverScreen
-  Global SilverScreen variable.
+## var SilvECreen
+  Global SilvECreen variable.
 *)
 var
-  SilverScreen: TSilverScreen;
+  SilvECreen: TSilvECreen;
 
 procedure TGameClient.ClientModeChanged; override;
 begin
   inherited;
 
-  SilverScreen.SetupAlignment();
+  SilvECreen.SetupAlignment();
 end;
 
 procedure TSRL.Setup; override;
 begin
   inherited;
 
-  SilverScreen.Setup();
+  SilvECreen.Setup();
 end;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
 begin
   inherited;
 
-  SilverScreen.Draw(Bitmap);
+  SilvECreen.Draw(Bitmap);
 end;

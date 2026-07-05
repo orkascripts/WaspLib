@@ -350,7 +350,7 @@ begin
 end;
 
 
-procedure TAntiban.OpenSkill(Skill: ERSSkill; time: Int32; ReturnToCurrentTab: Boolean);
+procedure TAntiban.OpenSkill(Skill: ESkill; time: Int32; ReturnToCurrentTab: Boolean);
 var
   Tab: ERSGameTab;
 begin
@@ -476,7 +476,7 @@ end;
 
 procedure TAntiban.RandomChatButton();
 var
-  ChatButton: ERSChatButton := ERSChatButton(Random(0, (Length(ERSChatButton) - 2)));
+  ChatButton: EChatButton := EChatButton(Random(0, (Length(EChatButton) - 2)));
 begin
   Self.DebugLn('Opening ' + ToStr(ChatButton) + ' chat button');
 
@@ -485,7 +485,7 @@ end;
 
 procedure TAntiban.ToggleChatButton();
 var
-  CurrentButton: ERSChatButton := ChatButtons.GetActive;
+  CurrentButton: EChatButton := ChatButtons.GetActive;
 begin
   Self.DebugLn('Toggling chat buttons');
   Self.RandomChatButton;
@@ -495,16 +495,16 @@ end;
 
 procedure TAntiban.RandomChatButtonState();
 var
-  RandomButton: ERSChatButton := ERSChatButton(Random(2, (Length(ERSChatButton) - 2)));
-  RandomState: ERSChatButtonState;
+  RandomButton: EChatButton := EChatButton(Random(2, (Length(EChatButton) - 2)));
+  RandomState: EChatButtonState;
 begin
   case RandomButton of
-    ERSChatButton.GAME_CHAT:    RandomState := ERSChatButtonState.FILTERED;
-    ERSChatButton.PUBLIC_CHAT:  RandomState := ERSChatButtonState(Random(1, Length(ERSChatButtonState)));
-    ERSChatButton.PRIVATE_CHAT: RandomState := ERSChatButtonState(Random(1, 3));
-    ERSChatButton.CHANNEL_CHAT: RandomState := ERSChatButtonState(Random(1, 3));
-    ERSChatButton.CLAN_CHAT:    RandomState := ERSChatButtonState(Random(1, 3));
-    ERSChatButton.TRADE_CHAT:   RandomState := ERSChatButtonState(Random(1, 3));
+    EChatButton.GAME_CHAT:    RandomState := EChatButtonState.FILTERED;
+    EChatButton.PUBLIC_CHAT:  RandomState := EChatButtonState(Random(1, Length(EChatButtonState)));
+    EChatButton.PRIVATE_CHAT: RandomState := EChatButtonState(Random(1, 3));
+    EChatButton.CHANNEL_CHAT: RandomState := EChatButtonState(Random(1, 3));
+    EChatButton.CLAN_CHAT:    RandomState := EChatButtonState(Random(1, 3));
+    EChatButton.TRADE_CHAT:   RandomState := EChatButtonState(Random(1, 3));
   end;
 
   Self.DebugLn('Changing ' + ToStr(RandomButton) + ' state to ' + ToStr(RandomState));

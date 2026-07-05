@@ -1,5 +1,5 @@
 (*
-# RSMonters
+# Monsters
 Methods to handle TMonters.
 TMonters are a type or TMMDot that can be fought.
 
@@ -8,7 +8,7 @@ For more information on TMMDot visit: https://torwent.github.io/WaspLib/walkerob
 ```
 *)
 
-{$DEFINE WL_RSMONSTER_INCLUDED}
+{$DEFINE WL_MONSTER_INCLUDED}
 {$IFNDEF WL_OSR}
   {$I WaspLib/osr.simba}
 {$ENDIF}

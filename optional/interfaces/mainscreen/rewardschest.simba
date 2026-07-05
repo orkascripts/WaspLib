@@ -25,9 +25,9 @@ begin
   area.X2 -= 8;
   area.Y2 -= 52;
 
-  if SRL.FindColors(final, RS_ITEM_BORDER, area) = 0 then Exit;
+  if SRL.FindColors(final, ITEM_BORDER, area) = 0 then Exit;
 
-  for i in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK] do
+  for i in [ITEM_YELLOW_STACK, ITEM_WHITE_STACK, ITEM_GREEN_STACK] do
     if SRL.FindColors(tpa, i, area) > 0 then
       final += tpa;
 

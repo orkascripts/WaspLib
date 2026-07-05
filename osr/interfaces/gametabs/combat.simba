@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  ERSCombatType = (
+  ECombatType = (
     UNKNOWN,
     RANGED,
     MELEE,
@@ -12,7 +12,7 @@ type
   );
 
   TCombatStyle = record
-    CombatType: ERSCombatType;
+    CombatType: ECombatType;
     CombatStyle: String;
   end;
 
@@ -45,7 +45,7 @@ const
   ];
 
 //TODO: Change this to be a true Get function, not to interact with Self.
-function TCombatStyle.GetCombatType(): ERSCombatType;
+function TCombatStyle.GetCombatType(): ECombatType;
 var
   button: TGameButton;
   buttons: TGameButtonArray;
@@ -58,19 +58,19 @@ begin
 
   for button in buttons do
   begin
-    if button.FindText(MELEE_ATTACK_STYLES, RS_FONT_PLAIN_11, str) then
+    if button.FindText(MELEE_ATTACK_STYLES, FONT_PLAIN_11, str) then
     begin
-      Self.CombatType := ERSCombatType.MELEE;
+      Self.CombatType := ECombatType.MELEE;
       Exit(Self.CombatType);
     end;
 
-    if button.FindText(COMBAT_STYLE_RAPID, RS_FONT_PLAIN_11) then
+    if button.FindText(COMBAT_STYLE_RAPID, FONT_PLAIN_11) then
     begin
-      Self.CombatType := ERSCombatType.RANGED;
+      Self.CombatType := ECombatType.RANGED;
       Exit(Self.CombatType);
     end;
   end;
 
-  Self.CombatType := ERSCombatType.MAGIC;
+  Self.CombatType := ECombatType.MAGIC;
   Result := Self.CombatType;
 end;

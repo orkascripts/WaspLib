@@ -9,9 +9,9 @@ This file contains types and arrays of consumable items that can be used as is o
 
 type
 (*
-## type ERSConsumable
+## type EConsumable
 ```pascal
-ERSConsumable = (
+EConsumable = (
   FOOD,
   PRAYER,
   POISON,
@@ -26,9 +26,9 @@ ERSConsumable = (
 );
 ```
 
-ERSConsumable is a enumerator that contains all types of consumable.
+EConsumable is a enumerator that contains all types of consumable.
 *)
-  ERSConsumable = (FOOD, PRAYER, ENERGY, POISON, ANTI_FIRE, BOOST, STRENGTH_BOOST, ATTACK_BOOST, DEFENCE_BOOST, RANGING_BOOST, MAGIC_BOOST);
+  EConsumable = (FOOD, PRAYER, ENERGY, POISON, ANTI_FIRE, BOOST, STRENGTH_BOOST, ATTACK_BOOST, DEFENCE_BOOST, RANGING_BOOST, MAGIC_BOOST);
 
 var
 (*
@@ -48,7 +48,7 @@ var
   MAGIC_BOOST_ARRAY: TItemArray = ['Divine magic potion(1..4)', 'Magic potion(1..4)'];
   TRASH_ARRAY: TItemArray = ['Cocktail glass', 'Jug', 'Bowl', 'Pie dish', 'Vial', 'Beer glass', 'Empty cup'];
 
-  CONSUMABLE_ARRAYS: array [ERSConsumable] of TItemArray = [FOOD_ARRAY, PRAYER_ARRAY, ENERGY_ARRAY, ANTI_POISON_ARRAY, ANTI_VENOM_ARRAY, ANTI_FIRE_ARRAY, BOOST_ARRAY, STRENGTH_BOOST_ARRAY, ATTACK_BOOST_ARRAY, DEFENCE_BOOST_ARRAY, RANGING_BOOST_ARRAY, MAGIC_BOOST_ARRAY];
+  CONSUMABLE_ARRAYS: array [EConsumable] of TItemArray = [FOOD_ARRAY, PRAYER_ARRAY, ENERGY_ARRAY, ANTI_POISON_ARRAY, ANTI_VENOM_ARRAY, ANTI_FIRE_ARRAY, BOOST_ARRAY, STRENGTH_BOOST_ARRAY, ATTACK_BOOST_ARRAY, DEFENCE_BOOST_ARRAY, RANGING_BOOST_ARRAY, MAGIC_BOOST_ARRAY];
 ```
 Global consumable arrays variables.
 These arrays holds all types of consumable for each respective purpose with the exception of TRASH_ARRAY which are possible left over items from consumables.
@@ -56,7 +56,7 @@ They are in UPPERCASE because they are intended to be treated as constants but a
 
 `CONSUMABLE_ARRAYS` is an array of all consumables. One can access a consumable array type easiely like so:
 ```pascal
-WriteLn CONSUMABLE_ARRAYS[ERSConsumable.ENERGY];
+WriteLn CONSUMABLE_ARRAYS[EConsumable.ENERGY];
 ```
 *)
   FOOD_ARRAY: TItemArray = ['Anchovies', 'Shrimps', 'Cooked chicken', 'Cooked meat', 'Sardine', 'Bread', 'Herring', 'Mackerel', 'Choc-ice', 'Trout', 'Cod', 'Pike', 'Cooked wild kebbit', 'Sunlight moth mix (1..2)', 'Sunlight moth', 'Roast beast meat', 'Pineapple punch', 'Salmon', 'Tuna', 'Jug of wine', 'Rainbow fish', 'Cooked larupia', 'Stew', 'Banana stew', 'Cake(1..3)', 'Meat pie(1..2)', 'Bass', 'Plain pizza(1..2)', 'Lobster', 'Cooked barb-tailed kebbit', 'Swordfish', 'Cooked graahk', 'Potato with butter', 'Apple pie(1..2)', 'Chocolate cake(1..3)', 'Tangled toad' 's legs', 'Chocolate bomb', 'Potato with cheese', 'Egg potato', 'Meat pizza(1..2)', 'Admiral pie(1..2)', 'Monkfish', 'Cooked kyatt', 'Anchovy pizza(1..2)', 'Cooked karambwan', 'Curry', 'Ugthanki kebab', 'Guthix rest(1..4)', 'Dragonfruit pie(1..2)', 'Mushroom potato', 'Shark', 'Cooked pyre fox', 'Sea turtle', 'Cooked sunlight antelope', 'Pineapple pizza(1..2)', 'Summer pie(1..2)', 'Wild pie(1..2)', 'Manta ray', 'Cooked dashing kebbit', 'Tuna potato', 'Dark crab', 'Anglerfish', 'Cooked moonlight antelope', 'Saradomin brew(1..4)', 'Cooked bream'];
@@ -71,7 +71,7 @@ WriteLn CONSUMABLE_ARRAYS[ERSConsumable.ENERGY];
   RANGING_BOOST_ARRAY: TItemArray = ['Divine ranging potion(1..4)', 'Ranging potion(1..4)'];
   MAGIC_BOOST_ARRAY: TItemArray = ['Divine magic potion(1..4)', 'Magic potion(1..4)', 'Saturated heart', 'Imbued heart', 'Forgotten brew(1..4)'];
   TRASH_ARRAY: TItemArray = ['Cocktail glass', 'Jug', 'Bowl', 'Pie dish', 'Vial', 'Beer glass', 'Empty cup'];
-  CONSUMABLE_ARRAYS: array [ERSConsumable] of TItemArray := [FOOD_ARRAY, PRAYER_ARRAY, ENERGY_ARRAY, ANTI_POISON_ARRAY, ANTI_FIRE_ARRAY, BOOST_ARRAY, STRENGTH_BOOST_ARRAY, ATTACK_BOOST_ARRAY, DEFENCE_BOOST_ARRAY, RANGING_BOOST_ARRAY, MAGIC_BOOST_ARRAY];
+  CONSUMABLE_ARRAYS: array [EConsumable] of TItemArray := [FOOD_ARRAY, PRAYER_ARRAY, ENERGY_ARRAY, ANTI_POISON_ARRAY, ANTI_FIRE_ARRAY, BOOST_ARRAY, STRENGTH_BOOST_ARRAY, ATTACK_BOOST_ARRAY, DEFENCE_BOOST_ARRAY, RANGING_BOOST_ARRAY, MAGIC_BOOST_ARRAY];
 
 type
 (*
@@ -112,7 +112,7 @@ type
   TEnergyBoost = type TConsumable;
   TEnergyBoostArray = array of TEnergyBoost;
   TBoost = record(TConsumable)
-    Skills: array of ERSSkill;
+    Skills: array of ESkill;
     LevelsBoost: TIntegerArray;
     Countdown: TCountdown;
   end;
@@ -128,7 +128,7 @@ TBoost type of consumable has a timer to keep track when it lost it's effect aft
   TEnergyBoost = type TConsumable;
   TEnergyBoostArray = array of TEnergyBoost;
   TBoost = record
-     (TConsumable) Skills: array of ERSSkill;
+     (TConsumable) Skills: array of ESkill;
     LevelsBoost: TIntegerArray;
     Countdown: TCountdown;
   end;
@@ -201,7 +201,7 @@ begin
     'Cooked dashing kebbit': Self.Points := 23;
     'Anglerfish':
       begin
-        HPLevel := Stats.GetLevel(ERSSkill.HitPoints);
+        HPLevel := Stats.GetLevel(ESkill.HitPoints);
         case HPLevel of
           10 .. 24: Self.Points := Floor(HPLevel * 0.1) + 2;
           25 .. 49: Self.Points := Floor(HPLevel * 0.1) + 4;
@@ -211,8 +211,8 @@ begin
         end;
       end;
     'Cooked moonlight antelope': Self.Points := 26;
-    'Saradomin brew(1..4)': Self.Points := Floor(Stats.GetLevel(ERSSkill.HitPoints) * 0.15) + 2;
-    'Cooked bream': Self.Points := Floor(Stats.GetLevel(ERSSkill.FISHING) * 0.33);
+    'Saradomin brew(1..4)': Self.Points := Floor(Stats.GetLevel(ESkill.HitPoints) * 0.15) + 2;
+    'Cooked bream': Self.Points := Floor(Stats.GetLevel(ESkill.FISHING) * 0.33);
   end;
   Self._Setup();
 end;
@@ -223,10 +223,10 @@ begin
     Exit;
   Self.Timer := 1800;
   case Self.Item of
-    'Prayer potion(1..4)': Self.Points := Floor((Stats.GetLevel(ERSSkill.PRAYER) * 0.25) + 7);
-    'Super restore(1..4)': Self.Points := Floor((Stats.GetLevel(ERSSkill.PRAYER) * 0.25) + 8);
-    'Sanfew serum(1..4)': Self.Points := Floor((Stats.GetLevel(ERSSkill.PRAYER) * 0.3) + 4);
-    'Zamorak brew(1..4)': Self.Points := Floor(Stats.GetLevel(ERSSkill.PRAYER) * 0.1);
+    'Prayer potion(1..4)': Self.Points := Floor((Stats.GetLevel(ESkill.PRAYER) * 0.25) + 7);
+    'Super restore(1..4)': Self.Points := Floor((Stats.GetLevel(ESkill.PRAYER) * 0.25) + 8);
+    'Sanfew serum(1..4)': Self.Points := Floor((Stats.GetLevel(ESkill.PRAYER) * 0.3) + 4);
+    'Zamorak brew(1..4)': Self.Points := Floor(Stats.GetLevel(ESkill.PRAYER) * 0.1);
     'Moonlight moth mix (1..2)', 'Moonlight moth': Self.Points := 22;
     'Jangerberries': Self.Points := 1;
   end;

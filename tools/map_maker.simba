@@ -358,7 +358,7 @@ end;
 
 function TMapMaker.GetDirectivesString(): String;
 begin
-  Result := '{$DEFINE WL_RSREGIONS_INCLUDED}' + LINEENDING;
+  Result := '{$DEFINE WL_REGIONS_INCLUDED}' + LINEENDING;
   Result += '{$IFNDEF WL_UTILS}' + LINEENDING;
   Result += '  {$I WaspLib/utils.simba}' + LINEENDING;
   Result += '{$ENDIF}' + LINEENDING;

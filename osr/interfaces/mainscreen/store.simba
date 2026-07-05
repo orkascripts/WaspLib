@@ -18,9 +18,9 @@ var
   b: TBox;
   c: Int32;
 begin
-  if SRL.FindColors(final, RS_ITEM_BORDER, Self.ItemsArea) = 0 then Exit;
+  if SRL.FindColors(final, ITEM_BORDER, Self.ItemsArea) = 0 then Exit;
 
-  for c in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK] do
+  for c in [ITEM_YELLOW_STACK, ITEM_WHITE_STACK, ITEM_GREEN_STACK] do
     if SRL.FindColors(tpa, c, Self.ItemsArea) > 0 then
       final += tpa;
 
@@ -83,7 +83,7 @@ end;
 
 function TStore.IsOpen(): Boolean;
 begin
-  Result := ['Value','check'] in OCR.Recognize(Self.InfoBox, TOCRThresholdFilter.Create(15), RS_FONT_PLAIN_12);
+  Result := ['Value','check'] in OCR.Recognize(Self.InfoBox, TOCRThresholdFilter.Create(15), FONT_PLAIN_12);
 end;
 
 function TStore.IsOpen(WaitTime: Int32): Boolean; overload;

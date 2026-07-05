@@ -191,7 +191,7 @@ begin
   for textBox in clusteredText.ToTBA() do
   begin
     textBox := textBox.Expand(5);
-    OCR.LocateText(textBox, teleportLocation.destination, RS_FONT_PLAIN_12, TOCRColorFilter.Create([textColor]), foundTextBox);
+    OCR.LocateText(textBox, teleportLocation.destination, FONT_PLAIN_12, TOCRColorFilter.Create([textColor]), foundTextBox);
     if foundTextBox.Area > 1 then
       begin
         Mouse.Move(foundTextBox.Center());
@@ -404,7 +404,7 @@ begin
     Exit(False);
   end;
 
-  if Stats.GetLevel(ERSSkill.MAGIC) < teleportLocation.magicLevel then
+  if Stats.GetLevel(ESkill.MAGIC) < teleportLocation.magicLevel then
   begin
     Self.DebugLn('Magic level not high enough');
     Exit();
@@ -420,7 +420,7 @@ begin
   if Magic.GetSpellBook <> spellBook then begin
     Self.DebugLn('Not on the correct spellbook we need ' + ToStr(spellbook));
 
-    if (Stats.GetLevel(ERSSkill.MAGIC) >= 96) and (Magic.GetSpellBook = ERSSpellBook.LUNAR) then
+    if (Stats.GetLevel(ESkill.MAGIC) >= 96) and (Magic.GetSpellBook = ERSSpellBook.LUNAR) then
     begin
       Self.DebugLn('Attempting to cast spellbook swap');
       Magic.ClickSpell(ERSSpell.SPELLBOOK_SWAP);

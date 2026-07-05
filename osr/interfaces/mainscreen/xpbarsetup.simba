@@ -81,7 +81,7 @@ begin
   if not Self.IsOpen then
     Exit;
 
-  Result := Self.GetDropDown(DropDown).GetText(RS_FONT_PLAIN_12);
+  Result := Self.GetDropDown(DropDown).GetText(FONT_PLAIN_12);
 end;
 
 function TXPBarSetup.ChangeDropDown(DropDown: ERSXPBarSetupDropDown; Option: String): Boolean;
@@ -92,7 +92,7 @@ begin
   if Self.GetSetting(DropDown) = Option then
     Exit(True);
 
-  Result := Self.GetDropDown(DropDown).Select(Option, MOUSE_LEFT, True, True, RS_FONT_PLAIN_12);
+  Result := Self.GetDropDown(DropDown).Select(Option, MOUSE_LEFT, True, True, FONT_PLAIN_12);
 end;
 
 

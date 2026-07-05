@@ -19,18 +19,18 @@ type
     END_SCRIPT
   );
 
-  TWalkerScript = record(TBaseScript)
+  TWalkECript = record(TBaseScript)
     State: EState;
   end;
 
-procedure TWalkerScript.Init(maxActions: UInt32; maxTime: UInt64); override;
+procedure TWalkECript.Init(maxActions: UInt32; maxTime: UInt64); override;
 begin
   inherited;
 
-  Map.SetupChunk(ERSChunk.VARROCK);
+  Map.SetupChunk(EChunk.VARROCK);
 end;
 
-function TWalkerScript.GetState(): EState;
+function TWalkECript.GetState(): EState;
 begin
   if Self.ShouldStop() then
     Exit(EState.END_SCRIPT);
@@ -41,7 +41,7 @@ begin
   Exit(EState.WAIT_STATE);
 end;
 
-procedure TWalkerScript.Run(maxActions: UInt32; maxTime: UInt64);
+procedure TWalkECript.Run(maxActions: UInt32; maxTime: UInt64);
 begin
   Self.Init(maxActions, maxTime);
 
@@ -59,11 +59,11 @@ begin
 end;
 
 var
-  WalkerScript: TWalkerScript;
+  WalkECript: TWalkECript;
 
 procedure TAntiban.Setup(); override;
 begin
-  Self.Skills := [ERSSkill.TOTAL];
+  Self.Skills := [ESkill.TOTAL];
   Self.MinZoom := 15;
   Self.MaxZoom := 40;
 
@@ -123,5 +123,5 @@ begin
   {$IFDEF SCRIPT_GUI}
   Config.Run();
   {$ENDIF}
-  WalkerScript.Run(WLSettings.MaxActions(), WLSettings.MaxTime());
+  WalkECript.Run(WLSettings.MaxActions(), WLSettings.MaxTime());
 end.

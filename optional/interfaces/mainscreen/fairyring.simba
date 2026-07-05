@@ -715,7 +715,7 @@ begin
   boxes := atpa.ToTBA();
   for i := 0 to High(boxes) do
   begin
-    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), RS_FONT_PLAIN_12);
+    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), FONT_PLAIN_12);
     Result += str.Replace(' ', '');
 
     boxes[i].X2 := Self.TravelLog.Bounds.X2 - 22;
@@ -745,7 +745,7 @@ begin
   boxes := atpa.ToTBA();
   for i := 0 to High(boxes) do
   begin
-    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), RS_FONT_PLAIN_12);
+    str := OCR.Recognize(boxes[i], TOCRColorFilter.Create(COLORS), FONT_PLAIN_12);
     Result += str.Replace(' ', '');
   end;
 end;

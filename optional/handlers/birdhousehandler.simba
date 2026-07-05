@@ -112,7 +112,7 @@ var
   a, b: EBirdHouseWood;
   craft, hunt: Int32;
 begin
-  craft := Stats.GetLevel(ERSSkill.CRAFTING);
+  craft := Stats.GetLevel(ESkill.CRAFTING);
   case craft of
     0..4: RaiseException('You can''t build birdhouses with ' + ToStr(craft) + ' crafting.');
     5..14:  a := EBirdHouseWood.REGULAR;
@@ -126,7 +126,7 @@ begin
     else    a := EBirdHouseWood.REDWOOD;
   end;
 
-  hunt := Stats.GetLevel(ERSSkill.CRAFTING);
+  hunt := Stats.GetLevel(ESkill.CRAFTING);
   case hunt of
     0..4: RaiseException('You can''t build birdhouses with ' + ToStr(hunt) + ' hunter.');
     5..13:  b := EBirdHouseWood.REGULAR;

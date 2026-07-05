@@ -284,7 +284,7 @@ var
   currentSetting: String;
 begin
   dd := XPBarSetup.GetDropDown(dropDown);
-  currentSetting := dd.GetText(RS_FONT_PLAIN_12);
+  currentSetting := dd.GetText(FONT_PLAIN_12);
 
   if currentSetting = text then
   begin
@@ -294,7 +294,7 @@ begin
 
   if dropDown = ERSXPBarSetupDropDown.COLOUR then
   begin
-    dd.Select(dd.GetOptions(RS_FONT_PLAIN_12)[0], MOUSE_LEFT);
+    dd.Select(dd.GetOptions(FONT_PLAIN_12)[0], MOUSE_LEFT);
     Wait(350);
     Result := True;
   end
@@ -393,7 +393,7 @@ begin
 
   for i := 0 to High(ATPA) do
   begin
-    match       := OCR.Recognize(ATPA[i].Bounds, TOCRColorFilter.Create([2070783], [2]), RS_FONT_BOLD_12);
+    match       := OCR.Recognize(ATPA[i].Bounds, TOCRColorFilter.Create([2070783], [2]), FONT_BOLD_12);
     debugString := match;
     match       := match.ToLower();
     if not match.Contains(textToFind.ToLower()) then
@@ -587,16 +587,16 @@ function TSettingsHandler.SetDropDownText(dropdown: TDropDown; text: String): Bo
 var
   currentSetting: String;
 begin
-  currentSetting := dropdown.GetText(RS_FONT_PLAIN_12);
+  currentSetting := dropdown.GetText(FONT_PLAIN_12);
   if CompareStr(currentSetting, text) = 0 then
     Exit;
   if text = 'White' then
   begin
-    dropdown.Select(dropdown.GetOptions(RS_FONT_PLAIN_12)[0], MOUSE_LEFT);
+    dropdown.Select(dropdown.GetOptions(FONT_PLAIN_12)[0], MOUSE_LEFT);
     Wait(350);
     Result := True;
   end
-  else if dropdown.Select(text, MOUSE_LEFT, False, True, RS_FONT_PLAIN_12) then
+  else if dropdown.Select(text, MOUSE_LEFT, False, True, FONT_PLAIN_12) then
   begin
     Wait(350);
     Result := True;

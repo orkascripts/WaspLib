@@ -128,13 +128,13 @@ begin
   if button <> ERSAnvilButton.QUANTITY_CUSTOM then
   begin
     for b in Buttons do
-      if b.FindText(textArray[Ord(button)], RS_FONT_PLAIN_11, [$FFFFFF, $1F98FF]) then
+      if b.FindText(textArray[Ord(button)], FONT_PLAIN_11, [$FFFFFF, $1F98FF]) then
         Exit(b);
     Exit;
   end;
 
   b := Buttons[High(Buttons)];
-  if not b.FindText([], RS_FONT_PLAIN_11, foundString) then
+  if not b.FindText([], FONT_PLAIN_11, foundString) then
     Exit(b);
 end;
 

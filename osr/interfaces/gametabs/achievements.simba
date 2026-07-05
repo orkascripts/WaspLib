@@ -242,7 +242,7 @@ begin
   for i := 0 to High(DiaryBoxes) do
   begin
     TextBox := [DiaryBoxes[i].X1 + 3, DiaryBoxes[i].Y1 + 1, DiaryBoxes[i].X1 + 110, DiaryBoxes[i].Y1 + 16];
-    FoundText := OCR.Recognize(TextBox, TOCRColorFilter.Create([16777215, 65535, 901389]), RS_FONT_PLAIN_11);
+    FoundText := OCR.Recognize(TextBox, TOCRColorFilter.Create([16777215, 65535, 901389]), FONT_PLAIN_11);
     if EXPECTED_TEXT[Ord(Diary)] in FoundText then
       Exit(DiaryBoxes[i]);
   end;

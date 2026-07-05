@@ -50,7 +50,7 @@ procedure TRecorder.Start(window: PtrUInt; seconds: Int32; directory: String; us
     Result := GetProcessID()
   end;
 
-  function _RecorderScript(): String;
+  function _RecordECript(): String;
   begin
     Result :=  IncludeTrailingPathDelimiter({$macro CURRENT_DIRECTORY}) + 'subprocess.simba';
   end;
@@ -80,7 +80,7 @@ begin
                ToString(expBox.Y2);
   end;
 
-  RunScript(_RecorderScript(), params);
+  RunScript(_RecordECript(), params);
   Self.PID := _ScriptPID();
   WL.IsRecording := True;
 end;
