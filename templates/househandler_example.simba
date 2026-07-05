@@ -72,7 +72,7 @@ var
   MyScriptForm: TMyScriptForm;
 {$ENDIF}
 var
-  obj: TRSObjectV2;
+  obj: TObjectV2;
 
 begin
   {$IFDEF SCRIPT_GUI}

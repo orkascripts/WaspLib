@@ -21,9 +21,9 @@ type
     FAKE_DROPS
   );
 
-  TRSXPBarSetup = type TRSInterface;
+  TXPBarSetup = type TInterface;
 
-function TRSXPBarSetup.IsOpen(): Boolean;
+function TXPBarSetup.IsOpen(): Boolean;
 var
   Count: Int32;
 begin
@@ -32,7 +32,7 @@ begin
   Result :=  (Count >= 2800) and (Count <= 4200);
 end;
 
-function TRSXPBarSetup.Open(): Boolean;
+function TXPBarSetup.Open(): Boolean;
 begin
   if Self.IsOpen then
     Exit(True);
@@ -45,7 +45,7 @@ begin
   Result := WaitUntil(Self.IsOpen, SRL.TruncatedGauss(100, 1000), 3000);
 end;
 
-function TRSXPBarSetup.Close(pressEscape: Boolean = False): Boolean;
+function TXPBarSetup.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -54,14 +54,14 @@ begin
 end;
 
 
-function TRSXPBarSetup.GetDropDowns(): TRSDropDownArray;
+function TXPBarSetup.GetDropDowns(): TDropDownArray;
 begin
   Result := Self.FindDropDown([[113, 18], [98, 18], [108, 18], [103, 18], [78, 18], [63, 18], [73, 18]]);
 end;
 
-function TRSXPBarSetup.GetDropDown(DropDown: ERSXPBarSetupDropDown): TRSDropDown;
+function TXPBarSetup.GetDropDown(DropDown: ERSXPBarSetupDropDown): TDropDown;
 var
-  DropDowns: TRSDropDownArray;
+  DropDowns: TDropDownArray;
 begin
   if not Self.IsOpen then
     Exit;
@@ -76,7 +76,7 @@ end;
 
 
 
-function TRSXPBarSetup.GetSetting(DropDown: ERSXPBarSetupDropDown): String;
+function TXPBarSetup.GetSetting(DropDown: ERSXPBarSetupDropDown): String;
 begin
   if not Self.IsOpen then
     Exit;
@@ -84,7 +84,7 @@ begin
   Result := Self.GetDropDown(DropDown).GetText(RS_FONT_PLAIN_12);
 end;
 
-function TRSXPBarSetup.ChangeDropDown(DropDown: ERSXPBarSetupDropDown; Option: String): Boolean;
+function TXPBarSetup.ChangeDropDown(DropDown: ERSXPBarSetupDropDown; Option: String): Boolean;
 begin
   if not Self.Open then
     Exit;
@@ -96,7 +96,7 @@ begin
 end;
 
 
-function TRSXPBarSetup.ProperSettings(): Boolean;
+function TXPBarSetup.ProperSettings(): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -110,7 +110,7 @@ begin
     WL.GameSettings.XPBarIsSetup := True;
 end;
 
-procedure TRSXPBarSetup.Fix();
+procedure TXPBarSetup.Fix();
 var
   i: Int32;
 begin
@@ -127,7 +127,7 @@ begin
 
     case i of
       0..7: ;
-      8..10: WriteLn 'Stuck in TRSXPBarSetup.Fix()';
+      8..10: WriteLn 'Stuck in TXPBarSetup.Fix()';
       else TerminateScript('Couldn''t fix the XPBar please fix it manually.');
     end;
     Inc(i);
@@ -137,15 +137,15 @@ begin
 end;
 
 
-procedure TRSXPBarSetup.Setup(); override;
+procedure TXPBarSetup.Setup(); override;
 begin
   inherited;
   Self.Name := 'XPBar Setup';
 end;
 
-procedure TRSXPBarSetup.SetupAlignment(); overload;
+procedure TXPBarSetup.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -156,7 +156,7 @@ begin
   Self.SetupAlignment(alignment);
 end;
 
-procedure TRSXPBarSetup.Draw(bitmap: TMufasaBitmap); override;
+procedure TXPBarSetup.Draw(bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then Exit;
 
@@ -166,9 +166,9 @@ begin
 end;
 
 var
-  XPBarSetup: TRSXPBarSetup;
+  XPBarSetup: TXPBarSetup;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
   XPBarSetup.SetupAlignment();

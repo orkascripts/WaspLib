@@ -8,11 +8,11 @@ type
   ERSGroupingTab = (CHAT_CHANNEL, YOUR_CLAN, ANOTHER_CLAN, ACTIVITY);
   ERSGroupingButton = (PVP_ARENA, JOIN, TELEPORT);
 
-  TRSGrouping = record(TRSInterface)
+  TGrouping = record(TInterface)
     Tabs: array [ERSGroupingTab] of TBox;
   end;
 
-procedure TRSGrouping.Setup(); override;
+procedure TGrouping.Setup(); override;
 begin
   inherited;
   Self.Name := 'Grouping';
@@ -20,9 +20,9 @@ begin
   Self.ButtonColors += CTS0(5334130, 1);
 end;
 
-procedure TRSGrouping.SetupAlignment(); overload;
+procedure TGrouping.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
   boxes: TBoxArray;
   i: Int32;
 begin
@@ -43,22 +43,22 @@ begin
     Self.Tabs[ERSGroupingTab(i)] := boxes[i];
 end;
 
-function TRSGrouping.IsOpen(): Boolean;
+function TGrouping.IsOpen(): Boolean;
 begin
   Result := (GameTabs.GetCurrentTab = ERSGameTab.CLAN);
 end;
 
-function TRSGrouping.Open(): Boolean;
+function TGrouping.Open(): Boolean;
 begin
   Result := GameTabs.Open(ERSGameTab.CLAN);
 end;
 
-function TRSGrouping.GetGroupingButtons(): TRSButtonArray;
+function TGrouping.GetGroupingButtons(): TGameButtonArray;
 begin
     Result := Self.FindButtons([[66, 18]]);//, Self.Bounds());
 end;
 
-function TRSGrouping.DoesActivityHaveTeleport(activity : string) : Boolean;
+function TGrouping.DoesActivityHaveTeleport(activity : string) : Boolean;
 const
   VALID_TELEPORTS : TStringArray := ['barbarian assault', 'games room', 'castle wars', 'clan wars', 'fish trawler', "giants' foundry", "guardians of the rift", "last man standing", "nightmare zone", "pest control", "rat pits", "shades of mort'ton", "soul wars", "tithe farm", "trouble brewing", "tzhaar fight pit" ];
 var
@@ -72,10 +72,10 @@ begin
   end;
 end;
 
-function TRSGrouping.SelectActivity(activity : string) : Boolean;
+function TGrouping.SelectActivity(activity : string) : Boolean;
 var
-  dropDowns : TRSDropDownArray;
-  activityScrollBar : TRSScrollBar;
+  dropDowns : TDropDownArray;
+  activityScrollBar : TGameScrollBar;
   textBounds : TBoxArray;
   foundStrings : TStringArray;
   i : Int32;
@@ -175,20 +175,20 @@ begin
   Result := selectedString.Contains(activity);
 end;
 
-function TRSGrouping.GetButtons(): TRSButtonArray;
+function TGrouping.GetButtons(): TGameButtonArray;
 begin
   Result := Self.FindButtons([[38,38]]);
 end;
 
-function TRSGrouping.GetButton(Button: ERSGroupingButton): TRSButton;
+function TGrouping.GetButton(Button: ERSGroupingButton): TGameButton;
 var
-  Buttons: TRSButtonArray := Self.GetButtons;
+  Buttons: TGameButtonArray := Self.GetButtons;
 begin
   if Length(Buttons) = Length(ERSGroupingButton) then
     Result := Buttons[Button];
 end;
 
-function TRSGrouping.GetCurrentTab(): ERSGroupingTab;
+function TGrouping.GetCurrentTab(): ERSGroupingTab;
 var
   tab: ERSGroupingTab;
   count : Int32;
@@ -201,15 +201,15 @@ begin
   end;
 end;
 
-function TRSGrouping.OpenTab(tab: ERSGroupingTab): Boolean;
+function TGrouping.OpenTab(tab: ERSGroupingTab): Boolean;
 begin
   if Self.GetCurrentTab() = tab then Exit(True);
   Mouse.Click(Self.Tabs[tab], MOUSE_LEFT);
   Result := WaitUntil(Self.GetCurrentTab() = tab, 200, 3000);
 end;
 
-function TRSInterface.FindDropDown(Dimensions: TRSButtonDimensions; borderColor : TCTS0Color): TRSDropDownArray; overload;
-  function FindArrow(B: TBox; Color: TCTS0Color; Dimensions: TRSButtonDimensions): Boolean;
+function TInterface.FindDropDown(Dimensions: TGameButtonDimensions; borderColor : TCTS0Color): TDropDownArray; overload;
+  function FindArrow(B: TBox; Color: TCTS0Color; Dimensions: TGameButtonDimensions): Boolean;
   var
     TPA: TPointArray;
     ATPA: T2DPointArray;
@@ -284,9 +284,9 @@ begin
   end;
 end;
 
-procedure TRSGrouping.Draw(bitmap: TMufasaBitmap); override;
+procedure TGrouping.Draw(bitmap: TMufasaBitmap); override;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   if not Self.IsOpen() then Exit;
 
@@ -299,15 +299,15 @@ begin
 end;
 
 var
-  Grouping: TRSGrouping;
+  Grouping: TGrouping;
 
-function TRSGameTabs.GetCurrentTab(): ERSGameTab; override;
+function TGameTabs.GetCurrentTab(): ERSGameTab; override;
 begin
   Result := inherited;
   if Result = ERSGameTab.UNKNOWN then Result := ERSGameTab.CLAN;
 end;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
   Grouping.SetupAlignment();
@@ -319,7 +319,7 @@ begin
   Grouping.Setup();
 end;
 
-function TRSGrouping.TeleportToActivity(activity : string) : Boolean;
+function TGrouping.TeleportToActivity(activity : string) : Boolean;
   function GetTeleportTestCoords() : TPointArray;
   const
     DOT_COLORS: array of TCTS2Color = [
@@ -353,7 +353,7 @@ function TRSGrouping.TeleportToActivity(activity : string) : Boolean;
   end;
 
 var
-  buttons : TRSButtonArray;
+  buttons : TGameButtonArray;
 begin
   if not Self.Open() then
     Exit;
@@ -387,7 +387,7 @@ begin
   *)
 end;
 
-function TRSGrouping.TeleportToActivtyWithChat(activity, chatOption : string; closeIfNotFound : Boolean = true) : Boolean;
+function TGrouping.TeleportToActivtyWithChat(activity, chatOption : string; closeIfNotFound : Boolean = true) : Boolean;
 begin
   if (Length(activity) < 2) or (Length(chatOption) < 2) then
     Exit;

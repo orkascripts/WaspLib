@@ -207,12 +207,12 @@ begin
 
   if WriteFileContents(filePath, newContent) then
   begin
-    Self.DebugLn('ApplyFix -> Write successful. Terminating RuneLite (PID: ' + ToStr(RSClient.RemoteInput.PID) + ')...');
+    Self.DebugLn('ApplyFix -> Write successful. Terminating RuneLite (PID: ' + ToStr(GameClient.RemoteInput.PID) + ')...');
     Self.GPUPluginActive := False;
 
     try
       KillTask.Init(nil);
-      KillTask.SetCommandLine('taskkill /f /pid ' + ToStr(RSClient.RemoteInput.PID));
+      KillTask.SetCommandLine('taskkill /f /pid ' + ToStr(GameClient.RemoteInput.PID));
       KillTask.SetOptions([poNoConsole]);
       KillTask.Execute();
       KillTask.Free();
@@ -280,7 +280,7 @@ Returns True if the setting was changed or already correct.
 *)
 function TSettingsHandler.ChangeXPBarDropDown(dropDown: ERSXPBarSetupDropDown; text: String): Boolean;
 var
-  dd: TRSDropDown;
+  dd: TDropDown;
   currentSetting: String;
 begin
   dd := XPBarSetup.GetDropDown(dropDown);
@@ -312,7 +312,7 @@ end;
 ```pascal
 function TSettingsHandler.OpenSettings(): Boolean;
 ```
-Opens the RuneScape settings interface if it is not already open.
+Opens the game settings interface if it is not already open.
 Returns True if the settings interface is open.
 *)
 function TSettingsHandler.OpenSettings(): Boolean;
@@ -444,7 +444,7 @@ Returns True if the filter panel was successfully closed. Outputs the number of 
 *)
 function TSettingsHandler.DisableMagicFilters(out actionsTaken: Int32): Boolean;
 var
-  button: TRSButton;
+  button: TGameButton;
 begin
   Self.DebugLn('DisableMagicFilters -> Checking magic filters');
   if not Magic.IsFiltered() then
@@ -469,7 +469,7 @@ begin
   Self.DebugLn('DisableMagicFilters -> ' + ToStr(actionsTaken) + ' filter(s) disabled, closing panel');
   Magic.CloseFilters();
   Result := WaitUntil(not Magic.IsFiltered(), 300, 3000);
-end;        
+end;
 (*
 ## SettingsHandler.FixScreenPostResolutionChange()
 ```pascal
@@ -485,7 +485,7 @@ var
   Bmp: TMufasaBitmap;
   countdown: TCountDown;
 begin
-  R_EIOS := RSClient.RemoteInput.EIOS;
+  R_EIOS := GameClient.RemoteInput.EIOS;
   GetClientDimensions(W, H);
 
   Self.BackBuffer.Init();
@@ -522,8 +522,8 @@ begin
   Self.DebugLn('ClearBitmaps -> Clearing and freeing bitmaps');
   if Self.BackBuffer <> nil then
     Self.BackBuffer.Clear();
-  if RSClient.RemoteInput.Image <> nil then
-    RSClient.RemoteInput.Image.Clear();
+  if GameClient.RemoteInput.Image <> nil then
+    GameClient.RemoteInput.Image.Clear();
   Self.BackBuffer.Free();
 end;
 
@@ -578,12 +578,12 @@ end;
 (*
 ## SettingsHandler.SetDropDownText()
 ```pascal
-function TSettingsHandler.SetDropDownText(dropdown: TRSDropDown; text: String): Boolean;
+function TSettingsHandler.SetDropDownText(dropdown: TDropDown; text: String): Boolean;
 ```
 Sets the given dropdown to the specified text if it differs from the current selection.
 Returns True if the setting was changed.
 *)
-function TSettingsHandler.SetDropDownText(dropdown: TRSDropDown; text: String): Boolean;
+function TSettingsHandler.SetDropDownText(dropdown: TDropDown; text: String): Boolean;
 var
   currentSetting: String;
 begin
@@ -705,14 +705,14 @@ begin
     Options.SetMaxBrightness();
   end;
 
-  if RSClient.Mode <> ERSClientMode.FIXED then
+  if GameClient.Mode <> EClientMode.FIXED then
   begin
     if Options.GetDropDown(ERSOptionsDropDown.CLIENT_MODE).Select('Fixed', MOUSE_LEFT, True, True) then
     begin
       Self.DebugLn('CheckDisplaySettings -> Client mode set to fixed');
-      WaitUntil(RSClient.DetectClientMode(True) = ERSClientMode.FIXED, 500, 5000);
-      RSClient.ClientModeChanged();
-      Self.DebugLn('CheckDisplaySettings -> Client mode confirmed: ' + ToStr(RSClient.Mode));
+      WaitUntil(GameClient.DetectClientMode(True) = EClientMode.FIXED, 500, 5000);
+      GameClient.ClientModeChanged();
+      Self.DebugLn('CheckDisplaySettings -> Client mode confirmed: ' + ToStr(GameClient.Mode));
     end;
   end;
 end;

@@ -21,7 +21,7 @@ const
   SCALE = 8;
 
 var
-  RSW: TRSWalker;
+  RSW: TWalker;
 
 procedure Init();
 begin

@@ -1,10 +1,10 @@
 (*
 # RSMonters
-Methods to handle TRSMonters.
-TRSMonters are a type or TRSMMDot that can be fought.
+Methods to handle TMonters.
+TMonters are a type or TMMDot that can be fought.
 
 ```{note}
-For more information on TRSMMDot visit: https://torwent.github.io/WaspLib/walkerobjects.html#type-trsmmdot
+For more information on TMMDot visit: https://torwent.github.io/WaspLib/walkerobjects.html#type-Tmmdot
 ```
 *)
 
@@ -14,18 +14,18 @@ For more information on TRSMMDot visit: https://torwent.github.io/WaspLib/walker
 {$ENDIF}
 
 type
-  TRSMonster = record(TRSMMDot)
+  TMonster = record(TMMDot)
     Name: String;
     Hitpoints: Int32;
     MaxHit: Int32;
     AttackTypes: array of ERSAttackType;
   end;
 
-  TRSMonsterArray = array of TRSMonster;
-  PRSMonster = ^TRSMonster;
+  TMonsterArray = array of TMonster;
+  PRSMonster = ^TMonster;
   PRSMonsterArray = array of PRSMonster;
 
-procedure TRSMonster.Setup(name: String); overload;
+procedure TMonster.Setup(name: String); overload;
 var
   size: Int32;
   height: Double;
@@ -56,7 +56,7 @@ begin
   Self.AttackTypes := MonsterData.GetAttackTypes(name);
 end;
 
-function TRSMonster.Attack(): Boolean;
+function TMonster.Attack(): Boolean;
 begin
   if Self.SelectOption(['Attack']) then
   begin
@@ -65,7 +65,7 @@ begin
   end;
 end;
 
-function TRSMonster.WalkAttack(): Boolean;
+function TMonster.WalkAttack(): Boolean;
 var
   Attacked: Boolean;
 begin
@@ -79,7 +79,7 @@ begin
   end;
 end;
 
-procedure Debug(monster: TRSMonster); overload;
+procedure Debug(monster: TMonster); overload;
 var
   bitmap: TMufasaBitmap;
 begin
@@ -90,11 +90,11 @@ begin
 end;
 
 var
-  DebugMonsterArray: TRSMonsterArray;
+  DebugMonsterArray: TMonsterArray;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
 var
-  DebugMonster: TRSMonster;
+  DebugMonster: TMonster;
 begin
   inherited;
 

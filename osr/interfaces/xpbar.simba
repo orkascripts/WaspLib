@@ -8,7 +8,7 @@ Extensions to SRL's {ref}`XPBar`
   {$I WaspLib/osr.simba}
 {$ENDIF}
 
-function TRSXPBar.Read(): Int64; override;
+function TXPBar.Read(): Int64; override;
 var
   i: Int32;
   xpStr: String;
@@ -50,7 +50,7 @@ begin
       Wait(50, 250, wdLeft);
       case i of
         0..7: ;
-        8..10: WriteLn 'Stuck in TRSXPBar.Read()';
+        8..10: WriteLn 'Stuck in TXPBar.Read()';
         else TerminateScript('Couldn''t toggle the XPBar.');
       end;
       Inc(i);
@@ -64,7 +64,7 @@ begin
   end;
 end;
 
-function TRSXPBar.EarnedXP(): Boolean; override;
+function TXPBar.EarnedXP(): Boolean; override;
 begin
   Result := Self.Read() > Self.Tracker.Previous;
 

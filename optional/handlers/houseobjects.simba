@@ -1,6 +1,6 @@
 (*
 # RoomObjects
-File responsible for handling house objects. Similar to {ref}`TRSObject` but exclusive to the POH.
+File responsible for handling house objects. Similar to {ref}`TObject` but exclusive to the POH.
 *)
 
 {$DEFINE WL_HOUSEOBJECTS_INCLUDED}
@@ -31,7 +31,7 @@ TRoomObject = record
   Coordinates: TPointArray;
   Shape: Vector3;
   UpText: TStringArray;
-  Finder: TRSObjectFinder;
+  Finder: TObjectFinder;
   RoomOffset: TPoint;
 end;
 ```
@@ -41,7 +41,7 @@ Record used to store and interact information about POH room objects.
     Coordinates: TPointArray;
     Shape: Vector3;
     UpText: TStringArray;
-    Finder: TRSObjectFinder;
+    Finder: TObjectFinder;
     RoomOffset: TPoint;
   end;
 
@@ -276,4 +276,3 @@ function TRoomObject.Select(options: TStringArray; mmPoints: TPointArray; radian
 begin
   Result := Self.Hover(mmPoints, radians) and ChooseOption.Select(options);
 end;
-

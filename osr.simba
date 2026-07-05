@@ -1,9 +1,9 @@
 (*
-WaspLib is a library that extends [SRL-T](https://github.com/Torwent/SRL-T), another library to bot OldSchool RuneScape with Simba.
+WaspLib is a library that extends [SRL-T](https://github.com/Torwent/SRL-T), another library to bot with Simba.
 This library along with [SRL-T](https://github.com/Torwent/SRL-T) is the core of [WaspScripts](https://waspscripts.com).
 *)
 
-{$IFNDEF SRL_OSR} {$I SRL-T/osr.simba}{$ENDIF}
+{$IFNDEF SRL_OSR} {$I SRL-T/main.simba}{$ENDIF}
 {$DEFINE WL_OSR}
 
 {$IFNDEF WL_UTILS} {$I utils.simba} {$ENDIF}
@@ -13,7 +13,7 @@ This library along with [SRL-T](https://github.com/Torwent/SRL-T) is the core of
 // Summary: It includes this file until the current file is reached.
 
 {$IFNDEF WL_PROGRESS_INCLUDED}          {$I osr/progress.simba}
-{$IFNDEF WL_RSCLIENT_INCLUDED}          {$I osr/rsclient.simba}
+{$IFNDEF WL_CLIENT_INCLUDED}            {$I osr/client.simba}
 {$IFNDEF WL_INTERFACE_INCLUDED}         {$I osr/interfaces/core/interface.simba}
 {$IFNDEF WL_INTERFACEAREA_INCLUDED}     {$I osr/interfaces/mainscreen/interfacearea.simba}
 {$IFNDEF WL_XPBAR_SETUP_INCLUDED}       {$I osr/interfaces/mainscreen/xpbarsetup.simba}
@@ -43,11 +43,11 @@ This library along with [SRL-T](https://github.com/Torwent/SRL-T) is the core of
 
 {$IFNDEF WL_WALKEROBJECT_INCLUDED}      {$I osr/walker/objects/walkerobjects.simba}
 
-{$IFNDEF WL_RSOBJECTS_INCLUDED}         {$I osr/walker/objects/rsobjects.simba}
-{$IFNDEF WL_RSNPCS_INCLUDED}            {$I osr/walker/objects/rsnpcs.simba}
-{$IFNDEF WL_RSGROUNDITEMS_INCLUDED}     {$I osr/walker/objects/rsgrounditems.simba}
-{$IFNDEF WL_RSMONSTER_INCLUDED}         {$I osr/walker/objects/rsmonster.simba}
-{$IFNDEF WL_RSMONSTERS_INCLUDED}        {$I osr/walker/objects/rsmonsters.simba}
+{$IFNDEF WL_OBJECTS_INCLUDED}         {$I osr/walker/objects/objects.simba}
+{$IFNDEF WL_NPCS_INCLUDED}            {$I osr/walker/objects/npcs.simba}
+{$IFNDEF WL_GROUNDITEMS_INCLUDED}     {$I osr/walker/objects/grounditems.simba}
+{$IFNDEF WL_MONSTER_INCLUDED}         {$I osr/walker/objects/monster.simba}
+{$IFNDEF WL_MONSTERS_INCLUDED}        {$I osr/walker/objects/monsters.simba}
 
 {$IFNDEF WL_COLLECTBOX_INCLUDED}        {$I osr/interfaces/mainscreen/collectbox.simba}
 {$IFNDEF WL_GRANDEXCHANGE_INCLUDED}     {$I osr/interfaces/mainscreen/grandexchange.simba}

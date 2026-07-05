@@ -11,11 +11,11 @@ Methods to interact with the MainScreen.
 (*
 ## ObjectFinder.Unlimit
 ```pascal
-procedure TRSObjectFinder.Unlimit;
+procedure TObjectFinder.Unlimit;
 ```
 Resets ObjectFinder size limits
 *)
-procedure TRSObjectFinder.Unlimit();
+procedure TObjectFinder.Unlimit();
 begin
   Self.MinLongSide := 0;
   Self.MaxLongSide := 0;
@@ -26,11 +26,11 @@ end;
 (*
 ## ObjectFinder.Unlimited
 ```pascal
-function TRSObjectFinder.Unlimited: TRSObjectFinder;
+function TObjectFinder.Unlimited: TObjectFinder;
 ```
 Returns a copy of the ObjectFinder with the size limits removed.
 *)
-function TRSObjectFinder.Unlimited(): TRSObjectFinder;
+function TObjectFinder.Unlimited(): TObjectFinder;
 begin
   Result := Self;
   Result.MinShortSide := 0;
@@ -43,12 +43,12 @@ end;
 (*
 ## MainScreen.FilterInPolygon
 ```pascal
-function TRSMainScreen.FilterInPolygon(tpa, polygon: TPointArray): TPointArray;
-function TRSMainScreen.FilterInPolygon(atpa: T2DPointArray; polygon: TPointArray): T2DPointArray; overload;
+function TMainScreen.FilterInPolygon(tpa, polygon: TPointArray): TPointArray;
+function TMainScreen.FilterInPolygon(atpa: T2DPointArray; polygon: TPointArray): T2DPointArray; overload;
 ```
 Filters the given TPointArray or T2DPointArray and returns only those that are visible within a polygon on the mainScreen.
 *)
-function TRSMainScreen.FilterInPolygon(tpa, polygon: TPointArray): TPointArray;
+function TMainScreen.FilterInPolygon(tpa, polygon: TPointArray): TPointArray;
 begin
   tpa := Self.Filter(tpa);
 
@@ -68,7 +68,7 @@ begin
   Result := tpa.Intersection(polygon);
 end;
 
-function TRSMainScreen.FilterInPolygon(atpa: T2DPointArray; polygon: TPointArray): T2DPointArray; overload;
+function TMainScreen.FilterInPolygon(atpa: T2DPointArray; polygon: TPointArray): T2DPointArray; overload;
 var
   tpa: TPointArray;
 begin
@@ -80,7 +80,7 @@ begin
   end;
 end;
 
-function TRSMainScreen.FilterInPolygon(atpa, polygonArray: T2DPointArray): T2DPointArray; overload;
+function TMainScreen.FilterInPolygon(atpa, polygonArray: T2DPointArray): T2DPointArray; overload;
 var
   tpa: TPointArray;
   polygon: TPointArray;
@@ -102,11 +102,11 @@ end;
 (*
 ## MainScreen.GetAdjacentTiles
 ```pascal
-function TRSMainScreen.GetAdjacentTiles: TRectArray;
+function TMainScreen.GetAdjacentTiles: TRectArray;
 ```
 Returns the 4 tiles adjacent to the player in form of a TRectArray.
 *)
-function TRSMainScreen.GetAdjacentTiles(): TRectArray;
+function TMainScreen.GetAdjacentTiles(): TRectArray;
 var
   Tiles: TPointArray;
   Tile: TPoint;
@@ -126,7 +126,7 @@ end;
 (*
 ## MainScreen.DebugAdjacentTiles
 ```pascal
-procedure TRSMainScreen.DebugAdjacentTiles;
+procedure TMainScreen.DebugAdjacentTiles;
 ```
 Debugs MainScreen.GetAdjacentTiles.
 
@@ -135,7 +135,7 @@ Example:
 MainScreen.DebugAdjacentTiles;
 ```
 *)
-procedure TRSMainScreen.DebugAdjacentTiles();
+procedure TMainScreen.DebugAdjacentTiles();
 begin
   Debug(Self.GetAdjacentTiles());
 end;
@@ -143,7 +143,7 @@ end;
 (*
 ## MainScreen.InMultiCombat
 ```pascal
-function TRSMainScreen.InMultiCombat: Boolean;
+function TMainScreen.InMultiCombat: Boolean;
 ```
 Returns true if we are in multi combat false if not.
 
@@ -152,18 +152,18 @@ Example:
 Writeln MainScreen.InMultiCombat;
 ```
 *)
-function TRSMainScreen.InMultiCombat(): Boolean;
+function TMainScreen.InMultiCombat(): Boolean;
 var
   b: TBox;
 begin
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       begin
         b := RSInterface.Bounds;
         b.X1 := b.X2 - 30;
         b.Y1 := b.Y2 - 30;
       end;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       begin
         b := Minimap.Bounds;
         b.X1 := b.X2 - 30;
@@ -178,7 +178,7 @@ end;
 (*
 ## MainScreen.FindGrave
 ```pascal
-function TRSMainScreen.FindGrave: Boolean;
+function TMainScreen.FindGrave: Boolean;
 ```
 Returns true if we died and there's a grave available somewhere, false otherwise.
 
@@ -187,19 +187,19 @@ Example:
 Writeln MainScreen.FindGrave;
 ```
 *)
-function TRSMainScreen.FindGrave(): Boolean;
+function TMainScreen.FindGrave(): Boolean;
 var
   a: TPoint;
   b: TBox;
 begin
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       begin
         b := RSInterface.Bounds;
         b.X1 := b.X2 - 90;
         b.Y1 := b.Y2 - 30;
       end;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       begin
         a := Minimap.Center;
         b.X1 := a.X - 50;
@@ -215,7 +215,7 @@ end;
 (*
 ## MainScreen.LoadingPOH
 ```pascal
-function TRSMainScreen.LoadingPOH: Boolean;
+function TMainScreen.LoadingPOH: Boolean;
 ```
 Returns true if we are loading a poh.
 
@@ -224,7 +224,7 @@ Example:
 Writeln MainScreen.LoadingPOH;
 ```
 *)
-function TRSMainScreen.LoadingPOH(): Boolean;
+function TMainScreen.LoadingPOH(): Boolean;
 begin
   Result := (SRL.CountColor(CTS0(13127, 0), Self.Bounds) = 892) and
             (SRL.CountColor(CTS0(8247, 0), Self.Bounds) = 900);
@@ -233,7 +233,7 @@ end;
 (*
 ## MainScreen.WaitLoadingPOH
 ```pascal
-function TRSMainScreen.WaitLoadingPOH: Boolean;
+function TMainScreen.WaitLoadingPOH: Boolean;
 ```
 Waits for the POH loading screen returns true if we find a loading screen and successfully wait for it to finish.
 
@@ -242,7 +242,7 @@ Example:
 Writeln MainScreen.WaitLoadingPOH;
 ```
 *)
-function TRSMainScreen.WaitLoadingPOH(waitTime: Int32; interval: Int32 = -1): Boolean;
+function TMainScreen.WaitLoadingPOH(waitTime: Int32; interval: Int32 = -1): Boolean;
 var
   t: UInt64;
 begin
@@ -261,7 +261,7 @@ end;
 (*
 ## MainScreen.FindEnemyHitsplats
 ```pascal
-function TRSMainScreen.FindEnemyHitsplats(): Boolean;
+function TMainScreen.FindEnemyHitsplats(): Boolean;
 ```
 Returns the hitsplats on screen that don't belong to the player.
 
@@ -270,13 +270,13 @@ Example:
 Debug(MainScreen.FindEnemyHitsplats());
 ```
 *)
-function TRSMainScreen.FindEnemyHitsplats(waitTime: Int32): TRSHitsplatArray;
+function TMainScreen.FindEnemyHitsplats(waitTime: Int32): THitsplatArray;
 var
   t: UInt64;
   l:Int32;
-  tmp, splats: TRSHitsplatArray;
+  tmp, splats: THitsplatArray;
   b: TBox;
-  splat: TRSHitsplat;
+  splat: THitsplat;
 begin
   t := GetTickCount() + waitTime;
   repeat
@@ -285,7 +285,7 @@ begin
     begin
       l := Length(splats);
       SetLength(splats, Length(tmp) + l);
-      MemMove(tmp[0],splats[L],Length(tmp)*SizeOf(TRSHitsplat));
+      MemMove(tmp[0],splats[L],Length(tmp)*SizeOf(THitsplat));
     end;
   until GetTickCount() >= t;
 
@@ -301,7 +301,7 @@ end;
 (*
 ## MainScreen.InCombat
 ```pascal
-function TRSMainScreen.InCombat: Boolean;
+function TMainScreen.InCombat: Boolean;
 ```
 Returns true if we are currently in combat.
 With slow attack speed between you and the enemy this might return false negatives.
@@ -311,7 +311,7 @@ Example:
 Writeln MainScreen.InCombat;
 ```
 *)
-function TRSMainScreen.InCombat(): Boolean;
+function TMainScreen.InCombat(): Boolean;
 begin
   Result := XPBar.EarnedXP() or (Self.FindHitsplats() <> []);
 end;
@@ -319,7 +319,7 @@ end;
 (*
 ## MainScreen.WaitInCombat
 ```pascal
-function TRSMainScreen.WaitInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
+function TMainScreen.WaitInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
 ```
 Waits the specified **waitTime** until we are in combat.
 
@@ -328,7 +328,7 @@ Example:
 MainScreen.WaitInCombat(5000);
 ```
 *)
-function TRSMainScreen.WaitInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
+function TMainScreen.WaitInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
 begin
   if (interval = -1) then
     interval := SRL.TruncatedGauss(50, 300);
@@ -339,7 +339,7 @@ end;
 (*
 ## MainScreen.WaitNotInCombat
 ```pascal
-function TRSMainScreen.WaitNotInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
+function TMainScreen.WaitNotInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
 ```
 Waits the specified **waitTime** until we are nto in combat.
 
@@ -348,7 +348,7 @@ Example:
 MainScreen.WaitNotInCombat(5000);
 ```
 *)
-function TRSMainScreen.WaitNotInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
+function TMainScreen.WaitNotInCombat(waitTime: Int32; interval: Int32 = -1): Boolean;
 begin
   if (interval = -1) then
     interval := SRL.TruncatedGauss(50, 300);
@@ -360,8 +360,8 @@ end;
 (*
 ## MainScreen.FindArrow
 ```pascal
-function TRSMainScreen.FindArrow(out TPA: TPointArray): Boolean;
-function TRSMainScreen.FindArrow: Boolean; overload;
+function TMainScreen.FindArrow(out TPA: TPointArray): Boolean;
+function TMainScreen.FindArrow: Boolean; overload;
 ```
 Returns true if there's a yellow arrow on screen.
 If a TPointArray is passed as a parameter it will return with the location of the arrow tip.
@@ -371,7 +371,7 @@ Example:
 Writeln MainScreen.FindArrow;
 ```
 *)
-function TRSMainScreen.FindArrow(out TPA: TPointArray): Boolean;
+function TMainScreen.FindArrow(out TPA: TPointArray): Boolean;
 var
   TempTPA: TPointArray;
 begin
@@ -381,7 +381,7 @@ begin
     TPA := Self.Filter(TempTPA);
 end;
 
-function TRSMainScreen.FindArrow(): Boolean; overload;
+function TMainScreen.FindArrow(): Boolean; overload;
 var
   TPA: TPointArray;
 begin
@@ -392,8 +392,8 @@ end;
 (*
 ## MainScreen.WaitArrow
 ```pascal
-function TRSMainScreen.WaitArrow(TPA: TPointArray; WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
-function TRSMainScreen.WaitArrow(WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
+function TMainScreen.WaitArrow(TPA: TPointArray; WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
+function TMainScreen.WaitArrow(WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
 ```
 Waits **WaitTime** for a yellow arrow to appear on MainScreen.
 If a TPointArray is passed as a parameter it will return with the location of the arrow tip.
@@ -403,7 +403,7 @@ Example:
 Writeln MainScreen.WaitArrow;
 ```
 *)
-function TRSMainScreen.WaitArrow(out TPA: TPointArray; WaitTime: Int32 = 120; Interval: Int32 = -1): Boolean;
+function TMainScreen.WaitArrow(out TPA: TPointArray; WaitTime: Int32 = 120; Interval: Int32 = -1): Boolean;
 begin
   if (Interval = -1) then
     Interval := SRL.TruncatedGauss(50, 200);
@@ -411,7 +411,7 @@ begin
   Result := WaitUntil(Self.FindArrow(TPA), Interval, WaitTime);
 end;
 
-function TRSMainScreen.WaitArrow(WaitTime: Int32 = 120; Interval: Int32 = -1): Boolean; overload;
+function TMainScreen.WaitArrow(WaitTime: Int32 = 120; Interval: Int32 = -1): Boolean; overload;
 begin
   if (Interval = -1) then
     Interval := SRL.TruncatedGauss(50, 200);
@@ -419,7 +419,7 @@ begin
   Result := WaitUntil(Self.FindArrow, Interval, WaitTime);
 end;
 
-function TRSMainScreen.IsUpText(text: TStringArray; timeout: Int32; out index: Int32; caseSensitive: Boolean = True): Boolean; overload;
+function TMainScreen.IsUpText(text: TStringArray; timeout: Int32; out index: Int32; caseSensitive: Boolean = True): Boolean; overload;
 
   function IsUpText(): Boolean;
   var

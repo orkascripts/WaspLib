@@ -13,32 +13,32 @@ LootHandler is a record made to handle looting.
 {$ENDIF}
 
 type
-  TRSLootDrop = record
+  TLootDrop = record
     Name: String;
-    Drop: TRSMonsterDrop;
+    Drop: TMonsterDrop;
     Value: Int32;
     Selected: Boolean;
   end;
 
-  TRSLootDropArray = array of TRSLootDrop;
+  TLootDropArray = array of TLootDrop;
 
-function SortLootDropArray(constref l, r: TRSLootDrop): Int32;
+function SortLootDropArray(constref l, r: TLootDrop): Int32;
 begin
   Result := r.Value - l.Value;
 end;
 
-procedure TRSLootDropArray.Sort();
+procedure TLootDropArray.Sort();
 begin
   System.Sort(Self, @SortLootDropArray);
 end;
 
-function TRSLootDropArray.Sorted(): TRSLootDropArray;
+function TLootDropArray.Sorted(): TLootDropArray;
 begin
   Result := Copy(Self);
   Result.Sort();
 end;
 
-function TRSLootDropArray.Find(name: String): Int32;
+function TLootDropArray.Find(name: String): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Name = name then
@@ -46,7 +46,7 @@ begin
   Result := -1;
 end;
 
-function TRSLootDropArray.Contains(name: String): Boolean;
+function TLootDropArray.Contains(name: String): Boolean;
 begin
   Result := Self.Find(name) <> -1;
 end;
@@ -58,10 +58,10 @@ type
     Selected: Boolean;
   end;
 
-  TRSLootHandler = record(TSRLBaseRecord)
-    Items: TRSLootDropArray;
-    Loot: TRSMonsterDropArray;
-    LootItems: TRSItemArray;
+  TLootHandler = record(TSRLBaseRecord)
+    Items: TLootDropArray;
+    Loot: TMonsterDropArray;
+    LootItems: TItemArray;
 
     ValueThreshold: Int32;
 
@@ -75,7 +75,7 @@ type
     Config: TConfigJSON;
   end;
 
-procedure TRSLootHandler._Init(value: Int32);
+procedure TLootHandler._Init(value: Int32);
 begin
   Self.Name := 'LootHandler';
 
@@ -119,11 +119,11 @@ begin
   Self.ValueThreshold := value;
 end;
 
-procedure TRSLootHandler.AddItems(items: array of TCustomLootHandlerItem); overload;
+procedure TLootHandler.AddItems(items: array of TCustomLootHandlerItem); overload;
 var
   item: TCustomLootHandlerItem;
   i: Int32;
-  drop: TRSMonsterDrop;
+  drop: TMonsterDrop;
 begin
   for item in items do
   begin
@@ -143,7 +143,7 @@ begin
       Continue;
     end;
 
-    drop := TRSMonsterDrop.Create(item.Name);
+    drop := TMonsterDrop.Create(item.Name);
 
     Self.Items += [drop.GetName(), drop, ItemData.GetAverage(item.Name), item.Selected];
   end;
@@ -164,17 +164,17 @@ begin
   end;
 end;
 
-procedure TRSLootHandler.Setup(drops: TRSItemArray; value: Int32 = 5000);
+procedure TLootHandler.Setup(drops: TItemArray; value: Int32 = 5000);
 var
   i, val: Int32;
-  drop: TRSMonsterDrop;
+  drop: TMonsterDrop;
 begin
   Self._Init(value);
 
   for i := 0 to High(drops) do
   begin
     val := ItemData.GetAverage(drops[i]);
-    drop := TRSMonsterDrop.Create(drops[i]);
+    drop := TMonsterDrop.Create(drops[i]);
     if val = 0 then val := $FFFFFF;
     Self.Items += [drop.GetName(), drop, val, val >= value];
   end;
@@ -182,9 +182,9 @@ begin
   Self.Items.Sort();
 end;
 
-procedure TRSLootHandler.Setup(monster: String; value: Int32 = 5000); overload;
+procedure TLootHandler.Setup(monster: String; value: Int32 = 5000); overload;
 var
-  drops: TRSMonsterDropArray;
+  drops: TMonsterDropArray;
   i, val, idx: Int32;
   keys: TStringList;
   custom: array of TCustomLootHandlerItem;
@@ -228,7 +228,7 @@ begin
   Self.AddItems(custom);
 end;
 
-procedure TRSLootHandler.ResetToThreshold();
+procedure TLootHandler.ResetToThreshold();
 var
   i: Int32;
 begin
@@ -249,12 +249,12 @@ begin
   end;
 end;
 
-procedure TRSLootHandler.AddItem(item: String);
+procedure TLootHandler.AddItem(item: String);
 begin
   Self.AddItems([[item, True]]);
 end;
 
-procedure TRSLootHandler.Toggle(idx: Int32);
+procedure TLootHandler.Toggle(idx: Int32);
 var
   i: Int32;
 begin
@@ -279,7 +279,7 @@ begin
 end;
 
 
-function TRSLootHandler.GetItemIndex(name: String): Int32;
+function TLootHandler.GetItemIndex(name: String): Int32;
 begin
   for Result := 0 to High(Self.Items) do
     if Self.Items[Result].Name = name then
@@ -287,7 +287,7 @@ begin
   Result := -1;
 end;
 
-function TRSLootHandler.GetItemValue(name: String): Int32;
+function TLootHandler.GetItemValue(name: String): Int32;
 var
   i: Int32;
 begin
@@ -297,13 +297,13 @@ begin
 end;
 
 
-function TRSLootHandler.HasSpace(drop: TRSMonsterDrop): Boolean;
+function TLootHandler.HasSpace(drop: TMonsterDrop): Boolean;
 begin
   Result := not Inventory.IsFull() or (drop.Stackable and Inventory.ContainsItem(drop.Item));
 end;
 
 
-function TRSLootHandler.IsHoveringLoot(out contextIsOpen: Boolean): Boolean;
+function TLootHandler.IsHoveringLoot(out contextIsOpen: Boolean): Boolean;
 var
   upText: String;
 begin
@@ -319,7 +319,7 @@ begin
   Result := contextIsOpen and ChooseOption.HasOption('Take');
 end;
 
-function TRSLootHandler.IsHoveringLoot(): Boolean; overload;
+function TLootHandler.IsHoveringLoot(): Boolean; overload;
 var
   upText: String;
 begin
@@ -333,7 +333,7 @@ begin
   Result := ChooseOption.Open() and ChooseOption.HasOption('Take');
 end;
 
-function TRSLootHandler.CountDrop(drop: TRSMonsterDrop): Int32;
+function TLootHandler.CountDrop(drop: TMonsterDrop): Int32;
 begin
   if drop.Stackable then
     Exit(Inventory.CountItemStack(drop.Item));
@@ -341,7 +341,7 @@ begin
   Result := Inventory.CountItem(drop.Item);
 end;
 
-function TRSLootHandler.HandleLooting(): Boolean;
+function TLootHandler.HandleLooting(): Boolean;
 var
   i, count: Int32;
   contextIsOpen: Boolean;
@@ -436,14 +436,14 @@ begin
   Result := Self.HandleLooting();
 end;
 
-function TRSLootHandler.CheckLoot(p: TPoint): Boolean;
+function TLootHandler.CheckLoot(p: TPoint): Boolean;
 begin
   Self._DidLoot := False;
   Mouse.Move(p);
   Result := Self.HandleLooting();
 end;
 
-function TRSLootHandler.CheckLoot(b: TBox; attempts: Int32 = 3): Boolean; overload;
+function TLootHandler.CheckLoot(b: TBox; attempts: Int32 = 3): Boolean; overload;
 var
   i: Int32;
   tpa: TPointArray;
@@ -467,7 +467,7 @@ begin
   Result := Self.HandleLooting() or Self._DidLoot;
 end;
 
-function TRSLootHandler.CheckLoot(tile: TRectangle): Boolean; overload;
+function TLootHandler.CheckLoot(tile: TRectangle): Boolean; overload;
 var
   i: Int32;
   tpa: TPointArray;
@@ -495,7 +495,7 @@ begin
   Result := Self.HandleLooting() or Self._DidLoot;
 end;
 
-function TRSLootHandler.CheckLoot(dots: TPointArray): Boolean; overload;
+function TLootHandler.CheckLoot(dots: TPointArray): Boolean; overload;
 var
   p: TPoint;
   angle: Double;
@@ -515,13 +515,13 @@ begin
   end;
 end;
 
-function TRSLootHandler.CheckLoot(): Boolean; overload;
+function TLootHandler.CheckLoot(): Boolean; overload;
 begin
   Result := Self.CheckLoot(Minimap.GetDots(ERSMinimapDot.ITEM));
 end;
 
 var
-  LootHandler: TRSLootHandler;
+  LootHandler: TLootHandler;
 
 function TScriptForm.CreateLootManager(): TTabSheet;
   type TScriptForm = TScriptForm;

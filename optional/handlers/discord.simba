@@ -179,17 +179,17 @@ begin
     if Length(Self.Embeds) > 0 then
     begin
       EmbedsArray.Init();
-      
+
       for i := 0 to High(Self.Embeds) do
       begin
         EmbedObj.Init();
 
         if Self.Embeds[i].Title <> '' then
           EmbedObj.Put('title', Self.Embeds[i].Title);
-          
+
         if Self.Embeds[i].Description <> '' then
           EmbedObj.Put('description', Self.Embeds[i].Description);
-          
+
         if Self.Embeds[i].Color <> 0 then
           EmbedObj.Put('color', Self.Embeds[i].Color);
 
@@ -213,10 +213,10 @@ begin
           ThumbObj.Put('url', Self.Embeds[i].ThumbnailURL);
           EmbedObj.Put('thumbnail', ThumbObj);
         end;
-        
+
         EmbedsArray.Put(EmbedObj);
       end;
-      
+
       JSON.Put('embeds', EmbedsArray);
     end;
 
@@ -250,7 +250,7 @@ begin
     Path := 'discord.json'
   else
     Path := ConfigPath;
-    
+
   Self.Config.Setup(Path);
 
   // Load webhook URL from config but don't validate it yet
@@ -263,21 +263,21 @@ begin
       Self.DebugLn('Loaded webhook URL from config');
     end;
   end;
-  
+
   // Load username if available
   if Self.Config.Has('webhook_username') then
   begin
     Self.Webhook.Username := Self.Config.GetString('webhook_username');
     Self.DebugLn('Loaded username from config');
   end;
-  
-  // Load avatar if available  
+
+  // Load avatar if available
   if Self.Config.Has('webhook_avatar') then
   begin
     Self.Webhook.AvatarURL := Self.Config.GetString('webhook_avatar');
     Self.DebugLn('Loaded avatar from config');
   end;
-  
+
   Self.RetryCount := 3;
   Self.RetryDelay := 1000;
   Self.HTTP := InitializeHTTPClient(False);
@@ -304,16 +304,16 @@ var
   oldURL: String;
 begin
   Self.LastError := '';
-  
+
   if WebhookURL = '' then
   begin
     Self.LastError := 'Webhook URL cannot be empty';
     Exit(False);
   end;
-  
+
   // Store the old URL in case validation fails
   oldURL := Self.Webhook.URL;
-  
+
   // Basic pattern validation for Discord webhook URLs
   if not (Pos('https://discord.com/api/webhooks/', WebhookURL) = 1) then
   begin
@@ -321,7 +321,7 @@ begin
     Self.DebugLn('Webhook URL does not match Discord pattern');
     Exit(False);
   end;
-  
+
   // Split by '/' and expect at least 6 parts for a valid webhook URL
   // Format: https://discord.com/api/webhooks/{webhook_id}/{webhook_token}
   if Length(WebhookURL.Split('/')) < 6 then
@@ -330,19 +330,19 @@ begin
     Self.DebugLn('Webhook URL is missing ID or token');
     Exit(False);
   end;
-  
+
   // Validate the webhook URL by making a minimal POST request
   try
     tempHTTP := InitializeHTTPClient(False);
     SetHTTPHeader(tempHTTP, 'Content-Type', 'application/json');
-    
+
     // Empty payload that won't actually send a message
     emptyPayload := '{}';
-    
+
     response := PostHTTPPage(tempHTTP, WebhookURL, emptyPayload);
     statusCode := GetHTTPResponseCode(tempHTTP);
     FreeHTTPClient(tempHTTP);
-    
+
     // Check for specific webhook errors
     if (statusCode = 404) or (Pos('"code": 10015', response) > 0) then
     begin
@@ -353,7 +353,7 @@ begin
         Self.Webhook.URL := oldURL;
       Exit(False);
     end;
-    
+
     // A 400 status might mean the webhook is valid but the payload is invalid
     // which is what we expect with our empty payload
     if (statusCode = 400) and (Pos('"code": 50006', response) > 0) then
@@ -364,7 +364,7 @@ begin
       Self.DebugLn('Webhook URL set and validated');
       Exit(True);
     end;
-    
+
     // For other successful responses, accept the webhook
     if (statusCode >= 200) and (statusCode < 300) then
     begin
@@ -373,7 +373,7 @@ begin
       Self.DebugLn('Webhook URL set and validated');
       Exit(True);
     end;
-    
+
     // If we get here, something unexpected happened
     Self.LastError := 'Webhook validation received unexpected response: ' + IntToStr(statusCode) + ' - ' + response;
     Self.DebugLn(Self.LastError);
@@ -400,7 +400,7 @@ Sets the username that appears for webhook messages.
 
 Example:
 ```pascal
-MyDiscord.SetUsername('OSRS Bot');
+MyDiscord.SetUsername('My Bot');
 ```
 *)
 procedure TDiscordClient.SetUsername(Username: String);
@@ -452,7 +452,7 @@ var
 begin
   Self.LastError := '';
   Self.LastResponse := '';
-  
+
   if Self.Webhook.URL = '' then
   begin
     Self.LastError := 'No webhook URL configured';
@@ -476,7 +476,7 @@ begin
 
       if Self.HTTP <> 0 then
         FreeHTTPClient(Self.HTTP);
-        
+
       Self.HTTP := InitializeHTTPClient(False);
       SetHTTPHeader(Self.HTTP, 'Content-Type', 'application/json');
 
@@ -490,7 +490,7 @@ begin
         Self.Webhook.ClearAll();
         Exit(True);
       end;
-      
+
       // If not successful yet, store error details if not already set by exception
       if (Self.LastError = '') and (not AttemptFailedDueToException) then
         Self.LastError := 'HTTP Error: ' + IntToStr(StatusCode) + ' - Response: ' + Self.LastResponse;
@@ -513,15 +513,15 @@ begin
         // Try alternative method for empty content
         if Self.HTTP <> 0 then
           FreeHTTPClient(Self.HTTP);
-          
+
         Self.HTTP := InitializeHTTPClient(False);
         SetHTTPHeader(Self.HTTP, 'Content-Type', 'application/x-www-form-urlencoded');
         AddPostVariable(Self.HTTP, 'content', Self.Webhook.Content);
-        
+
         // Note: This alternative method might need status code checking too,
         // but leaving it as is for now unless it also proves problematic.
         Self.LastResponse := PostHTTPPageEx(Self.HTTP, Self.Webhook.URL);
-        
+
         if (Self.LastResponse = '') and (not AttemptFailedDueToException) then
         begin
           Self.Webhook.Content := ''; // Assuming empty response means success here
@@ -566,7 +566,7 @@ var
 begin
   Self.LastError := '';
   Self.LastResponse := '';
-  
+
   if Self.Webhook.URL = '' then
   begin
     Self.LastError := 'No webhook URL configured';
@@ -582,7 +582,7 @@ begin
   Self.ScreenshotPath := FilePath;
   Attempts := 0;
   Boundary := '---------------------------' + ToStr(Random(100000000));
-  
+
   // Determine MIME type based on file extension
   Ext := LowerCase(ExtractFileExt(FilePath));
   if (Ext = '.png') then
@@ -601,7 +601,7 @@ begin
 
       if Self.HTTP <> 0 then
         FreeHTTPClient(Self.HTTP);
-        
+
       Self.HTTP := InitializeHTTPClient(False);
       SetHTTPHeader(Self.HTTP, 'Content-Type', 'multipart/form-data; boundary=' + Boundary);
 
@@ -685,7 +685,7 @@ var
   bounds: TBox := GetClientBounds;
 begin
   Self.LastError := '';
-  
+
   bmp.FromClient();
   bmp.Crop(bounds.X1, bounds.Y1, bounds.X2, bounds.Y2);
 
@@ -731,7 +731,7 @@ procedure TDiscordClient.Free;
 begin
   if Self.HTTP <> 0 then
     FreeHTTPClient(Self.HTTP);
-    
+
   Self.Config.Free();
   Self.HTTP := 0;
 end;
@@ -750,7 +750,7 @@ begin
   // Then set/override specific properties
   if not Discord.SetWebhook('https://discord.com/api/webhooks/your_webhook_id/your_webhook_token') then
     Exit;
-  Discord.SetUsername('OSRS Bot');
+  Discord.SetUsername('My Bot');
   Discord.SetAvatar('https://raw.githubusercontent.com/Torwent/wasp-webapp/refs/heads/main/static/favicon.png');
 
   try

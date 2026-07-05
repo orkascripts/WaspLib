@@ -10,17 +10,17 @@ type
     CLOSE_BALLOON
   );
 
-  TRSBalloonTransport = type TRSInterface;
+  TBalloonTransport = type TInterface;
 
-procedure TRSBalloonTransport.Setup(); override;
+procedure TBalloonTransport.Setup(); override;
 begin
   inherited;
   Self.ButtonColors := [CTS1(8564948, 0)];
 end;
 
-procedure TRSBalloonTransport.SetupAlignment(); overload;
+procedure TBalloonTransport.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   inherited;
 
@@ -32,7 +32,7 @@ begin
   alignment.MaxHeight := 334;
 end;
 
-function TRSBalloonTransport.GetButton(button: ERSBalloonButton): TRSButton;
+function TBalloonTransport.GetButton(button: ERSBalloonButton): TGameButton;
 begin
   case button of
     ERSBalloonButton.GRAND_TREE_BALLOON:
@@ -56,7 +56,7 @@ begin
   Result.Middle := Result.Bounds.Middle();
 end;
 
-function TRSBalloonTransport.GetButtons(): TRSButtonArray;
+function TBalloonTransport.GetButtons(): TGameButtonArray;
 var
   i: Int32;
 begin
@@ -64,18 +64,18 @@ begin
     Result += Self.GetButton(ERSBalloonButton(i));
 end;
 
-function TRSBalloonTransport.IsOpen(): Boolean;
+function TBalloonTransport.IsOpen(): Boolean;
 begin
   WriteLn SRL.CountColor(Self.ButtonColors[0], Self.Bounds());
   Result := InRange(SRL.CountColor(Self.ButtonColors[0], Self.Bounds()), 2100, 2500);
 end;
 
-function TRSBalloonTransport.IsOpen(waitTime: Int32): Boolean; overload;
+function TBalloonTransport.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TRSBalloonTransport.ClickCloseButton(pressEscape: Boolean = False): Boolean;
+function TBalloonTransport.ClickCloseButton(pressEscape: Boolean = False): Boolean;
 begin
   if pressEscape then
   begin
@@ -86,7 +86,7 @@ begin
     Result := Self.GetButton(CLOSE_BALLOON).Click();
 end;
 
-function TRSBalloonTransport.Close(pressEscape: Boolean = False): Boolean;
+function TBalloonTransport.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -95,9 +95,9 @@ begin
 end;
 
 var
- BalloonTransport : TRSBalloonTransport;
+ BalloonTransport : TBalloonTransport;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

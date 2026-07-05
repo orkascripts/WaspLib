@@ -19,7 +19,7 @@
 
 type
   TUniversalTransportV2 = record(TSRLBaseRecord)
-    ardougneCape: TRSItem;
+    ardougneCape: TItem;
     fairyTeleportItem: EFairyTeleportItem;
     PohSetup : Boolean;
   end;
@@ -94,11 +94,11 @@ begin
   raise 'Unable to find ' + teleportLocation.destination + ' in menu for ' + ToStr(teleportLocation.item);
 end;
 
-function TUniversalTransportV2.handleJewelleryTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TRSMap = Map): Boolean;
+function TUniversalTransportV2.handleJewelleryTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TMap = Map): Boolean;
 var
   startPosition: TPoint := TransportMap.position;// ScriptWalker^.GetMyPos();ScriptWalker^.GetMyPos();
-  chargedJewellery: TRSItem;
-  chargedVariants: TRSItemArray := getChargedJewelleryNames(teleportLocation.item);
+  chargedJewellery: TItem;
+  chargedVariants: TItemArray := getChargedJewelleryNames(teleportLocation.item);
   didTeleport: Boolean;
   middleScreenJewellery: TStringArray := ['skills necklace'];
 begin
@@ -138,11 +138,11 @@ begin
   end;
 end;
 
-function TUniversalTransportV2.handleOtherTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TRSMap = Map): Boolean;
+function TUniversalTransportV2.handleOtherTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TMap = Map): Boolean;
 var
   didTeleport: Boolean;
-  teleportItem: TRSItem;
-  teleportItems: TRSItemArray := teleportLocation.items;
+  teleportItem: TItem;
+  teleportItems: TItemArray := teleportLocation.items;
   teleportDestination: String := teleportLocation.destination;
   startPosition: TPoint := TransportMap.position;
 begin
@@ -170,10 +170,10 @@ begin
 
 end;
 
-function TUniversalTransportV2.handleDiaryTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TRSMap = Map): Boolean;
+function TUniversalTransportV2.handleDiaryTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TMap = Map): Boolean;
 var
-  numberedItems: TRSItemArray := getNumberedDiaryItems(teleportLocation.item);
-  numberedDiaryItem: TRSItem;
+  numberedItems: TItemArray := getNumberedDiaryItems(teleportLocation.item);
+  numberedDiaryItem: TItem;
   didTeleport: Boolean;
   startPosition: TPoint := TransportMap.position;// ScriptWalker^.GetMyPos();ScriptWalker^.GetMyPos();
 begin
@@ -204,7 +204,7 @@ begin
   end;
 end;
 
-function TUniversalTransportV2.handleMinigameTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TRSMap = Map): Boolean;
+function TUniversalTransportV2.handleMinigameTeleport(constref teleportLocation: TTeleportLocation; TransportMap : TMap = Map): Boolean;
 var
   startPosition: TPoint := TransportMap.position;// ScriptWalker^.GetMyPos(); ScriptWalker^.GetMyPos();
 begin
@@ -214,9 +214,9 @@ end;
 
 function TUniversalTransportV2.withdrawTeleportItem(constref teleportLocation: TTeleportLocation): Boolean;
 var
-  bankItem: TRSBankItem;
-  chargedJewellery: TRSItem;
-  chargedVariants: TRSItemArray;
+  bankItem: TBankItem;
+  chargedJewellery: TItem;
+  chargedVariants: TItemArray;
   teleportTabName: String;
 begin
   Self.DebugLn('Trying to withdraw');
@@ -252,7 +252,7 @@ begin
   end;
 end;
 
-function TUniversalTransportV2.handleMagicTeleport(constref teleportLocation: TTeleportLocation; useMagic: Boolean = False; TransportMap : TRSMap = Map): Boolean;
+function TUniversalTransportV2.handleMagicTeleport(constref teleportLocation: TTeleportLocation; useMagic: Boolean = False; TransportMap : TMap = Map): Boolean;
 var
   startPosition: TPoint := TransportMap.position;// ScriptWalker^.GetMyPos();ScriptWalker^.GetMyPos();
   teleportTabName: String := teleportLocation.destination.Lower() + " teleport";
@@ -444,7 +444,7 @@ begin
   end;
 end;
 
-function TUniversalTransportV2.run(constref teleportLocation: TTeleportLocation; useMagic: Boolean = False; usePOH: Boolean = false; TransportMap : TRSMap = Map): Boolean; overload;
+function TUniversalTransportV2.run(constref teleportLocation: TTeleportLocation; useMagic: Boolean = False; usePOH: Boolean = false; TransportMap : TMap = Map): Boolean; overload;
 var
   didTeleport: Boolean;
 begin

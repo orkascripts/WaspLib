@@ -45,8 +45,8 @@ type
     GrassColor: Int32;
   end;
 ```
-Helper record used by the {ref}`TRSPOHHandler`.
-All `TPOHMap` methods are helper methods for the {ref}`TRSPOHHandler` and you shouldn't have to call them for anything.
+Helper record used by the {ref}`TPOHHandler`.
+All `TPOHMap` methods are helper methods for the {ref}`TPOHHandler` and you shouldn't have to call them for anything.
 *)
   TPOHMap = record
     AMOUNT, SIZE: Int32;
@@ -425,7 +425,7 @@ Example:
 var
   minimapBMP: TMufasaBitmap;
 begin
-  minimapBMP := TRSPOHHandler.GetCleanMinimap();
+  minimapBMP := TPOHHandler.GetCleanMinimap();
   minimapBMP.ReplaceColor(1, POH.Map.GrassColor);
   WriteLn POH.Map.SampleSearch(minimapBMP, SAMPLE_SIZE);
   minimapBMP.Free();

@@ -1,6 +1,6 @@
 (*
-# RSClient
-Extensions to TRSClient.
+# GameClient
+Extensions to TGameClient.
 
 One thing to keep in mind is that WaspLib enforces the use of Remote Input by default.
 
@@ -13,14 +13,14 @@ begin
 WLSettings.RemoteInput.Enabled := False;
 end;
 *)
-{$DEFINE WL_RSCLIENT_INCLUDED}
+{$DEFINE WL_GameClient_INCLUDED}
 {$IFNDEF WL_OSR}
   {$I WaspLib/osr.simba}
 {$ENDIF}
 
-procedure TRSClient.Setup(); override;
+procedure TGameClient.Setup(); override;
 begin
-  Self.Name := 'RSClient';
+  Self.Name := 'GameClient';
 
   if not Self.Revalidate() then
     TerminateScript('Please refocus the client!');
@@ -32,18 +32,18 @@ begin
   {$ENDIF}
 
   Self.Mode := Self.DetectClientMode(True);
-  if Self.Mode = ERSClientMode.UNKNOWN then
-    Self.Mode := ERSClientMode.FIXED; // Fixed as default so we can login if needed
+  if Self.Mode = EClientMode.UNKNOWN then
+    Self.Mode := EClientMode.FIXED; // Fixed as default so we can login if needed
   Self.ClientModeChanged();
 end;
 
-function TRSOptions.HideRoofs(): Boolean;
+function TOptions.HideRoofs(): Boolean;
 begin
   //overriden later in options file.
   Result := True;
 end;
 
-procedure TRSClient.CheckClientSettings();
+procedure TGameClient.CheckClientSettings();
 var
   userB: TBox;
 begin
@@ -73,7 +73,7 @@ begin
   end;
 end;
 
-function TRSClient.IsLoggedIn(): Boolean; override;
+function TGameClient.IsLoggedIn(): Boolean; override;
 begin
   Result := inherited;
 

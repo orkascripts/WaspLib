@@ -9,11 +9,11 @@ Methods to handle MM2MS (Minimap to MainScreen). Extends SRL's MM2MS.
 
 type
 (*
-## type TRSMainScreenShape
+## type TMainScreenShape
 
-This record holds information about the shape of a TRSWalkerObject and it's rotation.
+This record holds information about the shape of a TWalkerObject and it's rotation.
 
-TRSMainScreenShape.Shape has 3 values, X, Y and Z. X and Y are how wide a object is, measured in game tiles.
+TMainScreenShape.Shape has 3 values, X, Y and Z. X and Y are how wide a object is, measured in game tiles.
 Z is the object height which has to be guessed and tested for a good value.
 
 For example, a bank chest would be roughly [1, 1, 4].
@@ -21,13 +21,13 @@ A bank booth would be roughly [1, 1, 8].
 
 Angle is used to rotate an object and should be done in radians.
 *)
-  TRSMainScreenShape = record
+  TMainScreenShape = record
     Tile: Vector3;
     Angle: Single;
   end;
-  TRSMainScreenShapeArray = array of TRSMainScreenShape;
+  TMainScreenShapeArray = array of TMainScreenShape;
 
-procedure TRSMainScreenShapeArray.SetShape(tile: Vector3; index: Int32 = -1);
+procedure TMainScreenShapeArray.SetShape(tile: Vector3; index: Int32 = -1);
 begin
 
   if index > -1 then
@@ -40,7 +40,7 @@ begin
     Self[index].Tile := tile;
 end;
 
-procedure TRSMainScreenShapeArray.SetAngle(angle: Double; index: Int32 = -1);
+procedure TMainScreenShapeArray.SetAngle(angle: Double; index: Int32 = -1);
 begin
   if index > -1 then
   begin
@@ -52,10 +52,10 @@ begin
     Self[index].Angle := angle;
 end;
 
-function TRSMainScreenShapeArray.GetShape(height: Double): TRSMainScreenShapeArray;
+function TMainScreenShapeArray.GetShape(height: Double): TMainScreenShapeArray;
 var
   i: Int32;
-  temp: TRSMainScreenShape;
+  temp: TMainScreenShape;
 begin
   for i := 0 to High(Self) do
   begin
@@ -65,7 +65,7 @@ begin
   end;
 end;
 
-function TRSMainScreenShapeArray.ZeroHeight(): Boolean;
+function TMainScreenShapeArray.ZeroHeight(): Boolean;
 var
   i: Int32;
 begin
@@ -76,7 +76,7 @@ begin
 end;
 
 
-function TRSMainScreen.GetPlayerBox(x1: Double; x2: Double; y1: Double; y2: Double): TBox; overload;
+function TMainScreen.GetPlayerBox(x1: Double; x2: Double; y1: Double; y2: Double): TBox; overload;
 var
   angle: Double;
   tpa: TPointArray;
@@ -91,7 +91,7 @@ begin
   Result.LimitTo(MainScreen.Bounds);
 end;
 
-function TRSMainScreen.GetPlayerBox(size: Double; y1: Double = 10; y2: Double=3): TBox; overload;
+function TMainScreen.GetPlayerBox(size: Double; y1: Double = 10; y2: Double=3): TBox; overload;
 begin
   Result := Self.GetPlayerBox(size, size, y1, y2);
 end;
@@ -100,11 +100,11 @@ end;
 (*
 ## Minimap.GetCuboidMS
 ```pascal
-function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: TRSMainScreenShape; startHeight: Double = 0; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
-function TRSMinimap.GetCuboidMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
-function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
-function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray
-function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TMinimap.GetCuboidMSEx(loc: TPoint; shape: TMainScreenShape; startHeight: Double = 0; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TMinimap.GetCuboidMS(loc: TPoint; shape: TMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TMainScreenShapeArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
+function TMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray
+function TMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 ```
 Converts minimap coordinates to mainscreen cuboid(s) at a specific height.
 To understand what this better, you should read about `Minimap.GetTileMS` and `TPointArray.ConvexHull` and understand what they do.
@@ -130,7 +130,7 @@ offset := [2 , 2];                                     //Minimap dots are actual
 Debug(Minimap.GetCuboidMS(P, [1, 1, 7], offset));     //This will draw a polygon around the nearest player.
 ```
 *)
-function TRSMinimap.GetTileMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectangle; overload;
+function TMinimap.GetTileMS(loc: TPoint; shape: TMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectangle; overload;
 begin
   if not Self.IsPointOn(loc) then
     Exit;
@@ -146,7 +146,7 @@ begin
   Result := Self.GetTileMS(loc, shape.Tile, offset, angle + shape.Angle)
 end;
 
-function TRSMinimap.GetTileArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectArray; overload;
+function TMinimap.GetTileArrayMS(locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectArray; overload;
 var
   i: Int32;
 begin
@@ -166,7 +166,7 @@ begin
     Result += Self.GetTileMS(locArray[i], shapeArray[0].Tile, offset, angle + shapeArray[0].Angle);
 end;
 
-function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: TRSMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx; overload;
+function TMinimap.GetCuboidMSEx(loc: TPoint; shape: TMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx; overload;
 var
   tile: Vector3;
 begin
@@ -183,12 +183,12 @@ begin
     Result.Top := Result.Bottom;
 end;
 
-function TRSMinimap.GetCuboidMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx; overload;
+function TMinimap.GetCuboidMS(loc: TPoint; shape: TMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx; overload;
 begin
   Result := Self.GetCuboidMSEx(loc, shape, offset, angle);
 end;
 
-function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 var
   i: Int32;
 begin
@@ -207,7 +207,7 @@ begin
   end;
 end;
 
-function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 var
   i: Int32;
 begin
@@ -226,7 +226,7 @@ begin
   end;
 end;
 
-function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TMainScreenShape; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 var
   i: Int32;
 begin
@@ -270,12 +270,12 @@ end;
 (*
 ## Minimap.GetFaceablePoints
 ```pascal
-function TRSMinimap.GetFaceablePoints(): TPointArray;
+function TMinimap.GetFaceablePoints(): TPointArray;
 ```
 Gives the center point of the 8 tiles that are directly close to the player.
 This are the tiles the player can "face".
 *)
-function TRSMinimap.GetFaceablePoints(): TPointArray;
+function TMinimap.GetFaceablePoints(): TPointArray;
 begin
   with Self.Center do
     Result := [
@@ -289,12 +289,12 @@ end;
 (*
 ## Minimap.GetCardinalPoints
 ```pascal
-function TRSMinimap.GetCardinalPoints(): TPointArray;
+function TMinimap.GetCardinalPoints(): TPointArray;
 ```
 Gives the center point of the 4 cardinal points (North, West, South and East) that are directly close to the player.
 This are the tiles the player can "face".
 *)
-function TRSMinimap.GetCardinalPoints(): TPointArray;
+function TMinimap.GetCardinalPoints(): TPointArray;
 begin
   with Self.Center do
     Result := [[X, Y - 4], [X + 4, Y], [X, Y + 4], [X - 4, Y]];
@@ -302,7 +302,7 @@ begin
 end;
 
 
-function TRSMinimap.SetZoomToPoint(p: TPoint; randomness: Int32 = 0): Boolean; override;
+function TMinimap.SetZoomToPoint(p: TPoint; randomness: Int32 = 0): Boolean; override;
 var
   level: Int32;
 begin
@@ -317,5 +317,3 @@ begin
   if InRange(level, Antiban.MinZoom, Antiban.MaxZoom) then
     Result := RSMouseZoom.SetZoomLevel(level);
 end;
-
-

@@ -8,7 +8,7 @@ Methods to extend and/or modify SRL's {ref}`Bank` interface.
 {$ENDIF}
 
 
-function TRSBank.FindItem(item: TRSItem; out box: TBox): Boolean; override;
+function TBank.FindItem(item: TItem; out box: TBox): Boolean; override;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -16,27 +16,27 @@ begin
   Result := Self.Items.Find(item.GetArray(), box);
 end;
 
-function TRSBank.ContainsItem(item: TRSItem): Boolean; override;
+function TBank.ContainsItem(item: TItem): Boolean; override;
 begin
   Result := Self.Items.ContainsAny(item.GetArray());
 end;
 
 
-function TRSBank.FindItem(bankTab: Int32; item: TRSItem; out Bounds: TBox): Boolean; overload;
+function TBank.FindItem(bankTab: Int32; item: TItem; out Bounds: TBox): Boolean; overload;
 begin
   if Self.OpenTab(bankTab) then
     Result := Self.FindItem(item, Bounds);
 end;
 
-function TRSBank.ContainsItem(bankTab: Int32; Item: TRSItem): Boolean; overload;
+function TBank.ContainsItem(bankTab: Int32; Item: TItem): Boolean; overload;
 begin
   if Self.OpenTab(bankTab) then
     Result := Self.ContainsItem(item);
 end;
 
-function TRSBank.DepositAllBut(Tab: Int32; Items: TRSItemArray): Boolean; deprecated 'Use Bank.DepositRandomItems() instead.';
+function TBank.DepositAllBut(Tab: Int32; Items: TItemArray): Boolean; deprecated 'Use Bank.DepositRandomItems() instead.';
 var
-  Item: TRSItem;
+  Item: TItem;
   Slots: TIntegerArray;
   DepositSlots: TIntegerArray;
 begin
@@ -63,7 +63,7 @@ begin
   until Result := (DepositSlots = []);
 end;
 
-function TRSBank.DepositRandomItems(items: TRSItemArray): Boolean;
+function TBank.DepositRandomItems(items: TItemArray): Boolean;
 var
   slots: TIntegerArray;
   t: UInt64;
@@ -88,7 +88,7 @@ begin
 end;
 
 
-function TRSBank.Close(pressEscape: Boolean = False): Boolean; override;
+function TBank.Close(pressEscape: Boolean = False): Boolean; override;
 begin
   if not Self.IsOpen(False) then
     Exit(True);
@@ -96,7 +96,7 @@ begin
   Result := RSInterface.Close(pressEscape);
 end;
 
-function TRSBank.Close(chance: Double): Boolean; overload;
+function TBank.Close(chance: Double): Boolean; overload;
 var
   pressEscape: Boolean;
 begin
@@ -109,7 +109,7 @@ begin
 end;
 
 //Temporarily here.
-function TRSDepositBox.Close(PressEscape: Boolean = False): Boolean; override;
+function TDepositBox.Close(PressEscape: Boolean = False): Boolean; override;
 begin
   if not Self.IsOpen then
     Exit(True);
@@ -118,11 +118,10 @@ begin
 end;
 
 //Temporarily here.
-function TRSGrandExchange.Close(PressEscape: Boolean = False): Boolean; override;
+function TGrandExchange.Close(PressEscape: Boolean = False): Boolean; override;
 begin
   if not Self.IsOpen then
     Exit(True);
 
   Result := RSInterface.Close(PressEscape);
 end;
-

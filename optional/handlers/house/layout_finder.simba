@@ -136,7 +136,7 @@ var
   matchedBox: TBox;
   match: TPoHLayoutFinderMatch;
 begin
-  clientImage.FromClient(RSClient.Bounds);
+  clientImage.FromClient(GameClient.Bounds);
   for i := 0 to High(rooms) do
     roomBitmaps += Self.GetRoomImages(rooms[i]);
 
@@ -174,7 +174,7 @@ var
   matches: TBoxArray;
   clientImage: TMufasaBitmap;
 begin
-  clientImage.FromClient(RSClient.Bounds);
+  clientImage.FromClient(GameClient.Bounds);
   SRL.FindAllTemplatesIn(self.GetRoomImages(r)[0], clientImage, 0.95, matches);
 end;
 

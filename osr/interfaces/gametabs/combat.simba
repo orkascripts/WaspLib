@@ -11,7 +11,7 @@ type
     MAGIC
   );
 
-  TRSCombatStyle = record
+  TCombatStyle = record
     CombatType: ERSCombatType;
     CombatStyle: String;
   end;
@@ -45,10 +45,10 @@ const
   ];
 
 //TODO: Change this to be a true Get function, not to interact with Self.
-function TRSCombatStyle.GetCombatType(): ERSCombatType;
+function TCombatStyle.GetCombatType(): ERSCombatType;
 var
-  button: TRSButton;
-  buttons: TRSButtonArray;
+  button: TGameButton;
+  buttons: TGameButtonArray;
   str: String;
 begin
   if not Combat.Open() then

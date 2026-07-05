@@ -14,7 +14,7 @@ const
   DEBUG_WALKER = False;
 
 var
-  rsw: TRSWalker;
+  rsw: TWalker;
 
 procedure Run();
 var

@@ -150,8 +150,8 @@ EHouseTeleport = (
     Left, Middle, Right: EHouseTeleport;
   end;
 
-function EHouseLocation.GetChunk(): TRSMapChunk;
-const CHUNKS: array of TRSMapChunk := [Chunk([45,51,47,49],0),Chunk([44,55,46,53],0), Chunk([51,47,53,45],0), Chunk([26,55,28,53],0), Chunk([40,57,42,55],0), Chunk([21,47,23,45],0), Chunk([42,50,44,48],0), Chunk([38,49,40,47],0), Chunk([49,95,51,93],0)];
+function EHouseLocation.GetChunk(): TMapChunk;
+const CHUNKS: array of TMapChunk := [Chunk([45,51,47,49],0),Chunk([44,55,46,53],0), Chunk([51,47,53,45],0), Chunk([26,55,28,53],0), Chunk([40,57,42,55],0), Chunk([21,47,23,45],0), Chunk([42,50,44,48],0), Chunk([38,49,40,47],0), Chunk([49,95,51,93],0)];
 begin
   Result := CHUNKS[Ord(Self)];
 end;
@@ -331,7 +331,7 @@ begin
   end;
 end;
 
-function EHouseObject.GetFinder(): TRSObjectFinder;
+function EHouseObject.GetFinder(): TObjectFinder;
 begin
   case Self of
     EHouseObject.EXIT:
@@ -537,7 +537,7 @@ begin
   end;
 end;
 
-function EHouseTeleport.GetFinder(): TRSObjectFinder;
+function EHouseTeleport.GetFinder(): TObjectFinder;
 begin
   Result.Colors += CTS2(7375010, 11, 0.29, 0.65); //teak frame
   Result.Colors += CTS2(5598857, 7, 0.04, 0.12); //mahogany frame

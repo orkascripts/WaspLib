@@ -4,9 +4,9 @@
 {$ENDIF}
 
 
-function TRSInterfaceArea.ClickClose(pressEscape: Boolean = False): Boolean; override;
+function TInterfaceArea.ClickClose(pressEscape: Boolean = False): Boolean; override;
 var
-  button: TRSButton;
+  button: TGameButton;
   i: Int32;
 begin
   button := Self.GetCloseButton();
@@ -50,7 +50,7 @@ begin
 end;
 
 
-function TRSInterfaceArea.Close(chance: Double = BioHash): Boolean; overload;
+function TInterfaceArea.Close(chance: Double = BioHash): Boolean; overload;
 var
   pressEscape: Boolean;
 begin
@@ -61,4 +61,3 @@ begin
 
   Result := Self.Close(pressEscape);
 end;
-

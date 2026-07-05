@@ -13,19 +13,19 @@ type
   ERSCollectButton = (CLOSE, COLLECT_INVENTORY, COLLECT_BANK);
   ERSCollectSlotBoxes = (TRADE_STATUS, OPERATION, ITEM, CHANGE);
 
-  TRSCollectBox = record(TRSTitledInterface)
-    Items: TRSItemInterface;
+  TCollectBox = record(TTitledInterface)
+    Items: TItemInterface;
     SlotBoxes: TBoxArray;
   end;
 
-function TRSCollectBox.GetButtons(): TRSButtonArray;
+function TCollectBox.GetButtons(): TGameButtonArray;
 begin
   Result := Self.FindButtons([[83, 19], [21,21]]);
 end;
 
-function TRSCollectBox.GetButton(button: ERSCollectButton): TRSButton;
+function TCollectBox.GetButton(button: ERSCollectButton): TGameButton;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   buttons := Self.GetButtons();
   if Length(buttons) = Length(ERSCollectButton) then
@@ -33,12 +33,12 @@ begin
 end;
 
 
-function TRSCollectBox.GetSlots(): TBoxArray;
+function TCollectBox.GetSlots(): TBoxArray;
 begin
   Result := Grid(4, 2, 100, 74, [10, 10], [Self.Bounds.X1 + 15, Self.Bounds.Y1 + 44]);
 end;
 
-function TRSCollectBox.GetSlot(Index: Int32): TBox;
+function TCollectBox.GetSlot(Index: Int32): TBox;
 begin
   if (Index < 0) and (Index > 7) then
     Exit;
@@ -46,19 +46,19 @@ begin
   Result := Self.GetSlots[Index];
 end;
 
-function TRSCollectBox.GetItemSlots(): TBoxArray;
+function TCollectBox.GetItemSlots(): TBoxArray;
 begin
   Result := Self.SlotBoxes;
 end;
 
-function TRSCollectBox.GetItemSlot(index: Int32): TBox;
+function TCollectBox.GetItemSlot(index: Int32): TBox;
 begin
   if InRange(index, 0, 7) then
     Result := Self.SlotBoxes[index];
 end;
 
 
-function TRSCollectBox.GetSlotBoxes(index: Int32): TBoxArray;
+function TCollectBox.GetSlotBoxes(index: Int32): TBoxArray;
 var
   SlotBox, Box: TBox;
 begin
@@ -79,7 +79,7 @@ begin
   Result += Box;
 end;
 
-function TRSCollectBox.GetSlotBox(slot: Int32; box: ERSCollectSlotBoxes): TBox;
+function TCollectBox.GetSlotBox(slot: Int32; box: ERSCollectSlotBoxes): TBox;
 var
   boxes: TBoxArray;
 begin
@@ -89,12 +89,12 @@ begin
 end;
 
 
-function TRSCollectBox.IsOpen(): Boolean;
+function TCollectBox.IsOpen(): Boolean;
 begin
   Result := Self.IsTitle('Collection Box');
 end;
 
-function TRSCollectBox.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
+function TCollectBox.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
 begin
   if (Interval = -1) then
     Interval := SRL.TruncatedGauss(50, 1500);
@@ -102,10 +102,10 @@ begin
   Result := WaitUntil(Self.IsOpen, Interval, WaitTime);
 end;
 
-procedure TRSCollectBox.Draw(Bitmap: TMufasaBitmap); override;
+procedure TCollectBox.Draw(Bitmap: TMufasaBitmap); override;
 var
   i: Int32;
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -131,7 +131,7 @@ Initializes CollectBox variables.
 This is automatically called on the **CollectBox** variable.
 ```
 *)
-procedure TRSCollectBox.Setup(); override;
+procedure TCollectBox.Setup(); override;
 begin
   inherited;
 
@@ -143,9 +143,9 @@ begin
   Self.Items.SlotBoxesFunction := @Self.GetItemSlots;
 end;
 
-procedure TRSCollectBox.SetupAlignment(); overload;
+procedure TCollectBox.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -153,10 +153,10 @@ begin
   alignment.MaxWidth := 460;
   alignment.MaxHeight := 247;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       alignment.Bottom := InterfaceArea.Bounds.Y2 -1;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 2;
   end;
 
@@ -169,7 +169,7 @@ end;
 (*
 ## CollectBox.Close
 ```pascal
-function TRSCollectBox.Close(UseKeyboard: Boolean = False): Boolean;
+function TCollectBox.Close(UseKeyboard: Boolean = False): Boolean;
 ```
 Closes the CollectBox, Depending on `UseKeyboard` the function will either click the button
 or press backspace.
@@ -179,19 +179,19 @@ Example:
  WriteLn CollectBox.Close;
 ```
 *)
-function TRSCollectBox.Close(pressEscape: Boolean = False): Boolean;
+function TCollectBox.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then Exit(True);
 
   Result := RSInterface.Close(pressEscape);
 end;
 
-function TRSCollectBox.GetUsedSlots(): TIntegerArray;
+function TCollectBox.GetUsedSlots(): TIntegerArray;
 begin
   Result := Self.Items.GetUsedSlots();
 end;
 
-function TRSCollectBox.HasChange(Slot: Int32): Boolean;
+function TCollectBox.HasChange(Slot: Int32): Boolean;
 begin
   if not Self.IsOpen then
     Exit;
@@ -200,7 +200,7 @@ begin
   Result := SRL.CountColor(CTS1(1118740, 35), Self.GetSlotBox(Slot, ERSCollectSlotBoxes.CHANGE)) > 0;
 end;
 
-function TRSCollectBox.GetSlotsWithChange(): TIntegerArray;
+function TCollectBox.GetSlotsWithChange(): TIntegerArray;
 var
   i: Int32;
 begin
@@ -209,7 +209,7 @@ begin
       Result += i;
 end;
 
-function TRSCollectBox.GetFullSlots(): TIntegerArray;
+function TCollectBox.GetFullSlots(): TIntegerArray;
 begin
   Result := Self.GetUsedSlots().Combine(Self.GetSlotsWithChange());
   Result.ClearDuplicates();
@@ -217,7 +217,7 @@ begin
 end;
 
 
-function TRSCollectBox.FindItems(items: TRSItemArray; out slots: TIntegerArray): Boolean;
+function TCollectBox.FindItems(items: TItemArray; out slots: TIntegerArray): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -226,7 +226,7 @@ begin
   Result := slots <> [];
 end;
 
-function TRSCollectBox.ContainsAny(Items: TRSItemArray): Boolean;
+function TCollectBox.ContainsAny(Items: TItemArray): Boolean;
 var
   Slots: TIntegerArray;
 begin
@@ -234,18 +234,18 @@ begin
 end;
 
 
-function TRSCollectBox.FindItem(Item: TRSItem; out Slots: TIntegerArray): Boolean;
+function TCollectBox.FindItem(Item: TItem; out Slots: TIntegerArray): Boolean;
 begin
   Result := Self.FindItems([Item], Slots);
 end;
 
-function TRSCollectBox.FindItem(item: TRSItem; out slot: Int32): Boolean; overload;
+function TCollectBox.FindItem(item: TItem; out slot: Int32): Boolean; overload;
 begin
   slot := Self.Items.IndexOf([item]);
   Result := slot > -1;
 end;
 
-function TRSCollectBox.ContainsItem(Item: TRSItem): Boolean;
+function TCollectBox.ContainsItem(Item: TItem): Boolean;
 var
   Slots: TIntegerArray;
 begin
@@ -253,13 +253,13 @@ begin
 end;
 
 
-function TRSCollectBox.CountItemStack(item: TRSItem): Int32;
+function TCollectBox.CountItemStack(item: TItem): Int32;
 begin
   Result := Self.Items.CountStack(item);
 end;
 
 
-function TRSCollectBox.CollectSlot(slot: Int32): Boolean;
+function TCollectBox.CollectSlot(slot: Int32): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -272,7 +272,7 @@ begin
   Result := WaitUntil(Self.Items.SlotEmpty(slot) and not Self.HasChange(slot), SRL.TruncatedGauss(50, 1500), 1000);
 end;
 
-function TRSCollectBox.CollectSlotToBank(slot: Int32): Boolean;
+function TCollectBox.CollectSlotToBank(slot: Int32): Boolean;
 begin
   if not Self.IsOpen then
     Exit;
@@ -289,7 +289,7 @@ begin
   Result := WaitUntil(Self.Items.SlotEmpty(Slot) and not Self.HasChange(Slot), SRL.TruncatedGauss(50, 1500), 1000);
 end;
 
-function TRSCollectBox.MouseItem(Item: TRSItem): Boolean;
+function TCollectBox.MouseItem(Item: TItem): Boolean;
 var
   Slot: Int32;
 begin
@@ -298,7 +298,7 @@ begin
     Mouse.Move(Self.GetSlotBox(Slot, ERSCollectSlotBoxes.ITEM));
 end;
 
-function TRSCollectBox.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
+function TCollectBox.ClickItem(Item: TItem; Option: String = ''): Boolean;
 begin
   if Self.MouseItem(Item) then
   begin
@@ -314,7 +314,7 @@ begin
 end;
 
 
-function TRSCollectBox.CollectToInventory(): Boolean;
+function TCollectBox.CollectToInventory(): Boolean;
 begin
   if Self.GetFullSlots = [] then
     Exit;
@@ -322,7 +322,7 @@ begin
   Result := Self.GetButton(ERSCollectButton.COLLECT_INVENTORY).Click();
 end;
 
-function TRSCollectBox.CollectToBank(): Boolean;
+function TCollectBox.CollectToBank(): Boolean;
 begin
   if Self.GetFullSlots = [] then
     Exit;
@@ -331,12 +331,12 @@ begin
 end;
 
 
-function TRSCollectBox.Hover(walkerObject: PRSWalkerObject = nil): Boolean;
+function TCollectBox.Hover(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
   Result := Bank.Hover(walkerObject);
 end;
 
-function TRSCollectBox.Open(walkerObject: PRSWalkerObject = nil): Boolean;
+function TCollectBox.Open(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -360,12 +360,12 @@ begin
   Result := WaitUntil(Self.IsOpen() or BankPin.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
 end;
 
-function TRSCollectBox.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean;
+function TCollectBox.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
   Result := Bank.WalkHover(walkerObject);
 end;
 
-function TRSCollectBox.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean;
+function TCollectBox.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -395,12 +395,12 @@ var
 ## var CollectBox
 Global CollectBox variable.
 *)
-  CollectBox: TRSCollectBox;
+  CollectBox: TCollectBox;
 
 type
-  TRSCollectBoxes = type TRSBanks;
+  TCollectBoxes = type TBanks;
 
-function TRSCollectBoxes.Open(mapObj: PRSMapObject = nil): Boolean; override;
+function TCollectBoxes.Open(mapObj: PRSMapObject = nil): Boolean; override;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -420,7 +420,7 @@ begin
   Result := WaitUntil(RSInterface.IsOpen(), 300, 3000) and (CollectBox.IsOpen() or BankPin.IsOpen());
 end;
 
-function TRSCollectBoxes.WalkOpen(mapObj: PRSMapObject = nil): Boolean; override;
+function TCollectBoxes.WalkOpen(mapObj: PRSMapObject = nil): Boolean; override;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -443,10 +443,10 @@ end;
 
 {$H-}
 var
-  CollectBoxes: TRSCollectBoxes;
+  CollectBoxes: TCollectBoxes;
 {$H+}
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

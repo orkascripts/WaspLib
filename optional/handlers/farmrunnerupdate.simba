@@ -128,7 +128,7 @@ type
     ClickBox                        : TBox;
     PatchRect                       : TRectangle;
     TravelMethod                    : ETravelMethod;
-    Seed                            : TRSItem;
+    Seed                            : TItem;
     EmptyUpText                     : String;
     PlantedUpText                   : String;
     HarvestUpText                   : String;
@@ -138,7 +138,7 @@ type
 
   TFarmRun = record
     Patches                         : array of TFarmPatch;
-    LeprechaunItems                 : TRSItemArray;
+    LeprechaunItems                 : TItemArray;
     CurrentPatch                    : TFarmPatch;
     InactivityTimer                 : TCountdown;
     PatchesCompleted                : Int32;
@@ -155,11 +155,11 @@ type
     XPGained, LastXPRead            : Int32;
     DoReport, DoBreak               : Boolean;
     ReadyTimer                      : TCountDown;
-    BoatyShore                      : TRSObject;
-    BoatyIsland                     : TRSObject;
-    BargeAttendant                  : TRSObject;
-    ZiplineObj                      : TRSObject;
-    rsw                             : TRSWalker;
+    BoatyShore                      : TGameObject;
+    BoatyIsland                     : TGameObject;
+    BargeAttendant                  : TGameObject;
+    ZiplineObj                      : TGameObject;
+    rsw                             : TWalker;
     RepeatLoop                      : Boolean;
     ArdyDiary,
     LumbyDiary,
@@ -282,7 +282,7 @@ type
   end;
 
 const
-  GRIMY_HERBS       : TRSItemArray := [
+  GRIMY_HERBS       : TItemArray := [
     'Grimy guam leaf', 'Grimy marrentill',
     'Grimy tarromin', 'Grimy harralander',
     'Grimy ranarr weed', 'Grimy toadflax',
@@ -735,7 +735,7 @@ begin
   if not ResultType = 2 then Result := true;
 end;
 
-function TRSMainScreen.MatchUpText(text: String; caseSensitive: Boolean = True; similarity: Single = 0.85): Boolean;
+function TMainScreen.MatchUpText(text: String; caseSensitive: Boolean = True; similarity: Single = 0.85): Boolean;
 var
   upText: String;
 begin
@@ -937,9 +937,9 @@ begin
   WriteIni('Farm Tab' + ToStr(Login.PlayerIndex), 'Magic secs', ToStr(self.msecsEnabled), AppPath+'Configs/FarmRunSettings');
 end;
 
-procedure TRSItemArray.Add(Items : TRSItemArray);
+procedure TItemArray.Add(Items : TItemArray);
 var
-  Item : TRSItem;
+  Item : TItem;
 begin
   for Item in Items do
     Self += Item;
@@ -950,7 +950,7 @@ begin
   WriteLn(SRL.TimeStamp() + '[FarmRunner]: '+ Message);
 end;
 
-procedure TFarmRun.AddPatch(patch: EFarmPatch; travel: ETravelMethod; _seed: TRSItem);
+procedure TFarmRun.AddPatch(patch: EFarmPatch; travel: ETravelMethod; _seed: TItem);
 var
   empty   : TStringArray := ['Herb', 'Flower', 'Bush', 'Allotment', 'Cactus', 'Seaweed patch'];
   harvest : TStringArray := ['ick', 'ick', 'ick', 'arves', 'ick', 'ick'];
@@ -993,7 +993,7 @@ begin
 end;
 {%codetools on}
 
-function TRSMinimap.FRIsUnloadedVisible(out unloadedBlackTPA: TPointArray): Boolean; // Skunkworks
+function TMinimap.FRIsUnloadedVisible(out unloadedBlackTPA: TPointArray): Boolean; // Skunkworks
 var
   unloadedClusters: T2DPointArray;
 begin
@@ -1011,7 +1011,7 @@ begin
   Exit(True);
 end;
 
-function TRSMinimap.FRClickIntoUnloaded(): Boolean; // Skunkworks
+function TMinimap.FRClickIntoUnloaded(): Boolean; // Skunkworks
 var
   blackTPA: TPointArray;
 begin
@@ -1163,7 +1163,7 @@ begin
   Result := colorCount / Self.SearchBox.Area >= 0.98;
 end;
 
-//TODO replace with TRSObject array
+//TODO replace with TGameObject array
 function TFarmPatch.FindLeprechaun(out Point: TPoint; Retry: Boolean = True): Boolean;
 var
   attempts        : Int32;
@@ -1231,7 +1231,7 @@ label
 var
   text : String;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit(EPatchState.FAILED);
 
   RSInterface.Close();
@@ -1321,9 +1321,9 @@ begin
   Exit(EPatchState.FAILED);
 end;
 
-function TFarmRun.FarmWithdrawHelper(item : TRSItem; quant : Int32) : Boolean; // CJ
+function TFarmRun.FarmWithdrawHelper(item : TItem; quant : Int32) : Boolean; // CJ
 var
-  withdrawItem : TRSBankItem;
+  withdrawItem : TBankItem;
   attempts : int32;
 begin
   if not Inventory.ContainsItem(item) then
@@ -1334,7 +1334,7 @@ begin
       if (attempts > 1) and not Inventory.ContainsItem(item) then
         Bank.SetScrollPosition(0);
 
-      withdrawItem := TRSBankItem.Setup(item, quant, False);
+      withdrawItem := TBankItem.Setup(item, quant, False);
       Bank.WithdrawItem(withdrawItem, False);
       Result := Waituntil(Inventory.ContainsItem(item), 315, 3000);
 
@@ -1657,7 +1657,7 @@ procedure TFarmRun.OnComplete(); begin
 
 end;
 
-function TRSChat.ChatUntilOptions(): Boolean;
+function TChat.ChatUntilOptions(): Boolean;
 var
   Timeout: TCountdown;
 begin
@@ -1771,7 +1771,7 @@ var
   slot            : Int32;
   slots           : TIntegerArray;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
   if not Inventory.FindItems(GRIMY_HERBS, slots) then
     Exit;
@@ -1792,13 +1792,13 @@ end;
 procedure TFarmRun.NoteItems();
 var
   count, slot, i  : Int32;
-  item            : TRSItem;
-  items           : TRSItemArray;
+  item            : TItem;
+  items           : TItemArray;
   slots, lepItems : TIntegerArray;
   lepPT           : TPoint;
   playerBox       : TBox;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if Self.CleanHerbs then
@@ -1867,7 +1867,7 @@ begin
 end;
 
 procedure TFarmRun.HandleDeadPatch(); begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if Self.ResurrectCrop then begin
@@ -1953,7 +1953,7 @@ var
   SBSTimer : TCountdown;
   Timeout : TCountdown;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if not Self.CurePlant then begin
@@ -2018,9 +2018,9 @@ end;
 procedure TFarmRun.WithdrawCompost;
 var
   compostArray    : TStringArray := ['Compost', 'Supercompost', 'Ultracompost', 'Bottomless compost bucket', '', ''];
-  compostItem     : TRSItem := compostArray[Self.CompostMethod];
+  compostItem     : TItem := compostArray[Self.CompostMethod];
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if Inventory.ContainsItem(compostItem) or (Self.CompostMethod = ECompostMethod.FERTILE_SOIL) then
@@ -2062,7 +2062,7 @@ procedure TFarmRun.DepositCompost;
 var
   leprechaunPt     : TPoint;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if not Self.CurrentPatch.FindLeprechaun(leprechaunPt) then
@@ -2118,9 +2118,9 @@ var
   slot, attempts  : Int32;
   T : TCountdown;
   compostArray    : TStringArray := ['Compost', 'Supercompost', 'Ultracompost', 'Bottomless compost bucket', '', ''];
-  compostItem     : TRSItem := compostArray[Self.CompostMethod];
+  compostItem     : TItem := compostArray[Self.CompostMethod];
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if not Self.CurrentPatch.WalkFind then begin
@@ -2227,9 +2227,9 @@ procedure TFarmRun.Plant();
 var
   slot, attempts, seedCount  : Int32;
   compostArray    : TStringArray := ['Compost', 'Supercompost', 'Ultracompost', 'Bottomless compost bucket', '', ''];
-  compostItem     : TRSItem := compostArray[Self.CompostMethod];
+  compostItem     : TItem := compostArray[Self.CompostMethod];
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   if not Self.CurrentPatch.WalkFind then
@@ -2362,7 +2362,7 @@ procedure TFarmRun.Harvest();
 var
   HarvestTimer    : TCountdown;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   Self.WriteMsg('Harvesting at ' + Self.CurrentPatch.Data.Name + ' patch.');
@@ -2432,7 +2432,7 @@ procedure TFarmRun.HarvestWhiteBerries();
 var
   HarvestTimer : TCountdown;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   Self.WriteMsg('Harvesting whiteberries at ' + Self.CurrentPatch.Data.Name + ' patch.');
@@ -2519,7 +2519,7 @@ procedure TFarmRun.HarvestCactus();
 var
   HarvestTimer: TCountdown;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   Self.WriteMsg('Harvesting cactus at ' + Self.CurrentPatch.Data.Name + ' patch.');
@@ -2609,8 +2609,8 @@ procedure TFarmRun.TeleportTo(TravelMethod : ETravelMethod; ConfirmPos : Boolean
 label
   teleport_complete;
 var
-  item            : TRSItem         := '';
-  items           : TRSItemArray;
+  item            : TItem         := '';
+  items           : TItemArray;
   spell           : ERSSpell        := ERSSpell.BAKE_PIE;
   b, d: TBox;
   c: Int32;
@@ -2619,7 +2619,7 @@ var
 begin
   Self.WriteMsg('Teleporting to ' + Self.CurrentPatch.Data.Name);
 
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Exit;
 
   Inventory.SetSelectedSlot(-1);
@@ -2917,7 +2917,7 @@ var
                               'Dust battlestaff', 'Mist battlestaff', 'Steam battlestaff', 'Smoke battlestaff', 'Lava battlestaff', 'Mud battlestaff',
                               'Mystic smoke staff', 'Mystic steam staff', 'Mystic lava staff',
                               'Kodai wand', 'Twinflame staff'];
-  Hits     : TRSItemFinderMatchArray;
+  Hits     : TItemFinderMatchArray;
 begin
   if Self.StrongholdHerbPatch then
     Self.StrongholdDiary := Achievements.GetDiaryLevel(ERSAchievementDiary.FREMENNIK);
@@ -3494,7 +3494,7 @@ var
   tmp: TBoxArray;
   i: Int32;
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Login.LoginPlayer;
 
   Self.WriteMsg('Setting up farm runs');
@@ -3600,9 +3600,9 @@ var
   failedCount     : Int32;
   AntibanMinZ, AntibanMaxZ: Int32;
   compostArray    : TStringArray := ['Compost', 'Supercompost', 'Ultracompost', 'Bottomless compost bucket', '', ''];
-  compostItem     : TRSItem := compostArray[Self.CompostMethod];
+  compostItem     : TItem := compostArray[Self.CompostMethod];
 begin
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Login.LoginPlayer;
 
   if not Self.Initialized then
@@ -3623,12 +3623,12 @@ begin
   Self.LastXPRead := XPBar.Read;
   Self.InactivityTimer.Restart;
 
-  if not RSClient.IsLoggedIn then
+  if not GameClient.IsLoggedIn then
     Login.LoginPlayer;
 
   for Self.CurrentPatch in Self.Patches do begin
 
-    if not RSClient.IsLoggedIn then
+    if not GameClient.IsLoggedIn then
       Login.LoginPlayer;
 
     repeat

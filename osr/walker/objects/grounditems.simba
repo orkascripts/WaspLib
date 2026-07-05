@@ -4,16 +4,16 @@
 {$ENDIF}
 
 type
-  TRSGroundItems = record
+  TGroundItems = record
     NormalLog,
     Plank,
     Egg,
     MarkOfGrace,
     BirdNest,
-    DragonStone: TRSGroundItem;
+    DragonStone: TGroundItem;
   end;
 
-procedure TRSGroundItems.Setup();
+procedure TGroundItems.Setup();
 begin
   with Self.NormalLog do
   begin
@@ -86,4 +86,4 @@ begin
 end;
 
 var
-  RSGroundItems: TRSGroundItems;
+  RSGroundItems: TGroundItems;

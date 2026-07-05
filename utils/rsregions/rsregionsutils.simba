@@ -4,15 +4,15 @@
 {$ENDIF}
 
 type
-  TRSNamedRegion = record
+  TNamedRegion = record
     Name: String;
     Bounds: TBox;
   end;
 
-  TRSNamedRegionsArray = array of TRSNamedRegion; //This is different from the ones below but share the same methods!
+  TNamedRegionsArray = array of TNamedRegion; //This is different from the ones below but share the same methods!
 
 
-function TRSNamedRegionsArray.IndexOf(name: String): Int32;
+function TNamedRegionsArray.IndexOf(name: String): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Name = name then
@@ -21,7 +21,7 @@ begin
   Result := -1;
 end;
 
-function TRSNamedRegionsArray.IndexOf(bounds: TBox): Int32; overload;
+function TNamedRegionsArray.IndexOf(bounds: TBox): Int32; overload;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Bounds = bounds then
@@ -30,7 +30,7 @@ begin
   Result := -1;
 end;
 
-function TRSNamedRegionsArray.IndexOf(point: TPoint): Int32; overload;
+function TNamedRegionsArray.IndexOf(point: TPoint): Int32; overload;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Bounds.Contains(point) then
@@ -40,23 +40,23 @@ begin
 end;
 
 
-function TRSNamedRegionsArray.Find(name: String): TRSNamedRegion;
+function TNamedRegionsArray.Find(name: String): TNamedRegion;
 begin
   Result := Self[Self.IndexOf(name)];
 end;
 
-function TRSNamedRegionsArray.Find(bounds: TBox): TRSNamedRegion; overload;
+function TNamedRegionsArray.Find(bounds: TBox): TNamedRegion; overload;
 begin
   Result := Self[Self.IndexOf(bounds)];
 end;
 
-function TRSNamedRegionsArray.Find(point: TPoint): TRSNamedRegion; overload;
+function TNamedRegionsArray.Find(point: TPoint): TNamedRegion; overload;
 begin
   Result := Self[Self.IndexOf(point)];
 end;
 
 
-function TRSNamedRegionsArray.GetStrings(): TStringArray;
+function TNamedRegionsArray.GetStrings(): TStringArray;
 var
   i: Int32;
 begin
@@ -65,14 +65,14 @@ begin
 end;
 
 type
-  TRSBankRegionArray = type TRSNamedRegionsArray;
-  TRSCombatRegionArray = type TRSNamedRegionsArray;
+  TBankRegionArray = type TNamedRegionsArray;
+  TCombatRegionArray = type TNamedRegionsArray;
 
 var
-  RSBankRegions: TRSBankRegionArray;
-  RSNamedRegionsArray: TRSNamedRegionsArray;
+  RSBankRegions: TBankRegionArray;
+  RSNamedRegionsArray: TNamedRegionsArray;
 
-procedure TRSBankRegionArray.Setup();
+procedure TBankRegionArray.Setup();
 var
   i, j: Int32;
   str: String;

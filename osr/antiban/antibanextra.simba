@@ -7,7 +7,7 @@
 //Antiban overrides:
 
 //Makes inventory patterns more common to each player based on their BioHash.
-function TRSInventory.RandomPattern(): TIntegerArray; override;
+function TInventory.RandomPattern(): TIntegerArray; override;
 const
   PATTERNS: T2DIntegerArray = [
     DROP_PATTERN_SNAKE, DROP_PATTERN_SPIRAL,
@@ -26,7 +26,7 @@ begin
 end;
 
 //overriden to use Bank.Close with biohash.
-function TRSGameTabs.Open(tab: ERSGameTab): Boolean; override;
+function TGameTabs.Open(tab: ERSGameTab): Boolean; override;
   function _InventoryIterfaceIsOpen(): Boolean;
   begin
     Result := Bank.IsOpen(False) or DepositBox.IsOpen() or Store.IsOpen();
@@ -42,18 +42,18 @@ begin
   Result := inherited(tab);
 end;
 
-function TRSCollectBox.Close(chance: Double = BioHash): Boolean; overload;
+function TCollectBox.Close(chance: Double = BioHash): Boolean; overload;
 begin
   Result := RSInterface.Close(chance);
 end;
 
-function TRSGrandExchange.Close(chance: Double): Boolean; overload;
+function TGrandExchange.Close(chance: Double): Boolean; overload;
 begin
   Result := RSInterface.Close(chance);
 end;
 
 
-function TRSChat.ClickOption(Text: String; chance: Double; Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean; overload;
+function TChat.ClickOption(Text: String; chance: Double; Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean; overload;
 var
   useKeyboard: Boolean;
 begin
@@ -67,7 +67,7 @@ end;
 
 
 
-function TRSChat.ClickContinue(chance: Double): Boolean; overload;
+function TChat.ClickContinue(chance: Double): Boolean; overload;
 var
   useKeyboard: Boolean;
 begin
@@ -79,9 +79,9 @@ begin
   Result := Self.ClickContinue(useKeyboard);
 end;
 
-function TRSChooseOption.HasOption(text: TStringArray; out option: TRSChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; override;
+function TChooseOption.HasOption(text: TStringArray; out option: TChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; override;
 var
-  choices: TRSChooseOption_OptionArray;
+  choices: TChooseOption_OptionArray;
   i, j, maxTime: Int32;
 begin
   if not Self.Open() then

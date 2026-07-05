@@ -3,7 +3,7 @@
 {$I WaspLib/optional.simba}
 
 var
-  gear1, gear2, gear3, gear4, gear5: TRSGear;
+  gear1, gear2, gear3, gear4, gear5: TGear;
 
 type
   TMyScriptForm = record(TScriptForm)

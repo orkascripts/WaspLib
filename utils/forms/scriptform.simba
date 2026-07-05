@@ -82,7 +82,7 @@ end;
 ```
 *)
 procedure RewriteCredentials();
-  function _FilterDuplicatePlayers(players: array of TRSLoginPlayer): array of TRSLoginPlayer;
+  function _FilterDuplicatePlayers(players: array of TLoginPlayer): array of TLoginPlayer;
   var
     i, j: Int32;
     match: Boolean;
@@ -106,7 +106,7 @@ procedure RewriteCredentials();
 
   function _BuildCredentials(): String;
   var
-    player: TRSLoginPlayer;
+    player: TLoginPlayer;
     world: Int32;
   begin
     Result := 'begin'#13#10'';
@@ -726,7 +726,7 @@ function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
     selector: TComboBox;
     hasPlayers: Boolean;
     save, delete: TButton;
-    player: TRSLoginPlayer;
+    player: TLoginPlayer;
   begin
     selector := Self.Form.GetChild('am_selector_combobox');
     selector.Clear();
@@ -811,7 +811,7 @@ function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
     worlds: TMemo;
     worldsArray: TIntegerArray;
     i: Int32;
-    player: TRSLoginPlayer;
+    player: TLoginPlayer;
   begin
     selector := Self.Form.GetChild('am_selector_combobox');
     user := Self.Form.GetChild('am_user_edit');
@@ -1390,7 +1390,7 @@ end;
 function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: ERSConsumable; addInfo: Boolean = True): TPanel;
 var
   typeStr: String;
-  itemArray: TRSItemArray;
+  itemArray: TItemArray;
   info: TLabel;
   minPoints, consumableAmount: TLabeledEdit;
   consumableSelector: TLabeledCombobox;
@@ -1619,7 +1619,7 @@ begin
     bmp.LoadFromFile(path + fileName)
   else
   begin
-    tmp := TRSWalkerMap.InternalLoadMap(WALKER_DIR + 'map.png');
+    tmp := TWalkerMap.InternalLoadMap(WALKER_DIR + 'map.png');
     tmp.Downsample(4, bmp);
     tmp.Free();
     if ForceDirectories(path) then bmp.SaveToFile(path + fileName);
@@ -1858,7 +1858,7 @@ begin
     Create(Result);
     SetTop(TControl.AdjustToDPI(20));
     SetLeft(fullWidth + space);
-    SetCaption('Remote input is the tool used to allow simba to do virtual input on osrs.' +
+    SetCaption('Remote input is the tool used to allow simba to do virtual input in game.' +
     LINEENDING + 'This uses reflection to achieve input.');
     SetName('ri_info');
   end;
@@ -2208,8 +2208,8 @@ begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if WLSettings.GetObject('remote_input').getBoolean('enabled') then
   begin
-    if not RSClient.RemoteInput.IsSetup() then RSClient.RemoteInput.Setup();
+    if not GameClient.RemoteInput.IsSetup() then GameClient.RemoteInput.Setup();
   end
-  else if RSClient.RemoteInput.IsSetup() then RSClient.RemoteInput.Free();
+  else if GameClient.RemoteInput.IsSetup() then GameClient.RemoteInput.Free();
   {$ENDIF}
 end;

@@ -1,6 +1,6 @@
 (*
 # Magic
-Extends SRL's TRSMagic.
+Extends SRL's TMagic.
 *)
 
 {$DEFINE WL_MAGIC_INCLUDED}
@@ -11,12 +11,12 @@ Extends SRL's TRSMagic.
 (*
 ## Magic.SpellWasCast
 ```pascal
-function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
+function TMagic.SpellWasCast(spell: ERSSpell): Boolean;
 ```
 
 Internal helper function to decide wether we cast a spell or not.
 *)
-function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean; override;
+function TMagic.SpellWasCast(spell: ERSSpell): Boolean; override;
 begin
   Result := inherited() or XPBar.EarnedXP();
 end;
@@ -24,13 +24,13 @@ end;
 (*
 ## Magic.CastSpell
 ```pascal
-function TRSMagic.CastSpell(spell: ERSSpell): Boolean; override;
+function TMagic.CastSpell(spell: ERSSpell): Boolean; override;
 ```
 
-Overrides the existing SRL TRSMagic.CastSpell() for better cast detection with
-the usage of WaspLib's TRSMagic.SpellWasCast().
+Overrides the existing SRL TMagic.CastSpell() for better cast detection with
+the usage of WaspLib's TMagic.SpellWasCast().
 *)
-function TRSMagic.CastSpell(spell: ERSSpell; option: String = ''): Boolean; override;
+function TMagic.CastSpell(spell: ERSSpell; option: String = ''): Boolean; override;
 begin
   XPBar.EarnedXP();
   Result := inherited;
@@ -40,7 +40,7 @@ end;
 (*
 ## Magic.GetFilterButton
 ```pascal
-function TRSMagic.GetFilterButton(): TRSButton;
+function TMagic.GetFilterButton(): TGameButton;
 ```
 Returns the filter button in the magic tab.
 
@@ -49,7 +49,7 @@ Example:
 Debug([Magic.GetFilterButton()]);
 ```
 *)
-function TRSMagic.GetFilterButton(): TRSButton;
+function TMagic.GetFilterButton(): TGameButton;
 begin
   Result.Bounds := Self.Bounds;
   Result.Bounds.Y1 := Result.Bounds.Y2 - 16;
@@ -64,7 +64,7 @@ end;
 (*
 ## Magic.FiltersIsOpen
 ```pascal
-function TRSMagic.FiltersIsOpen(): Boolean;
+function TMagic.FiltersIsOpen(): Boolean;
 ```
 
 Returns true/false if the filters interface of the magic tab is open.
@@ -74,7 +74,7 @@ Example:
 WriteLn Magic.FiltersIsOpen();
 ```
 *)
-function TRSMagic.FiltersIsOpen(): Boolean;
+function TMagic.FiltersIsOpen(): Boolean;
 begin
   Result := Self.GetFilterButton().Enabled();
 end;
@@ -82,7 +82,7 @@ end;
 (*
 ## Magic.OpenFilters
 ```pascal
-function TRSMagic.OpenFilters(): Boolean;
+function TMagic.OpenFilters(): Boolean;
 ```
 
 Attempts to open the filters interface of the magic tab.
@@ -93,7 +93,7 @@ Example:
 WriteLn Magic.OpenFilters();
 ```
 *)
-function TRSMagic.OpenFilters(): Boolean;
+function TMagic.OpenFilters(): Boolean;
 begin
   Result := Self.GetFilterButton().Enable();
 end;
@@ -101,7 +101,7 @@ end;
 (*
 ## Magic.CloseFilters
 ```pascal
-function TRSMagic.CloseFilters(): Boolean;
+function TMagic.CloseFilters(): Boolean;
 ```
 
 Attempts to close the filters interface of the magic tab.
@@ -112,7 +112,7 @@ Example:
 WriteLn Magic.CloseFilters();
 ```
 *)
-function TRSMagic.CloseFilters(): Boolean;
+function TMagic.CloseFilters(): Boolean;
 begin
   if Self.GetFilterButton().Disable() then
     Result := WaitUntil(not Self.FiltersIsOpen(), 300, 3000);
@@ -122,7 +122,7 @@ end;
 (*
 ## Magic.GetBookSpellCount
 ```pascal
-function TRSMagic.GetBookSpellCount(): Int32;
+function TMagic.GetBookSpellCount(): Int32;
 ```
 
 Returns the number of spells declared in SRL for the current spellbook.
@@ -132,7 +132,7 @@ Example:
 WriteLn Magic.GetBookSpellCount();
 ```
 *)
-function TRSMagic.GetBookSpellCount(): Int32;
+function TMagic.GetBookSpellCount(): Int32;
 begin
   case Self.GetSpellBook() of
     ERSSpellBook.STANDARD: Result := Ord(RS_STANDARD_SPELL_LAST) - Ord(RS_STANDARD_SPELL_FIRST);
@@ -147,7 +147,7 @@ end;
 (*
 ## Magic.CountSpells
 ```pascal
-function TRSMagic.CountSpells(): Int32;
+function TMagic.CountSpells(): Int32;
 ```
 
 Returns the number of spells that exist in your magic tab.
@@ -159,7 +159,7 @@ if Magic.GetBookSpellCount() <> Magic.CountSpells() then
   WriteLn 'Something is wrong!';
 ```
 *)
-function TRSMagic.CountSpells(): Int32;
+function TMagic.CountSpells(): Int32;
 var
   tpa, finalTPA: TPointArray;
   atpa: T2DPointArray;
@@ -177,7 +177,7 @@ begin
   SRL.FindColors(tpa, CTS1(1509900, 28), b);
   finalTPA += tpa;
 
-  //Minigame Teleport spell icon  
+  //Minigame Teleport spell icon
   SRL.FindColors(tpa, CTS2(2105485, 19, 0.01, 0.31), b);
   finalTPA += tpa;
 
@@ -187,7 +187,7 @@ begin
 
   //Arceuus Home Teleport's cooldown spell icon
   SRL.FindColors(tpa, CTS2(9014932, 1, 2.15, 0.43), b);
-  finalTPA += tpa; 
+  finalTPA += tpa;
 
   atpa := finalTPA.Cluster(3);
   atpa.FilterSize(8, __GT__);
@@ -198,7 +198,7 @@ end;
 (*
 ## Magic.GetFilterButtons
 ```pascal
-function TRSMagic.GetFilterButtons(): TRSButtonArray;
+function TMagic.GetFilterButtons(): TGameButtonArray;
 ```
 
 Returns the buttons of the magic tab filter interface.
@@ -208,7 +208,7 @@ Example:
 Debug(Magic.GetFilterButtons());
 ```
 *)
-function TRSMagic.GetFilterButtons(): TRSButtonArray;
+function TMagic.GetFilterButtons(): TGameButtonArray;
 var
   i: Int32;
   b: TBox;
@@ -235,7 +235,7 @@ end;
 (*
 ## Magic.IsFiltered
 ```pascal
-function TRSMagic.IsFiltered(): Boolean;
+function TMagic.IsFiltered(): Boolean;
 ```
 
 Returns wether the spells are currently filtered or not.
@@ -246,7 +246,7 @@ Example:
 WriteLn Magic.IsFiltered();
 ```
 *)
-function TRSMagic.IsFiltered(): Boolean;
+function TMagic.IsFiltered(): Boolean;
 begin
   if Self.FiltersIsOpen() then
     Exit(SRL.CountColor(CTS2(5945703, 20, 0.05, 0.58), Self.Bounds) <> 259);
@@ -257,7 +257,7 @@ end;
 (*
 ## Magic.DisableFilters
 ```pascal
-function TRSMagic.DisableFilters(): Boolean;
+function TMagic.DisableFilters(): Boolean;
 ```
 
 Attempts to disable magic spell filters.
@@ -267,9 +267,9 @@ Example:
 WriteLn Magic.DisableFilters();
 ```
 *)
-function TRSMagic.DisableFilters(): Boolean;
+function TMagic.DisableFilters(): Boolean;
 var
-  button: TRSButton;
+  button: TGameButton;
 begin
   if not Self.IsFiltered() then
     Exit(True);

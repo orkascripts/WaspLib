@@ -1,5 +1,5 @@
 # WaspLib
-WaspLib is a include for Simba to bot OldSchool RuneScape.
+WaspLib is a include for Simba to bot a popular MMORPG.
  WaspLib v2 is intended to work with [Simba 1400]([https://github.com/ollydev/Simba](https://github.com/Villavu/Simba/releases/tag/simba1400-release)) and [SRL-Development](https://github.com/Villavu/SRL-Development).
 
 If you are having problems I suggest you try [my fork of SRL-Development](https://github.com/Torwent/SRL) due to code changing too frequently in Olly's SRL-Development and something might be incompatible for a while.
@@ -9,14 +9,14 @@ I also recommend you join my site and discord server and ask around there for he
 For documentation refer to: [Documentation](https://torwent.github.io/WaspLib).
  
 # What is WaspLib for?
- As mentioned earlier, to bot OldSchool RuneScape. It's purpose is to make writting scripts faster as it includes lot's of commonly used code throughout my scripts.
+ As mentioned earlier, to bot a popular MMORPG. It's purpose is to make writting scripts faster as it includes lot's of commonly used code throughout my scripts.
  
 Some things in WaspLib could be coming to SRL in the future but others are just too custom to ever be accepted there and will remain here.
 
  # What can I expect to get with WaspLib?
 
  ## Better walker maps
- WaspLib includes custom runescape maps that are more reliable and contain way more locations than the original SRL-Development maps.
+ WaspLib includes custom game maps that are more reliable and contain way more locations than the original SRL-Development maps.
  The reason I say they are more reliable is because it has proper edges around the map edges unlike SRL-Development. 
  A good example of this would be the western edge of the desert, if you ever tried using RSWalker around the map edges in the desert you know it doesn't work properly.
  With my maps it should accurately walk around most edges.

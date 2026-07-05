@@ -1,6 +1,6 @@
 (*
 # Walker
-Extensions to SRL's TRSWalker.
+Extensions to SRL's TWalker.
 *)
 
 {$DEFINE WL_WALKER_INCLUDED}
@@ -12,32 +12,32 @@ var
   ScriptWalker: PRSWalker;
 
 (*
-## type TRSHeightMap
+## type THeightMap
 ```pascal
 type
-TRSHeightMap = record
+THeightMap = record
   Disabled: Boolean;
   Map: TMufasaBitmap;
   MaxHeight: Double;
   MathCache: Double;
 end;
 ```
-TRSHeightMap is the type responsible for handling heights with walker when using WaspLib.
+THeightMap is the type responsible for handling heights with walker when using WaspLib.
 This type does not need to be initiated as a variable and it's meant to be used directly with it's static methods.
 
-**Enabled** is used to toggle the TRSHeightMap on/off. By default it will always be on unless there's not a heightmap available for the map you load into walker.
+**Enabled** is used to toggle the THeightMap on/off. By default it will always be on unless there's not a heightmap available for the map you load into walker.
 the heightmap MUST be named the same as the map you load with an "h" prepended. E.G.: hWorld.png
 
 **Map** there's not much to talk about this one, it's simply the TMufasaBitmap loaded in the record.
 
-**MaxHeight** This is what will be considered the max height possible in the calculations made by TRSHeightMap.
+**MaxHeight** This is what will be considered the max height possible in the calculations made by THeightMap.
 There's no way to accurately know what this should be, you should debug heights and set a value that looks good to you.
 Values might also vary between regions but I find **30** to be a fine value that works well in a lot of places if not all.
 
 **MathCache**, not very important, simply a cache variable so we don't repeat calculations when it's not required.
 *)
 type
-  TRSHeightMap = record
+  THeightMap = record
     Disabled: Boolean;
     Map: TMufasaBitmap;
     MaxHeight: Double;
@@ -45,18 +45,18 @@ type
   end;
 
 (*
-## TRSHeightMap.GetColor
+## THeightMap.GetColor
 ```pascal
-function TRSHeightMap.GetColor(p: TPoint): Int64;
+function THeightMap.GetColor(p: TPoint): Int64;
 ```
 Returns the color of the heightmap at the specified point.
 
 Example:
 ```pascal
-WriteLn TRSHeightMap.GetColor([100, 100]);
+WriteLn THeightMap.GetColor([100, 100]);
 ```
 *)
-function TRSHeightMap.GetColor(p: TPoint): Int64;
+function THeightMap.GetColor(p: TPoint): Int64;
 begin
   if Self.Disabled then
     Exit;
@@ -70,7 +70,7 @@ begin
   Result := Self.Map.GetPixel(p.X, p.Y);
 end;
 
-procedure TRSHeightMap.Free();
+procedure THeightMap.Free();
 begin
   if Assigned(Self.Map) then
   begin
@@ -80,19 +80,19 @@ begin
 end;
 
 (*
-## TRSHeightMap.DebugPosition
+## THeightMap.DebugPosition
 ```pascal
-procedure TRSHeightMap.DebugPosition(p: TPoint);
+procedure THeightMap.DebugPosition(p: TPoint);
 ```
 
 Debug a point in the loaded heightmap.
 
 Example:
 ```pascal
-TRSHeightMap.DebugPosition(RSW.GetMyPos());
+THeightMap.DebugPosition(RSW.GetMyPos());
 ```
 *)
-procedure TRSHeightMap.DebugPosition(p: TPoint);
+procedure THeightMap.DebugPosition(p: TPoint);
 var
   hMap: TMufasaBitmap;
 begin
@@ -106,20 +106,20 @@ begin
 end;
 
 var
-  RSHeightMap: TRSHeightMap;
+  RSHeightMap: THeightMap;
 
 (*
-## TRSWalkerMap.Load
+## TWalkerMap.Load
 ```pascal
-procedure TRSWalkerMap.Load(fileName: String; Scaling: Integer); override;
-procedure TRSWalkerMap.Load(fileName: String; aRegions: TBoxArray; Scaling: Integer; Padding: Integer = 50); override;
-procedure TRSWalkerMap.Load(fileName: String; aRegion: TBox; scaling: Integer; padding: Integer = 50); override;
-procedure TRSWalkerMap.Load(fileName: String; start: TPoint; scaling: Int32; out aRegion: TBox; padding: Int32 = 50); override;
+procedure TWalkerMap.Load(fileName: String; Scaling: Integer); override;
+procedure TWalkerMap.Load(fileName: String; aRegions: TBoxArray; Scaling: Integer; Padding: Integer = 50); override;
+procedure TWalkerMap.Load(fileName: String; aRegion: TBox; scaling: Integer; padding: Integer = 50); override;
+procedure TWalkerMap.Load(fileName: String; start: TPoint; scaling: Int32; out aRegion: TBox; padding: Int32 = 50); override;
 ```
-Overrides SRL's TRSWalkerMap.Load() so it loads the respective heightmap if it exists.
+Overrides SRL's TWalkerMap.Load() so it loads the respective heightmap if it exists.
 This is an internal Walker method, you probably don't need to call it.
 *)
-procedure TRSWalkerMap.Load(fileName: String; scaling: Integer); override;
+procedure TWalkerMap.Load(fileName: String; scaling: Integer); override;
 var
   hFileName: String;
 begin
@@ -148,7 +148,7 @@ begin
   Self.RegionOffsets := [[0, 0]];
 end;
 
-procedure TRSWalkerMap.Load(fileName: String; aRegions: TBoxArray; scaling: Integer; padding: Integer = 50); override;
+procedure TWalkerMap.Load(fileName: String; aRegions: TBoxArray; scaling: Integer; padding: Integer = 50); override;
 var
   bitmaps, hBitmaps: TMufasaBitmapArray;
   I: Integer;
@@ -218,7 +218,7 @@ begin
       hBitmaps[I].Free();
 end;
 
-procedure TRSWalkerMap.Load(fileName: String; aRegion: TBox; scaling: Integer; padding: Integer = 50); override;
+procedure TWalkerMap.Load(fileName: String; aRegion: TBox; scaling: Integer; padding: Integer = 50); override;
 var
   bitmaps, hBitmaps: TMufasaBitmapArray;
   bitmap, hBitmap: TMufasaBitmap;
@@ -290,7 +290,7 @@ begin
       hBitmaps[I].Free();
 end;
 
-procedure TRSWalkerMap.Load(fileName: String; start: TPoint; scaling: Int32; out aRegion: TBox; padding: Int32 = 50); override;
+procedure TWalkerMap.Load(fileName: String; start: TPoint; scaling: Int32; out aRegion: TBox; padding: Int32 = 50); override;
 var
   bitmaps, hBitmaps: TMufasaBitmapArray;
   bitmap, hBitmap: TMufasaBitmap;
@@ -364,13 +364,13 @@ end;
 (*
 ## Walker.InternalSetup
 ```pascal
-procedure TRSWalker.InternalSetup(); override;
+procedure TWalker.InternalSetup(); override;
 ```
 Overrides SRL's Walker.InternalSetup() so it uses WaspWeb as the walker webgraph and so it uses ScreenWalk by default.
 This is an internal Walker method, you probably don't need to call it.
-It also sets up the ScriptWalker pointer which is used for several things in WaspLib like TRSWalkerObjects and Skunk's transport system.
+It also sets up the ScriptWalker pointer which is used for several things in WaspLib like TWalkerObjects and Skunk's transport system.
 *)
-procedure TRSWalker.InternalSetup(); override;
+procedure TWalker.InternalSetup(); override;
 begin
   inherited;
   Self.ClickRandomness := 6;
@@ -382,7 +382,7 @@ end;
 (*
 ## Walker.SetupNamedRegion
 ```pascal
-procedure TRSWalker.SetupNamedRegion(region: TRSBankRegion = []); overload;
+procedure TWalker.SetupNamedRegion(region: TBankRegion = []); overload;
 ```
 Use this if you want to setup a walker with whatever the user has setup in WLSettings.BankLocation.
 You can optionally pass in your own **region** but it's really meant to use the default.
@@ -394,7 +394,7 @@ Walker.SetupNamedRegion();
 Walker.Map.Map.Debug();
 ```
 *)
-procedure TRSWalker.SetupNamedRegion(region: TRSNamedRegion = []); overload;
+procedure TWalker.SetupNamedRegion(region: TNamedRegion = []); overload;
 begin
   if Self.Map.Map <> nil then Exit;
 
@@ -408,9 +408,9 @@ end;
 (*
 ## Walker.GetHeight
 ```pascal
-function TRSWalker.GetHeight(p: TPoint = []; global: Boolean = True): Double;
+function TWalker.GetHeight(p: TPoint = []; global: Boolean = True): Double;
 ```
-Returns the height of the player at the specified coordinate with the help of TRSHeightMap.
+Returns the height of the player at the specified coordinate with the help of THeightMap.
 If p is [], which is the default then we will use our current position.
 global decides wether the coordinate is converted to global coordinates or internal walker coordinates (read about walker regions for more info).
 
@@ -419,7 +419,7 @@ Example:
 WriteLn rsw.GetHeight();
 ```
 *)
-function TRSWalker.GetHeight(p: TPoint = []; global: Boolean = True): Double;
+function TWalker.GetHeight(p: TPoint = []; global: Boolean = True): Double;
 begin
   if RSHeightMap.Disabled then
     Exit;
@@ -442,17 +442,17 @@ end;
 (*
 ## Walker.DebugHeightTiles
 ```pascal
-procedure TRSWalker.DebugHeightTiles(angle: Double = -1);
+procedure TWalker.DebugHeightTiles(angle: Double = -1);
 ```
-Displays a debug image of the tiles visible on the mainscreen with their height adjusted according to the TRSHeightMap.
-This is very useful if you need to adjust TRSHeightMap.MaxHeight.
+Displays a debug image of the tiles visible on the mainscreen with their height adjusted according to the THeightMap.
+This is very useful if you need to adjust THeightMap.MaxHeight.
 
 Example:
 ```pascal
 rsw.DebugHeightTiles();
 ```
 *)
-procedure TRSWalker.DebugHeightTiles(angle: Double = -1);
+procedure TWalker.DebugHeightTiles(angle: Double = -1);
 var
   position: TPoint;
   tempTile: TPoint;
@@ -500,7 +500,7 @@ end;
 (*
 ## Walker.GetMyPos
 ```pascal
-function TRSWalker.GetMyPos(out height: Double): TPoint; overload;
+function TWalker.GetMyPos(out height: Double): TPoint; overload;
 ```
 Overload that also returns the player height.
 
@@ -510,7 +510,7 @@ WriteLn RSW.GetMyPos(height);
 WriteLn height;
 ```
 *)
-function TRSWalker.GetMyPos(out height: Double): TPoint; overload;
+function TWalker.GetMyPos(out height: Double): TPoint; overload;
 const
   SAMPLES = 3;
 var
@@ -553,8 +553,8 @@ end;
 (*
 ## Walker.GetHeightDiff
 ```pascal
-function TRSWalker.GetHeightDiff(p: TPoint): Double;
-function TRSWalker.GetHeightDiff(p, q: TPoint): Double; overload;
+function TWalker.GetHeightDiff(p: TPoint): Double;
+function TWalker.GetHeightDiff(p, q: TPoint): Double; overload;
 ```
 
 Returns the height difference between 2 points. If only one point is passed, the player position is used as one of them.
@@ -564,7 +564,7 @@ Example:
 WriteLn RSW.GetMyPos(RSW.GetMyPos(), [100, 100]);
 ```
 *)
-function TRSWalker.GetHeightDiff(p: TPoint): Double;
+function TWalker.GetHeightDiff(p: TPoint): Double;
 var
   h: Double;
 begin
@@ -575,7 +575,7 @@ begin
   Result := h - Self.GetHeight(p);
 end;
 
-function TRSWalker.GetHeightDiff(p, q: TPoint): Double; overload;
+function TWalker.GetHeightDiff(p, q: TPoint): Double; overload;
 begin
   if RSHeightMap.Disabled then
     Exit;
@@ -584,7 +584,7 @@ begin
 end;
 
 
-procedure TRSWalker.Draw(Bitmap: TMufasaBitmap);
+procedure TWalker.Draw(Bitmap: TMufasaBitmap);
 var
   X1, Y1, X2, Y2, X, Y, w, h: Int32;
   P: TPoint;
@@ -613,7 +613,7 @@ begin
   MinimapBitmap := Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 1);
 
   P := MinimapBitmap.GetCenter();
-  if RSClient.Mode = ERSClientMode.FIXED then
+  if GameClient.Mode = EClientMode.FIXED then
     P := P.Offset(0, 8).Rotate(-Minimap.GetCompassAngle(False), P);
 
   MinimapBitmap.DrawBoxFilled([P.X - 1, P.Y - 1, P.X + 1, P.Y + 1], False, $FFFFFF);
@@ -629,17 +629,17 @@ begin
 end;
 
 (*
-## TRSWalker.AtTile
+## TWalker.AtTile
 ```pascal
-function TRSWalker.AtTile(worldPoint: TPoint; Distance: Int32 = 4): Boolean;
-function TRSWalker.AtTile(worldPointArray: TPointArray; Distance: Int32 = 4): Boolean; overload;
+function TWalker.AtTile(worldPoint: TPoint; Distance: Int32 = 4): Boolean;
+function TWalker.AtTile(worldPointArray: TPointArray; Distance: Int32 = 4): Boolean; overload;
 ```
 method used to quickly check if we are within distance of a certain **worldPoint**. This distance is measure in pixels and in a radial way.
 You can optionally pass in a TPA to check if the closest point is within distance.
 
-This is a TRSWalker method so it will exist both on TRSWalker and TRSWalker.
+This is a TWalker method so it will exist both on TWalker and TWalker.
 *)
-function TRSWalker.AtTile(worldPoint: TPoint; distance: Int32 = 4): Boolean;
+function TWalker.AtTile(worldPoint: TPoint; distance: Int32 = 4): Boolean;
 var
   p: TPoint;
 begin
@@ -647,7 +647,7 @@ begin
   Result := p.InRange(worldPoint, distance);
 end;
 
-function TRSWalker.AtTile(worldPointArray: TPointArray; distance: Int32 = 4): Boolean; overload;
+function TWalker.AtTile(worldPointArray: TPointArray; distance: Int32 = 4): Boolean; overload;
 var
   p: TPoint;
 begin
@@ -658,16 +658,16 @@ end;
 
 
 (*
-## TRSWalker.GetClosestPoint
+## TWalker.GetClosestPoint
 ```pascal
-function TRSWalker.GetClosestPoint(worldPointArray: TPointArray): TPoint;
+function TWalker.GetClosestPoint(worldPointArray: TPointArray): TPoint;
 ```
 
 method used to get the closest Point to the Player out of a TPA.
 
-This is a TRSWalker method so it will exist both on TRSWalker and TRSWalker.
+This is a TWalker method so it will exist both on TWalker and TWalker.
 *)
-function TRSWalker.GetClosestPoint(destinations: TPointArray): TPoint;
+function TWalker.GetClosestPoint(destinations: TPointArray): TPoint;
 var
   shortPaths: T2DPointArray;
   path: TPointArray;
@@ -707,17 +707,17 @@ begin
 end;
 
 (*
-## TRSWalker.WebWalk
+## TWalker.WebWalk
 ```pascal
-function TRSWalker.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
+function TWalker.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
 ```
 method used to webwalk to the closest Point to the player.
 An example use case is for example, if you have sevel bank booths you can use, those would be your **Destination** TPA.
 You will likely want to use the closest bank booth to you, so you use this.
 
-This is a TRSWalker method so it will exist both on TRSWalker and TRSWalker.
+This is a TWalker method so it will exist both on TWalker and TWalker.
 *)
-function TRSWalker.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
+function TWalker.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
 var
   destination: TPoint;
 begin
@@ -727,20 +727,20 @@ end;
 
 
 (*
-## TRSWalker.WorldToMM
+## TWalker.WorldToMM
 ```pascal
-function TRSWalker.WorldToMM(me: TPoint; tpa: TPointArray; radians: Double): TPointArray; overload;
-function TRSWalker.WorldToMM(tpa: TPointArray): TPointArray; overload;
-function TRSWalker.WorldToMM(me: TPoint; atpa: T2DPointArray; radians: Double): T2DPointArray; overload;
-function TRSWalker.WorldToMM(atpa: T2DPointArray): TPointArray; overload;
-function TRSWalker.WorldToMM(me: TPoint; dotFilter: TRSDotFilter; roll: Double = $FFFF): TRSDotFilter; overload;
-function TRSWalker.WorldToMM(dotFilterArray: TRSDotFilterArray; roll: Double = $FFFF): TRSDotFilterArray; overload;
+function TWalker.WorldToMM(me: TPoint; tpa: TPointArray; radians: Double): TPointArray; overload;
+function TWalker.WorldToMM(tpa: TPointArray): TPointArray; overload;
+function TWalker.WorldToMM(me: TPoint; atpa: T2DPointArray; radians: Double): T2DPointArray; overload;
+function TWalker.WorldToMM(atpa: T2DPointArray): TPointArray; overload;
+function TWalker.WorldToMM(me: TPoint; dotFilter: TDotFilter; roll: Double = $FFFF): TDotFilter; overload;
+function TWalker.WorldToMM(dotFilterArray: TDotFilterArray; roll: Double = $FFFF): TDotFilterArray; overload;
 ```
-Overloaded methods required for ATPAs and TRSDotFilters. For more information on TRSDotFilter check their documentation.
+Overloaded methods required for ATPAs and TDotFilters. For more information on TDotFilter check their documentation.
 
-This is a TRSWalker method so it will exist both on TRSWalker and TRSWalker.
+This is a TWalker method so it will exist both on TWalker and TWalker.
 *)
-function TRSWalker.WorldToMM(me: TPoint; tpa: TPointArray; radians: Double): TPointArray; overload;
+function TWalker.WorldToMM(me: TPoint; tpa: TPointArray; radians: Double): TPointArray; overload;
 var
   p: TPoint;
 begin
@@ -748,13 +748,13 @@ begin
     Result += Self.WorldToMM(me, p, radians);
 end;
 
-function TRSWalker.WorldToMM(tpa: TPointArray): TPointArray; overload;
+function TWalker.WorldToMM(tpa: TPointArray): TPointArray; overload;
 begin
   Result := Self.WorldToMM(Self.GetMyPos(), tpa, Minimap.GetCompassAngle(False));
 end;
 
 
-function TRSWalker.WorldToMM(me: TPoint; atpa: T2DPointArray; radians: Double): T2DPointArray; overload;
+function TWalker.WorldToMM(me: TPoint; atpa: T2DPointArray; radians: Double): T2DPointArray; overload;
 var
   tpa: TPointArray;
 begin
@@ -762,13 +762,13 @@ begin
     Result += Self.WorldToMM(me, tpa, radians);
 end;
 
-function TRSWalker.WorldToMM(atpa: T2DPointArray): T2DPointArray; overload;
+function TWalker.WorldToMM(atpa: T2DPointArray): T2DPointArray; overload;
 begin
   Result := Self.WorldToMM(Self.GetMyPos(), atpa, Minimap.GetCompassAngle(False));
 end;
 
 
-function TRSWalker.WorldToMM(me: TPoint; dotFilter: TRSDotFilter; roll: Double = $FFFF): TRSDotFilter; overload;
+function TWalker.WorldToMM(me: TPoint; dotFilter: TDotFilter; roll: Double = $FFFF): TDotFilter; overload;
 var
   p: TPoint;
 begin
@@ -787,12 +787,12 @@ begin
   Result.Timer   := dotFilter.Timer;
 end;
 
-function TRSWalker.WorldToMM(dotFilter: TRSDotFilter; roll: Double = $FFFF): TRSDotFilter; overload;
+function TWalker.WorldToMM(dotFilter: TDotFilter; roll: Double = $FFFF): TDotFilter; overload;
 begin
   Result := Self.WorldToMM(Self.GetMyPos(), dotFilter, roll);
 end;
 
-function TRSWalker.WorldToMM(me: TPoint; DotFilterArray: TRSDotFilterArray; roll: Double = $FFFF): TRSDotFilterArray; overload;
+function TWalker.WorldToMM(me: TPoint; DotFilterArray: TDotFilterArray; roll: Double = $FFFF): TDotFilterArray; overload;
 var
   i: Int32;
 begin
@@ -812,7 +812,7 @@ begin
   end;
 end;
 
-function TRSWalker.WorldToMM(dotFilterArray: TRSDotFilterArray; roll: Double = $FFFF): TRSDotFilterArray; overload;
+function TWalker.WorldToMM(dotFilterArray: TDotFilterArray; roll: Double = $FFFF): TDotFilterArray; overload;
 var
   i: Int32;
 begin
@@ -831,35 +831,35 @@ end;
 
 
 (*
-## TRSWalker.MakePointVisible
+## TWalker.MakePointVisible
 ```pascal
-function TRSWalker.MakePointVisible(p: TPoint): Boolean;
-function TRSWalker.MakePointVisible(tpa: TPointArray): Boolean; overload;
+function TWalker.MakePointVisible(p: TPoint): Boolean;
+function TWalker.MakePointVisible(tpa: TPointArray): Boolean; overload;
 ```
 Wrapper function used to attempt to make a Point visible on the MainScreen.
 
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 *)
-function TRSWalker.MakePointVisible(p: TPoint): Boolean;
+function TWalker.MakePointVisible(p: TPoint): Boolean;
 begin
   Result := Minimap.MakePointVisible(Self.WorldToMM(p));
 end;
 
-function TRSWalker.MakePointVisible(tpa: TPointArray): Boolean; overload;
+function TWalker.MakePointVisible(tpa: TPointArray): Boolean; overload;
 begin
   Result := Minimap.MakePointVisible(Self.WorldToMM(Self.GetClosestPoint(tpa)));
 end;
 
 (*
-## TRSWalker.GetCuboidMS
+## TWalker.GetCuboidMS
 ```pascal
-function TRSWalker.GetCuboidMS(me, loc: TPoint; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TPointArray;
-function TRSWalker.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TPointArray; overload;
+function TWalker.GetCuboidMS(me, loc: TPoint; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TPointArray;
+function TWalker.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TPointArray; overload;
 ```
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 
-To understand what this does, you should read about **TRSMinimap.GetTileMS()** and **TPointArray.ConvexHull()** and understand what they do.
-This calls **TRSMinimap.GetCuboidMS()** internally which in turn will use both methods above.
+To understand what this does, you should read about **TMinimap.GetTileMS()** and **TPointArray.ConvexHull()** and understand what they do.
+This calls **TMinimap.GetCuboidMS()** internally which in turn will use both methods above.
 
 To put it simply, this will will first calculate a floor rectangle with **tile.Z**, or **height** if you prefer
 of 0 and then calculate the top rectangle of the **tile.Z** you specified.
@@ -875,7 +875,7 @@ Example:
 Debug(RSW.GetCuboidMS([100, 100], [1, 1, 4], Offset));     //This will draw a polygon around the coordinate [100, 100].
 ```
 *)
-function TRSWalker.GetCuboidMS(me, loc: TPoint; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]): TCuboidEx;
+function TWalker.GetCuboidMS(me, loc: TPoint; shape: TMainScreenShape; offset: Vector2 = [0, 0]): TCuboidEx;
 var
   angle: Double;
 begin
@@ -886,12 +886,12 @@ begin
   Result := Minimap.GetCuboidMS(loc, shape, offset.ToVec3(), angle);
 end;
 
-function TRSWalker.GetCuboidMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]): TCuboidEx; overload;
+function TWalker.GetCuboidMS(loc: TPoint; shape: TMainScreenShape; offset: Vector2 = [0, 0]): TCuboidEx; overload;
 begin
   Result := Self.GetCuboidMS(Self.GetMyPos(), loc, shape, offset);
 end;
 
-function TRSWalker.GetCuboidMS(me, loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]): TCuboidEx; overload;
+function TWalker.GetCuboidMS(me, loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]): TCuboidEx; overload;
 var
   Angle: Double;
 begin
@@ -901,28 +901,28 @@ begin
   Result := Minimap.GetCuboidMS(loc, tile, offset.ToVec3(), Angle);
 end;
 
-function TRSWalker.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]): TCuboidEx; overload;
+function TWalker.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]): TCuboidEx; overload;
 begin
   Result := Self.GetCuboidMS(Self.GetMyPos(), loc, tile, Offset);
 end;
 
 
 (*
-## TRSWalker.GetTileArrayMS
+## TWalker.GetTileArrayMS
 ```pascal
-function TRSWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 0]; Offset: Vector2 = [0, 0]): TRectArray;
-function TRSWalker.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; Offset: Vector2 = [0, 0]): TRectArray; overload;
+function TWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 0]; Offset: Vector2 = [0, 0]): TRectArray;
+function TWalker.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; Offset: Vector2 = [0, 0]): TRectArray; overload;
 ```
 
-This are wrapper functions to retrieve multiple tiles. Refer to SRL's TRSWalker.GetTileMSEx() and TRSWalker.GetTileMS() for more information.
+This are wrapper functions to retrieve multiple tiles. Refer to SRL's TWalker.GetTileMSEx() and TWalker.GetTileMS() for more information.
 
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 *)
-function TRSWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector2 = [0, 0]): TRectArray;
+function TWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector2 = [0, 0]): TRectArray;
 var
   angle, meHeight: Double;
   i: Int32;
-  tmpShapes: TRSMainScreenShapeArray;
+  tmpShapes: TMainScreenShapeArray;
 begin
   locArray := locArray.SortFrom(me);
   angle := Minimap.GetCompassAngle(False);
@@ -944,7 +944,7 @@ begin
   end;
 end;
 
-function TRSWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]): TRectArray; overload;
+function TWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; shape: TMainScreenShape; offset: Vector2 = [0, 0]): TRectArray; overload;
 var
   angle, meHeight: Double;
   i: Int32;
@@ -964,7 +964,7 @@ begin
   end;
 end;
 
-function TRSWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3; offset: Vector2 = [0, 0]): TRectArray; overload;
+function TWalker.GetTileArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3; offset: Vector2 = [0, 0]): TRectArray; overload;
 var
   angle, meHeight: Double;
   i: Int32;
@@ -984,22 +984,22 @@ begin
   end;
 end;
 
-function TRSWalker.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: Vector2 = [0, 0]): TRectArray; overload;
+function TWalker.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: Vector2 = [0, 0]): TRectArray; overload;
 begin
   Result := Self.GetTileArrayMS(Self.GetMyPos(), locArray, tile, offset);
 end;
 
 
 (*
-## TRSWalker.GetCuboidArrayMS
+## TWalker.GetCuboidArrayMS
 ```pascal
-function TRSWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): T2DPointArray;
-function TRSWalker.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): T2DPointArray;
+function TWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): T2DPointArray;
+function TWalker.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): T2DPointArray;
 ```
 
 Gives you an array of mainscreen polygons. Read **Minimap.GetCuboidMS** for more information.
 
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 
 Example:
 ```pascal
@@ -1007,7 +1007,7 @@ TPA := Minimap.GetDots(ERSMinimapDot.Player);   //find all player dots and retur
 Debug(Minimap.GetCuboidArrayMS(TPA, [2, 3, 5], [2, 2])); //This will draw a polygon that is 2 by 3 tiles and height 5 in the mainscreen where each NPC is.
 ```
 *)
-function TRSWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector2 = [0, 0]): TCuboidExArray;
+function TWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; shapeArray: TMainScreenShapeArray; offset: Vector2 = [0, 0]): TCuboidExArray;
 var
   angle, meHeight: Double;
   i: Int32;
@@ -1037,7 +1037,7 @@ begin
   end;
 end;
 
-function TRSWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]): TCuboidExArray; overload;
+function TWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; shape: TMainScreenShape; offset: Vector2 = [0, 0]): TCuboidExArray; overload;
 var
   angle, meHeight: Double;
   i: Int32;
@@ -1062,43 +1062,43 @@ begin
   end;
 end;
 
-function TRSWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TCuboidExArray; overload;
+function TWalker.GetCuboidArrayMS(me: TPoint; locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TCuboidExArray; overload;
 var
-  shape: TRSMainScreenShape;
+  shape: TMainScreenShape;
 begin
   shape := [tile, 0];
   Result := Self.GetCuboidArrayMS(me, locArray, shape, offset);
 end;
 
-function TRSWalker.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TCuboidExArray; overload;
+function TWalker.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 4]; Offset: Vector2 = [0, 0]): TCuboidExArray; overload;
 begin
   Result := Self.GetCuboidArrayMS(Self.GetMyPos(), locArray, tile, Offset);
 end;
 
 
 (*
-## TRSWalker.GetMSPolygon
+## TWalker.GetMSPolygon
 ```pascal
-function TRSWalker.GetMSPolygon(tpa: TPointArray): TPointArray;
-function TRSWalker.GetMSPolygonArray(atpa: T2DPointArray): T2DPointArray;
+function TWalker.GetMSPolygon(tpa: TPointArray): TPointArray;
+function TWalker.GetMSPolygonArray(atpa: T2DPointArray): T2DPointArray;
 ```
 This function converts a list of points to their respective points in the minimap.
 This is extremely useful if you want to be sure you are within an area.
 To make a polygon or a polygon array easily you can use Simba/Includes/WaspLib/tools/walkerpolygon.simba.
 
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 
 Example:
 ```pascal
 Debug(RSW.GetMMPoly(TPA).Connect());    //This will draw your TPA on the minimap.
 ```
 *)
-function TRSWalker.GetMSPolygon(tpa: TPointArray): TPointArray;
+function TWalker.GetMSPolygon(tpa: TPointArray): TPointArray;
 begin
   Result := Minimap.PointsToMS(Self.WorldToMM(tpa));
 end;
 
-function TRSWalker.GetMSPolygonArray(atpa: T2DPointArray): T2DPointArray;
+function TWalker.GetMSPolygonArray(atpa: T2DPointArray): T2DPointArray;
 var
   angle: Double;
 begin
@@ -1108,17 +1108,17 @@ begin
 end;
 
 (*
-## TRSWalker.InPoly
+## TWalker.InPoly
 ```pascal
-function TRSWalker.InPoly(locArray: TPointArray): Boolean;
+function TWalker.InPoly(locArray: TPointArray): Boolean;
 ```
 
-Checks if you are inside a polygon. If you need to debug the polygon check the example in TRSWalker.GetMMPoly.
+Checks if you are inside a polygon. If you need to debug the polygon check the example in TWalker.GetMMPoly.
 
-This are TRSWalker methods so they will exist both on TRSWalker and TRSWalker.
+This are TWalker methods so they will exist both on TWalker and TWalker.
 
 *)
-function TRSWalker.InPoly(locArray: TPointArray): Boolean;
+function TWalker.InPoly(locArray: TPointArray): Boolean;
 begin
   Result := SRL.PointInPoly(Self.GetMyPos(), locArray);
 end;
@@ -1133,12 +1133,12 @@ begin
   WALKER_MAPS := {$MACRO CURRENT_DIRECTORY} + 'maps' + DirectorySeparator;
 end;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 
   case Self.Mode of
-    ERSClientMode.FIXED: RSHeightMap.MaxHeight := 70;
+    EClientMode.FIXED: RSHeightMap.MaxHeight := 70;
     else RSHeightMap.MaxHeight := 60;
   end;
 end;
