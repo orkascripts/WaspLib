@@ -4,18 +4,18 @@
 {$ENDIF}
 
 type
-  TRSGear = record
+  TGear = record
     Name: String;
-    Items: array [ERSEquipmentSlot] of TRSItem;
+    Items: array [ERSEquipmentSlot] of TItem;
   end;
 
 type
-  TRSGearHandler = record
-    Sets: array of TRSGear;
+  TGearHandler = record
+    Sets: array of TGear;
     Config: TConfigJSON;
 
-    CurrentEquipment: array [ERSEquipmentSlot] of TRSItem;
-    _ValidGear: array [ERSEquipmentSlot] of TRSItemArray;
+    CurrentEquipment: array [ERSEquipmentSlot] of TItem;
+    _ValidGear: array [ERSEquipmentSlot] of TItemArray;
 
     _FormGearIndex: Int32;
     _FormFiltered: Boolean;
@@ -28,7 +28,7 @@ type
     IsSetup: Boolean;
   end;
 
-procedure TRSGearHandler.Setup();
+procedure TGearHandler.Setup();
 var
   keys: TStringList;
   key, name: String;
@@ -96,7 +96,7 @@ begin
 end;
 
 
-procedure TRSGearHandler.AddTo(strings: TStrings);
+procedure TGearHandler.AddTo(strings: TStrings);
 var
   i: Int32;
 begin
@@ -104,7 +104,7 @@ begin
     strings.Add(Self.Sets[i].Name);
 end;
 
-procedure TRSGearHandler.AddTo(combobox: TComboBox); overload;
+procedure TGearHandler.AddTo(combobox: TComboBox); overload;
 var
   i, idx: Int32;
   found: Boolean;
@@ -126,7 +126,7 @@ begin
     combobox.setItemIndex(i);
 end;
 
-procedure TRSGearHandler.AddTo(listbox: TListBox); overload;
+procedure TGearHandler.AddTo(listbox: TListBox); overload;
 var
   i, idx: Int32;
   found: Boolean;
@@ -149,7 +149,7 @@ begin
 end;
 
 
-function TRSGearHandler.Add(gear: TRSGear): Boolean;
+function TGearHandler.Add(gear: TGear): Boolean;
 var
   i: Int32;
   obj: TJSONObject;
@@ -178,7 +178,7 @@ begin
     Self.AddTo(Self._FormListBoxes[i]);
 end;
 
-function TRSGearHandler.Edit(idx: Int32; gear: TRSGear): Boolean;
+function TGearHandler.Edit(idx: Int32; gear: TGear): Boolean;
 var
   i: Int32;
   obj: TJSONObject;
@@ -215,7 +215,7 @@ begin
     Self.AddTo(Self._FormListBoxes[i]);
 end;
 
-function TRSGearHandler.Remove(idx: Int32): Boolean;
+function TGearHandler.Remove(idx: Int32): Boolean;
 var
   keys: TStringList;
 begin
@@ -236,7 +236,7 @@ begin
 end;
 
 
-function TRSGearHandler.Get(idx: Int32): TRSGear;
+function TGearHandler.Get(idx: Int32): TGear;
 begin
   if idx = -1 then
     Exit;
@@ -244,7 +244,7 @@ begin
     Result := Self.Sets[idx];
 end;
 
-function TRSGearHandler.Get(name: String): TRSGear; overload;
+function TGearHandler.Get(name: String): TGear; overload;
 var
   i: Int32;
 begin
@@ -253,7 +253,7 @@ begin
       Exit(Self.Sets[i]);
 end;
 
-function TRSGearHandler.Contains(name: String): Boolean;
+function TGearHandler.Contains(name: String): Boolean;
 var
   i: Int32;
 begin
@@ -263,7 +263,7 @@ begin
 end;
 
 var
-  GearHandler: TRSGearHandler;
+  GearHandler: TGearHandler;
 
 begin
   GearHandler.Setup();
@@ -282,7 +282,7 @@ procedure TScriptForm._RefreshSets(sender: TObject);
 var
   combobox, cb: TComboBox;
   parent: TPanel;
-  gear: TRSGear;
+  gear: TGear;
   slot: ERSEquipmentSlot;
   name: String;
 begin
@@ -316,8 +316,8 @@ var
   parent: TPanel;
   button: TButton;
   slot: ERSEquipmentSlot;
-  gear: TRSGear;
-  item: TRSItem;
+  gear: TGear;
+  item: TItem;
 begin
   combobox := sender;
   if combobox.getItemIndex() = -1 then Exit;
@@ -358,7 +358,7 @@ var
   button: TButton;
   combobox, cb: TComboBox;
   parent: TPanel;
-  gear: TRSGear;
+  gear: TGear;
   slot: ERSEquipmentSlot;
   name: String;
 begin
@@ -389,7 +389,7 @@ var
   button: TButton;
   combobox: TComboBox;
   parent: TPanel;
-  gear: TRSGear;
+  gear: TGear;
 begin
   button := sender;
   parent := button.getParent();
@@ -412,7 +412,7 @@ var
   button: TButton;
   combobox: TComboBox;
   parent: TPanel;
-  gear: TRSGear;
+  gear: TGear;
 begin
   button := sender;
   parent := button.getParent();
@@ -439,7 +439,7 @@ var
   parent: TPanel;
   img: TImage;
   item, tmp: TMufasaBitmap;
-  id: TRSItem;
+  id: TItem;
   path: String;
 begin
   combobox := sender;
@@ -484,8 +484,8 @@ procedure TScriptForm._OnLoadGear(sender: TObject);
 var
   combobox: TComboBox;
   parent: TPanel;
-  items: TRSItemArray;
-  item: TRSItem;
+  items: TItemArray;
+  item: TItem;
   slot: ERSEquipmentSlot;
   name: String;
 begin
@@ -494,8 +494,8 @@ begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if WLSettings.GetObject('remote_input').getBoolean('enabled') then
   begin
-    if not RSClient.RemoteInput.IsSetup() then
-      RSClient.RemoteInput.Setup();
+    if not GameClient.RemoteInput.IsSetup() then
+      GameClient.RemoteInput.Setup();
   end
   else
   {$ENDIF}
@@ -530,7 +530,7 @@ procedure TScriptForm._ClearGearFilter(sender: TObject);
 var
   combobox: TComboBox;
   parent: TPanel;
-  item: TRSItem;
+  item: TItem;
   slot: ERSEquipmentSlot;
   name: String;
 begin

@@ -10,15 +10,15 @@ DriftNet interface by Reldnahc.
 type
   ERSDriftNetButton = (DISCARD_ALL, BANK_ALL, TAKE_ALL, OVERLAY_CONFIRM, OVERLAY_CANCEL);
 
-  TRSDriftNet = record(TRSTitledInterface)
-    Items: TRSItemInterface;
+  TDriftNet = record(TTitledInterface)
+    Items: TItemInterface;
   end;
 
 
 (*
-## TRSDriftNet.BankOverlayOpen
+## TDriftNet.BankOverlayOpen
 ```pascal
-function TRSDriftNet.BankOverlayOpen(): Boolean;
+function TDriftNet.BankOverlayOpen(): Boolean;
 ```
 
 Returns True if the bank loot overlay is activated
@@ -29,15 +29,15 @@ if DriftNet.BankOverlayOpen() then
   Driftnet.GetButton(ERSDriftNetButton.OVERLAY_CONFIRM).Click();
 ```
 *)
-function TRSDriftNet.BankOverlayOpen(): Boolean;
+function TDriftNet.BankOverlayOpen(): Boolean;
 begin
   Result := SRL.CountColor(CTS2(16777215, 1, 0.01, 0.01), Self.Bounds) = 66;
 end;
 
 (*
-## TRSDriftNet.DestroyOverlayOpen
+## TDriftNet.DestroyOverlayOpen
 ```pascal
-function TRSDriftNet.DestroyOverlayOpen(): Boolean;
+function TDriftNet.DestroyOverlayOpen(): Boolean;
 ```
 
 Returns True if the destroy loot overlay is activated
@@ -48,15 +48,15 @@ if DriftNet.DestroyOverlayOpen() then
   Driftnet.GetButton(ERSDriftNetButton.OVERLAY_CANCEL).Click();
 ```
 *)
-function TRSDriftNet.DestroyOverlayOpen(): Boolean;
+function TDriftNet.DestroyOverlayOpen(): Boolean;
 begin
   Result := SRL.CountColor(CTS2(255, 1, 0.01, 0.01), Self.Bounds) = 102;
 end;
 
 (*
-## TRSDriftNet.HasOverlay
+## TDriftNet.HasOverlay
 ```pascal
-function TRSDriftNet.HasOverlay(): Boolean;
+function TDriftNet.HasOverlay(): Boolean;
 ```
 
 Returns True if either overlay is activated
@@ -67,20 +67,20 @@ if DriftNet.HasOverlay() then
   Driftnet.GetButton(ERSDriftNetButton.OVERLAY_CONFIRM).Click();
 ```
 *)
-function TRSDriftNet.HasOverlay(): Boolean;
+function TDriftNet.HasOverlay(): Boolean;
 begin
   Result := Self.BankOverlayOpen() or Self.DestroyOverlayOpen();
 end;
 
 (*
-## TRSDriftNet.GetSlotBoxes
+## TDriftNet.GetSlotBoxes
 ```pascal
-function TRSDriftNet.GetSlotBoxes(): TBoxArray;
+function TDriftNet.GetSlotBoxes(): TBoxArray;
 ```
 
 Returns a TBoxArray containing each item slot
 *)
-function TRSDriftNet.GetSlotBoxes(): TBoxArray;
+function TDriftNet.GetSlotBoxes(): TBoxArray;
 begin
   if Self.HasOverlay() then
     Exit;
@@ -88,7 +88,7 @@ begin
   Result := Grid(5, 2, 32, 32, [48, 5], [Self.Bounds.X1 + 27, Self.Bounds.Y1 + 55]);
 end;
 
-procedure TRSDriftNet.Setup(); override;
+procedure TDriftNet.Setup(); override;
 begin
   inherited;
   Self.Name := 'Drift Net';
@@ -96,9 +96,9 @@ begin
   Self.Items.SlotBoxesFunction := @Self.GetSlotBoxes;
 end;
 
-procedure TRSDriftNet.SetupAlignment(); overload;
+procedure TDriftNet.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -106,28 +106,28 @@ begin
   alignment.MaxWidth := 412;
   alignment.MaxHeight := 254;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       alignment.Top := InterfaceArea.Bounds.Y1;
 
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       alignment.Top := InterfaceArea.Bounds.Y1-1;
   end;
 
   Self.SetupAlignment(alignment);
 end;
 
-function TRSDriftNet.IsOpen(): Boolean;
+function TDriftNet.IsOpen(): Boolean;
 begin
   Result := Self.IsTitle(Self.Name);
 end;
 
-function TRSDriftNet.IsOpen(waitTime: Int32): Boolean; overload;
+function TDriftNet.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TRSDriftNet.Close(pressEscape: Boolean = False): Boolean;
+function TDriftNet.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -136,15 +136,15 @@ begin
 end;
 
 (*
-## TRSDriftNet.GetButtons
+## TDriftNet.GetButtons
 ```pascal
-function TRSDriftNet.GetButtons(): TRSButtonArray;
+function TDriftNet.GetButtons(): TGameButtonArray;
 ```
 
-Returns a TRSButtonArray containing the avaiable buttons. Changes depending on if there is an overlay.
+Returns a TGameButtonArray containing the avaiable buttons. Changes depending on if there is an overlay.
 
 *)
-function TRSDriftNet.GetButtons(): TRSButtonArray;
+function TDriftNet.GetButtons(): TGameButtonArray;
 begin
   if Self.HasOverlay() then
     Result := Self.FindButtons([[100, 28]])
@@ -153,9 +153,9 @@ begin
 end;
 
 (*
-## TRSDriftNet.GetButton
+## TDriftNet.GetButton
 ```pascal
-function TRSDriftNet.GetButton(): TRSButton;
+function TDriftNet.GetButton(): TGameButton;
 ```
 
 Returns a specific button if its available
@@ -168,9 +168,9 @@ if DriftNet.BankOverlayOpen() then
   Driftnet.GetButton(ERSDriftNetButton.OVERLAY_CONFIRM).Click();
 ```
 *)
-function TRSDriftNet.GetButton(button: ERSDriftNetButton): TRSButton;
+function TDriftNet.GetButton(button: ERSDriftNetButton): TGameButton;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   case button of
     ERSDriftNetButton.DISCARD_ALL,
@@ -200,9 +200,9 @@ begin
 end;
 
 var
- DriftNet : TRSDriftNet;
+ DriftNet : TDriftNet;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

@@ -4,7 +4,7 @@
 {$ENDIF}
 
 const
-  RUNES : TRSItemArray := [
+  RUNES : TItemArray := [
     'Air rune', 'Water rune', 'Earth rune', 'Fire rune',
     'Mind rune', 'Chaos rune', 'Death rune', 'Blood rune',
     'Law rune', 'Cosmic rune', 'Body rune', 'Astral rune',
@@ -14,28 +14,28 @@ const
 ];
 
 type
-  TRSRunePouch = record(TRSTitledInterface)
-    Items: TRSItemInterface;
+  TRunePouch = record(TTitledInterface)
+    Items: TItemInterface;
   end;
 
 var
-  RunePouch : TRSRunePouch;
+  RunePouch : TRunePouch;
 
-function TRSRunePouch.IsOpen(): Boolean; begin
+function TRunePouch.IsOpen(): Boolean; begin
   Result := RSInterface.IsOpen(ERSInterfaceType.CLASSIC) and
             (SRL.CountColor(2586039, Self.Bounds) > 600);
 end;
 
-function TRSRunePouch.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload; begin
+function TRunePouch.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload; begin
   if (interval = -1) then
     interval := SRL.TruncatedGauss(50, 1500);
 
   Result := WaitUntil(Self.IsOpen, interval, waitTime);
 end;
 
-function TRSRunePouch.Open: Boolean;
+function TRunePouch.Open: Boolean;
 var
-  Match : TRSItemFinderMatch;
+  Match : TItemFinderMatch;
 begin
   if Self.IsOpen then
     Exit(True);
@@ -53,7 +53,7 @@ begin
   Result := WaitUntil(Self.IsOpen, 17, 5000);
 end;
 
-function TRSRunePouch.GetPouchBoxes(): TBoxArray;
+function TRunePouch.GetPouchBoxes(): TBoxArray;
 begin
   if 'Div' in Self.GetTitle then
     Result := Grid(4, 1, 34, 34, [10, 0], [Self.Bounds.X1 + 93, Self.Bounds.Y1 + 63])
@@ -61,14 +61,14 @@ begin
     Result := Grid(3, 1, 34, 34, [27, 0], [Self.Bounds.X1 + 97, Self.Bounds.Y1 + 62]);
 end;
 
-function TRSRunePouch.GetInventoryBoxes(): TBoxArray; begin
+function TRunePouch.GetInventoryBoxes(): TBoxArray; begin
   Result := Grid(7, 4, 34, 32, [13, 1], [Self.Bounds.X1 + 14, Self.Bounds.Y1 + 136]);
 end;
 
-function TRSRunePouch.DiscoverPouch(): TRSItemArray;
+function TRunePouch.DiscoverPouch(): TItemArray;
 var
   SlotBoxes : TBoxArray := Self.GetPouchBoxes;
-  Matches : TRSItemFinderMatchArray;
+  Matches : TItemFinderMatchArray;
   I : Int32;
 begin
   if not Self.IsOpen then
@@ -83,10 +83,10 @@ begin
     Result += Matches[I].Item;
 end;
 
-function TRSRunePouch.DiscoverInventory(): TRSItemArray;
+function TRunePouch.DiscoverInventory(): TItemArray;
 var
   SlotBoxes : TBoxArray := Self.GetInventoryBoxes;
-  Matches : TRSItemFinderMatchArray;
+  Matches : TItemFinderMatchArray;
   I : Int32;
 begin
   if not Self.IsOpen then
@@ -101,10 +101,10 @@ begin
     Result += Matches[I].Item;
 end;
 
-function TRSRunePouch.FindInPouch(Rune : TRSItem; out Slot : Int32): Boolean;
+function TRunePouch.FindInPouch(Rune : TItem; out Slot : Int32): Boolean;
 var
   SlotBoxes : TBoxArray := Self.GetPouchBoxes;
-  Match : TRSItemFinderMatch;
+  Match : TItemFinderMatch;
 begin
   if not Self.IsOpen then
     Exit;
@@ -113,10 +113,10 @@ begin
   Slot := Match.Index;
 end;
 
-function TRSRunePouch.FindInPouch(Rune : TRSItem; out Box : TBox): Boolean; overload;
+function TRunePouch.FindInPouch(Rune : TItem; out Box : TBox): Boolean; overload;
 var
   SlotBoxes : TBoxArray := Self.GetPouchBoxes;
-  Match : TRSItemFinderMatch;
+  Match : TItemFinderMatch;
 begin
   if not Self.IsOpen then
     Exit;
@@ -125,10 +125,10 @@ begin
   Box := Match.Box;
 end;
 
-function TRSRunePouch.FindInInventory(Rune : TRSItem; out Slot : Int32): Boolean;
+function TRunePouch.FindInInventory(Rune : TItem; out Slot : Int32): Boolean;
 var
   SlotBoxes : TBoxArray := Self.GetInventoryBoxes;
-  Match : TRSItemFinderMatch;
+  Match : TItemFinderMatch;
 begin
   if not Self.IsOpen then
     Exit;
@@ -137,10 +137,10 @@ begin
   Slot := Match.Index;
 end;
 
-function TRSRunePouch.FindInInventory(Rune : TRSItem; out Box : TBox): Boolean; overload;
+function TRunePouch.FindInInventory(Rune : TItem; out Box : TBox): Boolean; overload;
 var
   SlotBoxes : TBoxArray := Self.GetInventoryBoxes;
-  Match : TRSItemFinderMatch;
+  Match : TItemFinderMatch;
 begin
   if not Self.IsOpen then
     Exit;
@@ -149,7 +149,7 @@ begin
   Box := Match.Box;
 end;
 
-function TRSRunePouch.Withdraw(Rune : TRSItem; Amount : Int32 = -1): Boolean;
+function TRunePouch.Withdraw(Rune : TItem; Amount : Int32 = -1): Boolean;
 var
   Box : TBox;
 begin
@@ -167,7 +167,7 @@ begin
   Result := WaitUntil((SRL.CountColor(10461097, Box) = 0), 17, 3000);
 end;
 
-function TRSRunePouch.WithdrawAll(): Boolean;
+function TRunePouch.WithdrawAll(): Boolean;
 var
   SlotBoxes : TBoxArray := Self.GetPouchBoxes;
   I : Int32;
@@ -186,7 +186,7 @@ begin
   Result := WaitUntil((SRL.CountColor(10461097, SlotBoxes[0].Combine(SlotBoxes[High(SlotBoxes)])) = 0), 17, 3000);
 end;
 
-function TRSRunePouch.Store(Rune : TRSItem; Amount : Int32 = -1): Boolean;
+function TRunePouch.Store(Rune : TItem; Amount : Int32 = -1): Boolean;
 var
   Box : TBox;
   Slot : Int32;
@@ -205,7 +205,7 @@ begin
   Result := WaitUntil(Self.FindInPouch(Rune, Slot), 17, 3000);
 end;
 
-function TRSRunePouch.GetRuneCount(Rune : TRSItem): Int32;
+function TRunePouch.GetRuneCount(Rune : TItem): Int32;
 var
   Box : TBox;
 begin
@@ -215,7 +215,7 @@ begin
   Result := SRL.GetItemAmount(Box);
 end;
 
-procedure TRSRunePouch.Setup(); override;
+procedure TRunePouch.Setup(); override;
 begin
   inherited;
 
@@ -224,23 +224,23 @@ begin
   Self.Items.SlotBoxesFunction := @Self.GetPouchBoxes;
 end;
 
-procedure TRSRunePouch.SetupAlignment(); overload;
+procedure TRunePouch.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Right := InterfaceArea.Bounds.X2;
   alignment.Top := InterfaceArea.Bounds.Y1 + 2;
   alignment.MaxWidth := 353;
   alignment.MaxHeight := 286;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
     begin
       alignment.Left := InterfaceArea.Bounds.X1 - 4;
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 1;
     end;
 
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
     begin
       alignment.Left := InterfaceArea.Bounds.X1 - 5;
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 2;
@@ -250,7 +250,7 @@ begin
   Self.SetupAlignment(alignment);
 end;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

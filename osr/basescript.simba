@@ -32,7 +32,7 @@ TBaseScript can be used as is or inherited from to extend it's functionality.
 Example:
 ```pascal
 TBaseWalkerScript = record(TBaseScript)
-  RSW: TRSWalker;
+  RSW: TWalker;
 end;
 ```
 *)
@@ -347,7 +347,7 @@ begin
   end;
   {$ENDIF}
 
-  if not RSClient.IsLoggedIn() then
+  if not GameClient.IsLoggedIn() then
     Login.LoginPlayer();
 
   Antiban.Setup();
@@ -400,7 +400,7 @@ begin
   Self.TimeRunning.Resume();
   Self.OnAntiban := False;
 
-  if not RSClient.IsLoggedIn() then
+  if not GameClient.IsLoggedIn() then
     Login.LoginPlayer();
 end;
 
@@ -446,11 +446,11 @@ end;
 Record that holds common variables for most scripts that use walker.
 This record extends **TBaseScript** and has all of it's variables too.
 The extra variables that are part of **TBaseWalkerScript** are:
- - **RSW**: TRSWalker variable that holds our walker, for more information check the following page: https://ollydev.github.io/SRL-Development/walker.html?highlight=walker
+ - **RSW**: TWalker variable that holds our walker, for more information check the following page: https://ollydev.github.io/SRL-Development/walker.html?highlight=walker
 *)
 type
   TBaseWalkerScript = record(TBaseScript)
-    RSW: TRSWalker;
+    RSW: TWalker;
   end;
 
 (*
@@ -475,8 +475,8 @@ end;
 Record that holds common variables for most scripts that use a bank.
 This record inherits from **TBaseWalkerScript** and which inherits from **TBaseScript's**.
 The extra variables that are part of **TBaseBankScript** are:
- - **Self.ScriptBank**: PRSObject pointer that points to our current bank TRSObject, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-trsobject
- - **Self.ScriptBanker**: PRSNPC pointer that points to our current banker TRSNPC, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-trsmmdot
+ - **Self.ScriptBank**: PRSObject pointer that points to our current bank TObject, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-Tobject
+ - **Self.ScriptBanker**: PRSNPC pointer that points to our current banker TNPC, for more info check: https://torwent.github.io/WaspLib/waspobject.html#type-Tmmdot
  - **BankTab**: Integer variable used to cache the current bank tab that contains items for our script.
  - **ItemLeftAmount**: Integer variable used to cache items left to make/build/whatever to pre-hover the bank.
  - **HoveringBank**: Boolean variable that holds information if we are currently already hovering the bank. This is so we don't try to rehover the bank and don't need to check the uptext if we already are doing it.
@@ -564,7 +564,7 @@ end;
 (*
 ## BaseBankScript.CountItemsLeft
 ```pascal
-procedure TBaseBankScript.CountItemsLeft(Item: TRSItem);
+procedure TBaseBankScript.CountItemsLeft(Item: TItem);
 ```
 Set's TBaseBankScript.ItemLeftAmount to be used by TBaseBankScript.ShouldHover().
 
@@ -572,7 +572,7 @@ Set's TBaseBankScript.ItemLeftAmount to be used by TBaseBankScript.ShouldHover()
 For some scripts this might need to be overriten and rewritten.
 ```
 *)
-procedure TBaseBankScript.CountItemsLeft(item: TRSItem);
+procedure TBaseBankScript.CountItemsLeft(item: TItem);
 begin
   Self.ItemLeftAmount := Inventory.CountItem(item);
 end;
@@ -632,11 +632,11 @@ begin
 end;
 
 
-function TBaseBankScript.RanOut(item: TRSBankItem; attempts: Int32 = 3): Boolean;
+function TBaseBankScript.RanOut(item: TBankItem; attempts: Int32 = 3): Boolean;
 var
   attempt: Int32;
   b: TBox;
-  position: TRSBankPosition;
+  position: TBankPosition;
 begin
   for attempt := 1 to attempts do
   begin
@@ -678,21 +678,21 @@ end;
 (*
 ## BaseBankScript.Withdraw
 ```pascal
-function TBaseBankScript.Withdraw(item: TRSBankWithdrawItem): Boolean;
+function TBaseBankScript.Withdraw(item: TBankWithdrawItem): Boolean;
 ```
 Withdraws **item** from the bank.
 
 Example:
 ```pascal
-item := TRSBankItem.Setup('Shark', 1, True);
+item := TBankItem.Setup('Shark', 1, True);
 if Bank.IsOpen() then
   BankScript.Withdraw(item);
 ```
 *)
-function TBaseBankScript.Withdraw(item: TRSBankItem; attempts: Int32 = 3): Boolean;
+function TBaseBankScript.Withdraw(item: TBankItem; attempts: Int32 = 3): Boolean;
 var
   count, stack, attempt: Int32;
-  invItem: TRSItem;
+  invItem: TItem;
   b: TBox;
 begin
   if item.Noted then
@@ -747,12 +747,12 @@ end;
 (*
 ## BaseBankScript.DepositItem
 ```pascal
-function TBaseBankScript.DepositItem(out item: TRSBankItem; isBank, isDepositBox: Boolean = False): Boolean;
-function TBaseBankScript.DepositItem(item: TRSItem; isBank, isDepositBox: Boolean = False): Boolean; overload;
+function TBaseBankScript.DepositItem(out item: TBankItem; isBank, isDepositBox: Boolean = False): Boolean;
+function TBaseBankScript.DepositItem(item: TItem; isBank, isDepositBox: Boolean = False): Boolean; overload;
 ```
 Deposits **item** in the bank through either the bank or deposit box depending on which one is open.
 *)
-function TBaseBankScript.DepositItem(item: TRSBankItem; isBank, isDepositBox: Boolean = False): Boolean; static;
+function TBaseBankScript.DepositItem(item: TBankItem; isBank, isDepositBox: Boolean = False): Boolean; static;
 var
   count: Int32;
 begin
@@ -784,25 +784,25 @@ begin
   end;
 end;
 
-function TBaseBankScript.DepositItem(item: TRSItem; isBank, isDepositBox: Boolean = False): Boolean; static; overload;
+function TBaseBankScript.DepositItem(item: TItem; isBank, isDepositBox: Boolean = False): Boolean; static; overload;
 var
-  tmp: TRSBankItem;
+  tmp: TBankItem;
 begin
-  tmp := TRSBankItem.Setup(item);
+  tmp := TBankItem.Setup(item);
   Result := TBaseBankScript.DepositItem(tmp, isBank, isDepositBox);
 end;
 
 (*
 ## BaseBankScript.DepositItems
 ```pascal
-function TBaseBankScript.DepositItem(out items: TRSBankItemArray; isBank, isDepositBox: Boolean = False): Boolean;
-function TBaseBankScript.DepositItems(item: TRSItem; isBank, isDepositBox: Boolean = False): Boolean; overload;
+function TBaseBankScript.DepositItem(out items: TBankItemArray; isBank, isDepositBox: Boolean = False): Boolean;
+function TBaseBankScript.DepositItems(item: TItem; isBank, isDepositBox: Boolean = False): Boolean; overload;
 ```
 Deposits **item** in the bank through either the bank or deposit box depending on which one is open.
 *)
-function TBaseBankScript.DepositItems(out items: TRSBankItemArray): Boolean; static;
+function TBaseBankScript.DepositItems(out items: TBankItemArray): Boolean; static;
 var
-  item: TRSBankItem;
+  item: TBankItem;
   isBank, isDepositBox: Boolean;
 begin
   if not RSInterface.IsOpen() then
@@ -822,9 +822,9 @@ begin
   Result := True;
 end;
 
-function TBaseBankScript.DepositItems(items: TRSItemArray): Boolean; static; overload;
+function TBaseBankScript.DepositItems(items: TItemArray): Boolean; static; overload;
 var
-  item: TRSItem;
+  item: TItem;
   isBank, isDepositBox: Boolean;
 begin
   if not RSInterface.IsOpen() then
@@ -848,7 +848,7 @@ end;
 (*
 ## BaseBankScript.HandleCollectBox
 ```pascal
-function TBaseBankScript.HandleCollectBox(items: TRSItemArray): Boolean;
+function TBaseBankScript.HandleCollectBox(items: TItemArray): Boolean;
 ```
 Collects **items** from the collectbox.
 
@@ -858,7 +858,7 @@ if CollectBox.IsOpen() then
   BankScript.HandleCollectBox();
 ```
 *)
-function TBaseBankScript.HandleCollectBox(items: TRSItemArray): Boolean;
+function TBaseBankScript.HandleCollectBox(items: TItemArray): Boolean;
 begin
   Self.CollectEmpty := True;
 
@@ -872,7 +872,7 @@ end;
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
 begin
   MM2MS.SetupZoom();
-  if (Bitmap = RSClient.Image) then
+  if (Bitmap = GameClient.Image) then
     Bitmap.Clear();
 
   inherited(Bitmap);

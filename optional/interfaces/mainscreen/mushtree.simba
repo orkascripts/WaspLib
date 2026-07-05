@@ -7,11 +7,11 @@ type
   ERSMushTreeLocation = (HOUSE_ON_THE_HILL, VERDANT_VALLEY, STICKY_SWAMP, MUSHROOM_MEADOW);
   ERSMushTreeButton = ERSMushTreeLocation; //deprecated
 
-  TRSMushTree = record(TRSTitledInterface)
-    Mushrooms: TRSObjectV2;
+  TMushTree = record(TTitledInterface)
+    Mushrooms: TObjectV2;
   end;
 
-procedure TRSMushtree.Setup(); override;
+procedure TMushtree.Setup(); override;
 begin
   inherited;
 
@@ -26,9 +26,9 @@ begin
   Self.Mushrooms.Walker := @Map.Walker;
 end;
 
-procedure TRSMushTree.SetupAlignment(); overload;
+procedure TMushTree.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -36,27 +36,27 @@ begin
   alignment.MaxWidth := 472;
   alignment.MaxHeight := 294;
 
-  case RSCLient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       alignment.Top := InterfaceArea.Bounds.Y1;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       alignment.Top := InterfaceArea.Bounds.Y1 - 1;
   end;
 
   Self.SetupAlignment(alignment);
 end;
 
-function TRSMushTree.IsOpen(): Boolean;
+function TMushTree.IsOpen(): Boolean;
 begin
   Result := Self.IsTitle(Self.Name);
 end;
 
-function TRSMushTree.IsOpen(waitTime: Int32): Boolean; overload;
+function TMushTree.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TRSMushTree.Close(pressEscape: Boolean = False): Boolean;
+function TMushTree.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -64,14 +64,14 @@ begin
   Result := Self.ClickCloseButton(pressEscape) and WaitUntil(not Self.IsOpen(), SRL.TruncatedGauss(50, 1500), Random(1500, 2000));
 end;
 
-function TRSMushTree.GetButtons(): TRSButtonArray;
+function TMushTree.GetButtons(): TGameButtonArray;
 begin
   Result := Self.FindButtons([[200, 52]]);
 end;
 
-function TRSMushTree.GetButton(location: ERSMushTreeLocation): TRSButton;
+function TMushTree.GetButton(location: ERSMushTreeLocation): TGameButton;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   buttons := Self.GetButtons();
 
@@ -79,9 +79,9 @@ begin
     Result := buttons[location];
 end;
 
-function TRSMushTree.ClickButton(location: ERSMushTreeLocation): Boolean;
+function TMushTree.ClickButton(location: ERSMushTreeLocation): Boolean;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   buttons := Self.GetButtons();
 
@@ -91,13 +91,13 @@ begin
 end;
 
 
-function TRSMushTree.GetCoordinate(location: ERSMushTreeLocation): TPoint;
+function TMushTree.GetCoordinate(location: ERSMushTreeLocation): TPoint;
 begin
   Result := Self.Mushrooms.Coordinates[Ord(location)];
 end;
 
 
-function TRSMushTree.Open(): Boolean;
+function TMushTree.Open(): Boolean;
 begin
   if Self.IsOpen() then Exit(True);
   if not Self.Mushrooms.Click() then Exit;
@@ -105,7 +105,7 @@ begin
   Result := Self.IsOpen(4000);
 end;
 
-function TRSMushTree.WalkOpen(): Boolean;
+function TMushTree.WalkOpen(): Boolean;
 begin
   if Self.IsOpen() then Exit(True);
   if not Self.Mushrooms.Click() then Exit;
@@ -114,7 +114,7 @@ begin
 end;
 
 
-function TRSMushTree.Teleport(location: ERSMushTreeLocation): Boolean;
+function TMushTree.Teleport(location: ERSMushTreeLocation): Boolean;
 begin
   if Map.Position().InRange(Self.GetCoordinate(location), 60) then Exit(True);
   if not Self.Open() then Exit;
@@ -122,7 +122,7 @@ begin
   Result := WaitUntil(Map.Position().InRange(Self.GetCoordinate(location), 60), 300, 5000);
 end;
 
-function TRSMushTree.WalkTeleport(location: ERSMushTreeLocation): Boolean;
+function TMushTree.WalkTeleport(location: ERSMushTreeLocation): Boolean;
 begin
   if Map.Position().InRange(Self.GetCoordinate(location), 60) then Exit(True);
   if not Self.WalkOpen() then Exit;
@@ -131,9 +131,9 @@ begin
 end;
 
 var
- MushTree : TRSMushtree;
+ MushTree : TMushtree;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
   MushTree.SetupAlignment();

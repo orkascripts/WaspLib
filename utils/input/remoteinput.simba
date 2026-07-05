@@ -30,7 +30,7 @@ begin
     TerminateScript(
       'You seem to be running ' + ToStr(count) + ' simba scripts.' +
       LineEnding + 'WaspLib is not meant for gold farming, the maximum allowed are 7 instances.' +
-      LineEnding + 'If this is not the case, close the osrs clients you''ve used Simba on and try again!'
+      LineEnding + 'If this is not the case, close the game clients you''ve used Simba on and try again!'
     );
 
   EIOS_SetInputEnabled(Self.EIOS, not WLSettings.GetObject('remote_input').getBoolean('block_real_input', True));

@@ -21,12 +21,12 @@ type
   ERSMushroomLocation = (VERD_VALLEY, HILL_HOUSE, SHROOM_MEADOW); //Names have been changed to protect the globals of the same name
 
   TBirdhouse = record
-    BirdhouseObject : TRSObject;
+    BirdhouseObject : TGameObject;
     IsFilled : Boolean;
   end;
 
   TMushroom = record
-    Mushroom : TRSObject;
+    Mushroom : TGameObject;
     location : ERSMushroomLocation;
   end;
 {$SCOPEDENUMS OFF}
@@ -35,7 +35,7 @@ type
 
   TBirdHouseInclude = record
     LogType, SuggestedLogType : ERSLogType;
-    Seed : TRSItem;
+    Seed : TItem;
     BirdHousesFilled : Int8;
     //VerdValleySouthBirdHouse, VerdValleyNorthBirdHouse, MushMeadowBirdhouse, TarBirdHouse : TBirdhouse;
 
@@ -46,9 +46,9 @@ type
     ShouldTeleport,
     AlwaysUseBestLog, IsDisabled, NeedClockworks, TerminateOnNoLogs, Initialized : Boolean;
 
-    RSW : TRSWalker;
+    RSW : TWalker;
     ScriptIntervalTimer, NextRunSpewTimer : TCountdown;
-    VerdValleyShroom, MushMeadowShroom, HouseHillShroom : TRSObject;
+    VerdValleyShroom, MushMeadowShroom, HouseHillShroom : TGameObject;
     MushIndex : Int8;
     RunsCompleted : Int32;
     NestsLooted : Int32;
@@ -63,7 +63,7 @@ var
   BirdHouseRunner : TBirdHouseInclude;
   BHWriteDebug : Boolean := true;
   BHIncludeGUILogType : ERSLogType := ERSLogType.MAPLE_LOGS;
-  BHIncludeGUISeed : TRSItem := 'Potato seed';
+  BHIncludeGUISeed : TItem := 'Potato seed';
   BHIncludeGUIRunIntervalMinutes : Int32 := 51;
   BHIncludeGUIUseBestLog : Boolean := false;
   BHIncludeGUICraftWhileNav : Boolean := false;
@@ -77,7 +77,7 @@ begin
   end;
 end;
 
-function TRSMushTree.Click(mushroom : ERSMushTreeButton) : Boolean;
+function TMushTree.Click(mushroom : ERSMushTreeButton) : Boolean;
 begin
   Result := Self.GetButton(mushroom).Click();
 end;
@@ -122,9 +122,9 @@ begin
   end;
 end;
 
-function TBirdHouseInclude.GetBirdhouseItem(log : ERSLogType) : TRSItem;
+function TBirdHouseInclude.GetBirdhouseItem(log : ERSLogType) : TItem;
 var
-  baseBirdHouse : TRSItem := "Bird house";
+  baseBirdHouse : TItem := "Bird house";
 
 begin
   case log of
@@ -134,23 +134,23 @@ begin
   end;
 end;
 
-function TBirdHouseInclude.GetWithdrawList() : TRSBankItemArray;
+function TBirdHouseInclude.GetWithdrawList() : TBankItemArray;
 begin
-  Result += TRSBankItem.Setup("Chisel", 1, false);
-  Result += TRSBankItem.Setup("Hammer", 1, false);
-  Result += TRSBankItem.Setup(Self.GetLogString(Self.LogType), 4, false);
+  Result += TBankItem.Setup("Chisel", 1, false);
+  Result += TBankItem.Setup("Hammer", 1, false);
+  Result += TBankItem.Setup(Self.GetLogString(Self.LogType), 4, false);
 
   if Self.NeedClockworks then
-    Result += TRSBankItem.Setup("Clockwork", 1, false);
+    Result += TBankItem.Setup("Clockwork", 1, false);
 
-  Result += TRSBankItem.Setup(Self.Seed, 40, false);
+  Result += TBankItem.Setup(Self.Seed, 40, false);
 end;
 
-function TRSBank.FindAll(items: TRSItemArray): Boolean; overload;
+function TBank.FindAll(items: TItemArray): Boolean; overload;
 var
   tempBox : TBox;
   i : Int32;
-  tempItem : TRSBankItem;
+  tempItem : TBankItem;
 
 begin
   for i := 0 to High(items) do
@@ -163,7 +163,7 @@ begin
   Result := true;
 end;
 
-function TRSBankItemArray.ToItemArray() : TRSItemArray; constref;
+function TBankItemArray.ToItemArray() : TItemArray; constref;
 var
   i : Int32;
 
@@ -176,7 +176,7 @@ end;
 
 function TBirdHouseInclude.HasTools() : Boolean;
 var
-  tools : TRSItemArray;
+  tools : TItemArray;
   i : Int32;
 begin
 
@@ -215,8 +215,8 @@ end;
 
 procedure TBirdHouseInclude.SetupBirdHouses();
 var
-  VVBHN, VVBHS, MMBHN, TARBH : TRSObject;
-  commonFinder : TRSObjectFinder;
+  VVBHN, VVBHS, MMBHN, TARBH : TGameObject;
+  commonFinder : TObjectFinder;
 
 begin
 
@@ -405,7 +405,7 @@ begin
   end;
 end;
 
-function TBirdHouseInclude.GetClosestObject(evalObjects : TRSObjectArray; position : TPoint ) : TRSObject;
+function TBirdHouseInclude.GetClosesTGameObject(evalObjects : TGameObjectArray; position : TPoint ) : TGameObject;
 var
   bestDist : Int32 := 99999;
   dist : Int32 := 99999;
@@ -639,7 +639,7 @@ end;
 
 function TBirdHouseInclude.BuildBirdHouseItem() : Boolean;
 var
-  birdHouseItem : TRSItem := Self.GetBirdhouseItem(Self.LogType);
+  birdHouseItem : TItem := Self.GetBirdhouseItem(Self.LogType);
 
 begin
   if not Inventory.ContainsItem('Clockwork')
@@ -975,11 +975,11 @@ begin
     Result := ERSLogType.REGULAR_LOGS;
 end;
 
-function TRSBank.FindAny(items: TRSItemArray): Boolean; overload;
+function TBank.FindAny(items: TItemArray): Boolean; overload;
 var
   tempBox : TBox;
   i : Int32;
-  tempItem : TRSBankItem;
+  tempItem : TBankItem;
 
 begin
   for i := 0 to High(items) do
@@ -994,7 +994,7 @@ function TBirdHouseInclude.GetNextBestLogInBank(currLog : ERSLogType) : ERSLogTy
 var
   i : Int32;
   tempBox : TBox;
-  foundBankItem : TRSBankItem;
+  foundBankItem : TBankItem;
 begin
   if not Bank.IsOpen() then
     Exit(Self.LogType);
@@ -1016,7 +1016,7 @@ begin
   if Self.AlwaysUseBestLog then
     Self.SuggestedLogType := Self.GetLogForHunterLevel(Stats.GetLevel(ERSSkill.HUNTER, false));
 
-  Result := Bank.WalkOpen(RSObjects.BankChestFossilIsland);
+  Result := Bank.WalkOpen(GameObjects.BankChestFossilIsland);
 end;
 
 //Function responsible for getting to a bank
@@ -1035,7 +1035,7 @@ end;
 
 function TBirdHouseInclude.HasAllItemsForRun() : Boolean;
 var
-  tools : TRSBankItemArray;
+  tools : TBankItemArray;
   i : Int32;
   itemStr : string;
 begin
@@ -1158,7 +1158,7 @@ begin
   while not Self.HasRunFinished do
   begin
     //Re-log in during run
-    if not RSClient.IsLoggedIn() then
+    if not GameClient.IsLoggedIn() then
     begin
       if not Login.LoginPlayer() then
       begin
@@ -1223,7 +1223,7 @@ end;
 
 function TBirdHouseInclude.WithdrawNextRun() : Boolean;
 var
-  itemList : TRSBankItemArray;
+  itemList : TBankItemArray;
   i, itemNumNeeded : Int32;
   itemName : string;
   nextBestLog : ERSLogType;
@@ -1294,7 +1294,7 @@ end;
 
 //If you don't use the GUI's TScriptForm.CreateBirdhouseRunSettings
 //Use this to set the values directly.
-procedure TBirdHouseInclude.Setup(log : ERSLogType; seedItem : TRSItem; useBestLog : Boolean = false; interval : UInt32 = (50 * ONE_MINUTE); needClockwork : Boolean = true);
+procedure TBirdHouseInclude.Setup(log : ERSLogType; seedItem : TItem; useBestLog : Boolean = false; interval : UInt32 = (50 * ONE_MINUTE); needClockwork : Boolean = true);
 begin
   with Self do
   begin

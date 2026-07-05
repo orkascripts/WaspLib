@@ -2,7 +2,7 @@
 # Inventory
 Methods to interact with the inventory.
 
-This extends SRL's TRSInventory and related methods.
+This extends SRL's TInventory and related methods.
 *)
 
 {$DEFINE WL_INVENTORY_INCLUDED}
@@ -15,10 +15,10 @@ const
   DROP_PATTERN_TWO_ROW: TIntegerArray = [0,4,1,5,2,6,3,7,8,12,9,13,10,14,11,15,16,20,17,21,18,22,19,23,20,24,25,26,27,28];
   DROP_PATTERN_TWO_ROW_R: TIntegerArray = [0,4,1,5,2,6,3,7,11,15,10,14,9,13,8,12,16,20,17,21,18,22,19,23,20,24,28,27,26,25];
 
-function TRSInventory.FindItems(items: TRSItemArray; out slots: TIntegerArray): Boolean; override;
+function TInventory.FindItems(items: TItemArray; out slots: TIntegerArray): Boolean; override;
 var
-  item: TRSItem;
-  tmp: TRSItemArray;
+  item: TItem;
+  tmp: TItemArray;
 begin
   if not Self.Open() then
     Exit;
@@ -30,7 +30,7 @@ begin
   Result := Length(slots) > 0;
 end;
 
-function TRSInventory.FindItem(item: TRSItem; out slot: Int32): Boolean; override;
+function TInventory.FindItem(item: TItem; out slot: Int32): Boolean; override;
 begin
   slot := -1;
   if not Self.Open() then Exit;
@@ -40,15 +40,15 @@ end;
 
 
 
-function TRSInventory.ContainsItem(item: TRSItem): Boolean; override;
+function TInventory.ContainsItem(item: TItem): Boolean; override;
 begin
   Result := Self.ContainsAny([item]);
 end;
 
-function TRSInventory.ContainsAny(items: TRSItemArray): Boolean; override;
+function TInventory.ContainsAny(items: TItemArray): Boolean; override;
 var
-  item: TRSItem;
-  itemArray: TRSItemArray;
+  item: TItem;
+  itemArray: TItemArray;
 begin
   for item in Items do
     itemArray += item.GetArray();
@@ -56,10 +56,10 @@ begin
   Result := inherited(itemArray);
 end;
 
-function TRSInventory.ContainsAll(items: TRSItemArray): Boolean; override;
+function TInventory.ContainsAll(items: TItemArray): Boolean; override;
 var
-  item: TRSItem;
-  itemArray: TRSItemArray;
+  item: TItem;
+  itemArray: TItemArray;
 begin
   for item in items do
     itemArray += item.GetArray();
@@ -68,15 +68,15 @@ begin
 end;
 
 
-function TRSInventory.ItemIsStackable(Item: TRSItem): Boolean;
+function TInventory.ItemIsStackable(Item: TItem): Boolean;
 begin
   Result := Self.CountItemStack(Item) > 0;
 end;
 
 
-function TRSInventory.FindAllItems(items: TRSItemArray; out Slots: TIntegerArray): Boolean;
+function TInventory.FindAllItems(items: TItemArray; out Slots: TIntegerArray): Boolean;
 var
-  item: TRSItem;
+  item: TItem;
 begin
   for item in items do
   begin
@@ -89,14 +89,14 @@ begin
 end;
 
 
-function TRSInventory.SetSelectedItem(item: TRSItem): Boolean;
+function TInventory.SetSelectedItem(item: TItem): Boolean;
 var
   slot: Int32;
 begin
   Result := Inventory.FindItem(item, slot) and Self.SetSelectedSlot(slot);
 end;
 
-function TRSInventory.Use(slot: Int32; item: TRSItem): Boolean; overload;
+function TInventory.Use(slot: Int32; item: TItem): Boolean; overload;
 var
   slots: TIntegerArray;
   otherSlot: Int32;
@@ -110,60 +110,60 @@ begin
 end;
 
 
-function TRSInventory.GetUsedSlots(): TIntegerArray;
+function TInventory.GetUsedSlots(): TIntegerArray;
 begin
   Result := Self.Items.GetUsedSlots();
 end;
 
-function TRSInventory.GetEmptySlots(): TIntegerArray;
+function TInventory.GetEmptySlots(): TIntegerArray;
 begin
   Result := Self.Items.GetEmptySlots();
 end;
 
 
-function TRSInventory.CountEmptySlots(): Int32;
+function TInventory.CountEmptySlots(): Int32;
 begin
   Result := Self.Items.CountEmptySlots();
 end;
 
-function TRSInventory.HasSpace(slotsNeeded: Int32 = 1): Boolean;
+function TInventory.HasSpace(slotsNeeded: Int32 = 1): Boolean;
 begin
   Result := slotsNeeded <= Self.CountEmptySlots();
 end;
 
 
-function TRSInventory.FindRandomItems(items: TRSItemArray): TIntegerArray;
+function TInventory.FindRandomItems(items: TItemArray): TIntegerArray;
 var
-  item: TRSItem;
-  itemArray: TRSItemArray;
+  item: TItem;
+  itemArray: TItemArray;
 begin
   for item in items do itemArray += item.GetArray();
   Result := Self.Items.FindRandomItems(itemArray);
 end;
 
-function TRSInventory.ContainsRandomItems(items: TRSItemArray): Boolean;
+function TInventory.ContainsRandomItems(items: TItemArray): Boolean;
 var
-  item: TRSItem;
-  itemArray: TRSItemArray;
+  item: TItem;
+  itemArray: TItemArray;
 begin
   for item in items do itemArray += item.GetArray();
   Result := Self.Items.ContainsRandomItems(itemArray);
 end;
 
 
-function TRSInventory.Drag(initialSlot, finalSlot: Int32): Boolean;
+function TInventory.Drag(initialSlot, finalSlot: Int32): Boolean;
 begin
   Result := Self.Items.Move(initialSlot, finalSlot);
 end;
 
-function TRSInventory.WaitItemFade(slot: Int32): Boolean;
+function TInventory.WaitItemFade(slot: Int32): Boolean;
 begin
   if WaitUntil(not Inventory.IsSlotUsed(Slot), 10, 300) then
     Result := WaitUntil(Inventory.IsSlotUsed(Slot), 50, 300);
 end;
 
 
-function TRSInventory.ClickSlot(slot: Int32; option: String = ''): Boolean; override;
+function TInventory.ClickSlot(slot: Int32; option: String = ''): Boolean; override;
 var
   upText: String;
 begin
@@ -187,7 +187,7 @@ begin
   end;
 end;
 
-function TRSInventory.ClickSlot(slot: Int32; options: TStringArray): Boolean; overload;
+function TInventory.ClickSlot(slot: Int32; options: TStringArray): Boolean; overload;
 var
   upText: String;
 begin
@@ -212,7 +212,7 @@ begin
 end;
 
 
-function TRSInventory.ClickItem(item: TRSItem; option: String = ''): Boolean; override;
+function TInventory.ClickItem(item: TItem; option: String = ''): Boolean; override;
 var
   upText: String;
 begin
@@ -236,7 +236,7 @@ begin
   end;
 end;
 
-function TRSInventory.ClickItem(item: TRSItem; options: TStringArray): Boolean; overload;
+function TInventory.ClickItem(item: TItem; options: TStringArray): Boolean; overload;
 var
   upText: String;
 begin

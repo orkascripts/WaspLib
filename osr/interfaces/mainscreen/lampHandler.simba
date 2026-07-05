@@ -32,11 +32,11 @@ type
     HUNTER
   );
 
-TRSLampHandler = record(TSRLBaseRecord)
+TLampHandler = record(TSRLBaseRecord)
   Skill: ERSLampSkill;
 end;
 
-function TRSLampHandler.FindLampSkills() : T2DPointArray;
+function TLampHandler.FindLampSkills() : T2DPointArray;
 var
   borderColor : TCTS2Color := CTS2(2304556, 2, 0.01, 0.01);
   tpa : TPointArray;
@@ -48,7 +48,7 @@ begin
   Result.FilterSize(30, __GT__);
 end;
 
-procedure TRSLampHandler.HoverLampSkill(skill : ERSLampSkill)
+procedure TLampHandler.HoverLampSkill(skill : ERSLampSkill)
 var
   skillsCluster: T2DPointArray := Self.FindLampSkills();
 begin
@@ -57,12 +57,12 @@ begin
   Mouse.Move(skillsCluster[Ord(skill)].Bounds().Expand(-3));
 end;
 
-procedure TRSLampHandler.HoverLampSkill() overload;
+procedure TLampHandler.HoverLampSkill() overload;
 begin
   Self.HoverLampSkill(Self.Skill);
 end;
 
-function TRSLampHandler.Confirm() : Boolean;
+function TLampHandler.Confirm() : Boolean;
 var
   ocrFilter : TOCRColorFilter;
   foundBox : TBox;
@@ -75,7 +75,7 @@ begin
   end;
 end;
 
-function TRSLampHandler.SelectLampSkill(skill : ERSLampSkill) : Boolean;
+function TLampHandler.SelectLampSkill(skill : ERSLampSkill) : Boolean;
 var
   skillsCluster : T2DPointArray := Self.FindLampSkills();
 begin
@@ -86,25 +86,25 @@ begin
   Result := Self.Confirm();
 end;
 
-function TRSLampHandler.SelectLampSkill() : Boolean; overload;
+function TLampHandler.SelectLampSkill() : Boolean; overload;
 begin
   Result := Self.SelectLampSkill(Self.Skill);
 end;
 
-function TRSLampHandler.HasLamp(out lamp : TRSItem): Boolean;
+function TLampHandler.HasLamp(out lamp : TItem): Boolean;
 const
-  LAMPS : TRSItemArray := ['Lamp', 'Antique Lamp'];
+  LAMPS : TItemArray := ['Lamp', 'Antique Lamp'];
 begin
   for lamp in LAMPS do
     if Inventory.ContainsItem(lamp) then
       Exit(True);
 end;
 
-function TRSLampHandler.Open() : Boolean;
+function TLampHandler.Open() : Boolean;
 const
   BG_COLOR : TCTS2Color := CTS2(7829631, 10, 0.24, 0.10);
 var
-  item : TRSItem;
+  item : TItem;
   x, y : Int32;
   lampInterface: Int32;
 begin
@@ -134,18 +134,18 @@ begin
   FreeDTM(lampInterface);
 end;
 
-procedure TRSLampHandler.Setup();
+procedure TLampHandler.Setup();
 begin
   Self.Name := 'LampHandler';
 end;
 
-procedure TRSLampHandler.Setup(skill : ERSLampSkill); overload;
+procedure TLampHandler.Setup(skill : ERSLampSkill); overload;
 begin
   Self.Skill := skill;
 end;
 
 var
-  LampHandler : TRSLampHandler;
+  LampHandler : TLampHandler;
 
 procedure TSRL.Setup; override;
 begin

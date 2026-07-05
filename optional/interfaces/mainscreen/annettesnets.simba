@@ -5,16 +5,16 @@
 
 type
 
-  TRSAnnettesNets = record(TRSTitledInterface)
-    Items: TRSItemInterface;
+  TAnnettesNets = record(TTitledInterface)
+    Items: TItemInterface;
   end;
 
-function TRSAnnettesNets.GetSlotBoxes(): TBoxArray;
+function TAnnettesNets.GetSlotBoxes(): TBoxArray;
 begin
   Result := [Box(Self.Bounds.X1 + 134, Self.Bounds.Y1 + 95, Self.Bounds.X2 - 39, Self.Bounds.Y2 - 35)];
 end;
 
-procedure TRSAnnettesNets.Setup(); override;
+procedure TAnnettesNets.Setup(); override;
 begin
   inherited;
 
@@ -23,9 +23,9 @@ begin
   Self.Items.SlotBoxesFunction := @Self.GetSlotBoxes;
 end;
 
-procedure TRSAnnettesNets.SetupAlignment(); overload;
+procedure TAnnettesNets.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -33,28 +33,28 @@ begin
   alignment.MaxWidth := 204;
   alignment.MaxHeight := 160;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       alignment.Top := InterfaceArea.Bounds.Y1;
 
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       alignment.Top := InterfaceArea.Bounds.Y1-1;
   end;
 
   Self.SetupAlignment(alignment);
 end;
 
-function TRSAnnettesNets.IsOpen(): Boolean;
+function TAnnettesNets.IsOpen(): Boolean;
 begin
   Result := Self.IsTitle(Self.Name);
 end;
 
-function TRSAnnettesNets.IsOpen(waitTime: Int32): Boolean; overload;
+function TAnnettesNets.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TRSAnnettesNets.Close(pressEscape: Boolean = False): Boolean;
+function TAnnettesNets.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -64,9 +64,9 @@ end;
 
 
 var
- AnnettesNets : TRSAnnettesNets;
+ AnnettesNets : TAnnettesNets;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

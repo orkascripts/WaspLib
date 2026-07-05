@@ -12,7 +12,7 @@ Some handy item wrappers were added for all cakes, pies and pizzas
 {$ENDIF}
 
 
-function TRSItem.Interact(option: String = ''; attempts: Int32 = 2): Boolean;
+function TItem.Interact(option: String = ''; attempts: Int32 = 2): Boolean;
 var
   slot, i: Int32;
   tabI, otherI: PRSItemGameTab;
@@ -54,7 +54,7 @@ begin
   Result := Self.Interact(option, Dec(attempts));
 end;
 
-function TRSItemArray.Interact(out item: TRSItem; option: String = ''; attempts: Int32 = 2): Boolean;
+function TItemArray.Interact(out item: TItem; option: String = ''; attempts: Int32 = 2): Boolean;
 var
   slot, i: Int32;
   tabI, otherI: PRSItemGameTab;

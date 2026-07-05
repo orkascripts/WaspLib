@@ -1,6 +1,6 @@
 (*
 # Login
-Overrides to SRL TRSLogin.
+Overrides to SRL TLogin.
 *)
 
 {$DEFINE WL_LOGIN_INCLUDED}

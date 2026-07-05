@@ -15,7 +15,7 @@ type
 {$SCOPEDENUMS ON}
   EBirdHouseWood = (BEST, REGULAR, OAK, WILLOW, TEAK, MAPLE, MAHOGANY, YEW, MAGIC, REDWOOD);
 
-function EBirdHouseWood.GetLogs(): TRSItem;
+function EBirdHouseWood.GetLogs(): TItem;
 begin
   case Self of
     EBirdHouseWood.REGULAR:  Result := 'Logs';
@@ -30,7 +30,7 @@ begin
   end;
 end;
 
-function EBirdHouseWood.GetHouse(): TRSItem;
+function EBirdHouseWood.GetHouse(): TItem;
 begin
   case Self of
     EBirdHouseWood.REGULAR:  Result := 'Bird house';
@@ -80,7 +80,7 @@ type
   TBirdHouse = record
     State: EBirdHouseState;
     MushTree: ERSMushTreeLocation;
-    Obj: TRSObjectV2;
+    Obj: TObjectV2;
   end;
 
   TBirdHouseHandler = record(TSRLBaseRecord)
@@ -90,14 +90,14 @@ type
     Houses: array [EBirdHouseLocation] of TBirdHouse;
     Wood: EBirdHouseWood;
     Items: record
-      Logs, House, Seeds: TRSItem;
+      Logs, House, Seeds: TItem;
     end;
 
     Timer: TCountDown;
 
     OnStart, OnStop, IsFinished: function (): Boolean of object;
 
-    Map: TRSMap; //TRSMap exclusive to the TBirdHouseHandler
+    Map: TMap; //TMap exclusive to the TBirdHouseHandler
     Position: TPoint;
   end;
 
@@ -182,7 +182,7 @@ var
 begin
   Self.Map.Loader.Load([Chunk([56,61,60,57], 0), Chunk([58,60,58,60], 1)], 8, 80);
 
-  //add map to our handler map regardless of where it came from, TRSMap or TRSWalker
+  //add map to our handler map regardless of where it came from, TMap or TWalker
   sizeMap := [Self.Map.Loader.Map.getWidth(), Self.Map.Loader.Map.getHeight()];
   sizeBMP := [bmp.getWidth(), bmp.getHeight()];
 
@@ -211,7 +211,7 @@ begin
   Self.Map.InternalSetup();
 end;
 
-procedure TBirdHouseHandler.Setup(map: PRSMap; wood: EBirdHouseWood; seeds: TRSItem);
+procedure TBirdHouseHandler.Setup(map: PRSMap; wood: EBirdHouseWood; seeds: TItem);
 begin
   Self.InternalSetup(map^.Loader.Map);
 
@@ -221,7 +221,7 @@ begin
   Self._Setup();
 end;
 
-procedure TBirdHouseHandler.Setup(map: PRSWalker; wood: EBirdHouseWood; seeds: TRSItem); overload;
+procedure TBirdHouseHandler.Setup(map: PRSWalker; wood: EBirdHouseWood; seeds: TItem); overload;
 begin
   Self.InternalSetup(map^.Map.Map);
 
@@ -231,7 +231,7 @@ begin
   Self._Setup();
 end;
 
-procedure TBirdHouseHandler.Setup(wood: EBirdHouseWood; seeds: TRSItem); overload;
+procedure TBirdHouseHandler.Setup(wood: EBirdHouseWood; seeds: TItem); overload;
 begin
   Self.Map.Loader.Load([Chunk([56,61,60,57], 0), Chunk([58,60,58,60], 1)], 8, 80);
   Self.Map.InternalSetup();
@@ -436,10 +436,10 @@ var
 {$SCOPEDENUMS OFF}
 
 (*
-//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TRSWALKER AND TRSMAP
+//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TWalker AND TMAP
 
 var
-  rsw: TRSWalker;
+  rsw: TWalker;
 begin
   rsw.SetupRegion(RSRegions.ARDOUGNE);
   BirdHouseHandler.Setup(@rsw, EBirdHouseWood.MAHOGANY, 'Guam seed');

@@ -17,12 +17,12 @@ Keep in mind that ProgressReport requires remote input.
 {$ENDIF}
 
 (*
-(TRSProgressReport)=
+(TProgressReport)=
 ## type ProgressReport
 Type responsible for handling the HUDProgressReport, also commonly called as "Paint" or InGame/OnScreen Progress Report.
 *)
 type
-  TRSProgressReport = record
+  TProgressReport = record
     ImagePath: String;
 
     BGImg: TMufasaBitmap;
@@ -48,7 +48,7 @@ procedure ProgressReport.Terminate();
 ```
 Internal method called automatically on termination. This will do things such as free used assetsa and clear the progress report from the game screen.
 *)
-procedure TRSProgressReport.Terminate();
+procedure TProgressReport.Terminate();
 begin
   if Self.Terminated then //avoids multiple terminations in case the script is chained.
     Exit;
@@ -62,9 +62,9 @@ end;
 ```pascal
 procedure Self.Setup();
 ```
-Internal method called when we need to setup TRSProgressReport.
+Internal method called when we need to setup TProgressReport.
 *)
-procedure TRSProgressReport.Setup();
+procedure TProgressReport.Setup();
 begin
   Self.BGImg.Init();
   Self.BGImg.SetName('proggy');
@@ -83,7 +83,7 @@ begin
 
   Self.BGImg.setFontAntialiasing(True);
 
-  Self.ClientImg := RSClient.Image();
+  Self.ClientImg := GameClient.Image();
 
   Self.ClientImg.Clear();
   Self.ClientImg.SetName('ClientImg');
@@ -108,12 +108,12 @@ end;
 (*
 ## ProgressReport.DrawBackground()
 ```pascal
-procedure TRSProgressReport.DrawBackground(fontColor: Int32);
+procedure TProgressReport.DrawBackground(fontColor: Int32);
 ```
 Method that handles drawing the background of our Self.
 Usually called internally by Self.Update().
 *)
-procedure TRSProgressReport.DrawBackground();
+procedure TProgressReport.DrawBackground();
 var
   hi: String;
 begin
@@ -138,12 +138,12 @@ end;
 (*
 ## ProgressReport.DrawProgress()
 ```pascal
-procedure TRSProgressReport.DrawProgress(fontColor: Int32);
+procedure TProgressReport.DrawProgress(fontColor: Int32);
 ```
 Method that handles drawing the text of our Self.
-Usually called internally by TRSProgressReport.Update().
+Usually called internally by TProgressReport.Update().
 *)
-procedure TRSProgressReport.DrawProgress();
+procedure TProgressReport.DrawProgress();
 var
   p, q: TPoint;
   i: Int32;
@@ -174,12 +174,12 @@ end;
 (*
 ## ProgressReport.HideProgress()
 ```pascal
-procedure TRSProgressReport.HideProgress();
+procedure TProgressReport.HideProgress();
 ```
 Used to hide Self.
-Usually called internally by TRSProgressReport.Update().
+Usually called internally by TProgressReport.Update().
 *)
-procedure TRSProgressReport.HideProgress();
+procedure TProgressReport.HideProgress();
 begin
   Self.IsSetup := False;
 
@@ -189,7 +189,7 @@ end;
 (*
 ## ProgressReport.Update
 ```pascal
-procedure TRSProgressReport.Update();
+procedure TProgressReport.Update();
 ```
 Main method that should be called to used to start and update ProgressReport.
 
@@ -199,7 +199,7 @@ uncomment:
 //Self.TextColor := Self.GetNextCycleColor(Self.TextColor, 10);
 ```
 *)
-procedure TRSProgressReport.Update();
+procedure TProgressReport.Update();
 begin
   Self.ClientImg.Clear();
   //Self.TextColor := Self.GetNextCycleColor(Self.TextColor, 10);
@@ -213,4 +213,4 @@ var
 ## var ProgressReport
 Global ProgressReport variable.
 *)
-  ProgressReport: TRSProgressReport;
+  ProgressReport: TProgressReport;

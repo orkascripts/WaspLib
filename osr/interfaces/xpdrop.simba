@@ -28,23 +28,23 @@ const
   ];
 
 type
-  TRSXPDrop = record(TRSInterface)
+  TXPDrop = record(TInterface)
     IsSetup: Boolean;
     Color: Int32;
-    Alignments: array[ERSXPBarLocation] of TRSInterfaceAlignment;
+    Alignments: array[ERSXPBarLocation] of TInterfaceAlignment;
   end;
 
 (*
 ## XPDrop.Setup
 ```pascal
-procedure TRSXPDrop.Setup;
+procedure TXPDrop.Setup;
 ```
 Setups the XPDrop.
 ```{note}
 This is automatically called on the **XPDrop** variable.
 ```
 *)
-procedure TRSXPDrop.Setup; override;
+procedure TXPDrop.Setup; override;
 begin
   inherited;
 
@@ -77,9 +77,9 @@ begin
 
 end;
 
-procedure TRSXPDrop.SetupAlignment(); overload;
+procedure TXPDrop.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   inherited;
 
@@ -90,11 +90,11 @@ end;
 (*
 ## XPDrop.IsOpen
 ```pascal
-function TRSXPDrop.IsOpen: Boolean;
+function TXPDrop.IsOpen: Boolean;
 ```
 Returns true if the XP Drops are on.
 *)
-function TRSXPDrop.IsOpen: Boolean;
+function TXPDrop.IsOpen: Boolean;
 var
   TPA: TPointArray;
 begin
@@ -124,12 +124,12 @@ end;
 (*
 ## XPDrop.Open
 ```pascal
-function TRSXPDrop.Open: Boolean;
+function TXPDrop.Open: Boolean;
 ```
 
 Attempts to open the XP Drops if they are closed.
 *)
-function TRSXPDrop.Open: Boolean;
+function TXPDrop.Open: Boolean;
 begin
   if Self.IsOpen then
     Exit(True);
@@ -142,13 +142,13 @@ end;
 (*
 ## XPDrop._Find
 ```pascal
-function TRSXPDrop._Find: Boolean;
+function TXPDrop._Find: Boolean;
 ```
 
 Internal function to find XPDrops.
 Searches for all colors in XP_COLORS within the current XPDrops location.
 *)
-function TRSXPDrop._Find: Boolean;
+function TXPDrop._Find: Boolean;
 var
   i, ColorCount: Int32;
 begin
@@ -176,12 +176,12 @@ end;
 (*
 ## XPDrop.UpdateLocation
 ```pascal
-function TRSXPDrop.UpdateLocation: Boolean;
+function TXPDrop.UpdateLocation: Boolean;
 ```
 
 Internal function to update XPDrops location.
 *)
-function TRSXPDrop.UpdateLocation: Boolean;
+function TXPDrop.UpdateLocation: Boolean;
 var
   Location: ERSXPBarLocation;
 begin
@@ -203,7 +203,7 @@ end;
 (*
 ## XPDrop.FindDrop
 ```pascal
-function TRSXPDrop.FindDrop: Boolean;
+function TXPDrop.FindDrop: Boolean;
 ```
 
 Returns true if a XPDrop is found.
@@ -213,7 +213,7 @@ Example:
  WriteLn XPDrop.FindDrop;
 ```
 *)
-function TRSXPDrop.FindDrop: Boolean;
+function TXPDrop.FindDrop: Boolean;
 begin
   Result :=  (IsSetup and Self._Find) or Self.UpdateLocation;
   if Result then WL.Activity.Restart;
@@ -222,7 +222,7 @@ end;
 (*
 ## XPDrop.WaitDrop
 ```pascal
-function TRSXPDrop.WaitDrop: Boolean;
+function TXPDrop.WaitDrop: Boolean;
 ```
 
 Waits **WaitTime** until an XPDrop is found.
@@ -232,7 +232,7 @@ Example:
  WriteLn XPDrop.WaitDrop(1000);
 ```
 *)
-function TRSXPDrop.WaitDrop(WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
+function TXPDrop.WaitDrop(WaitTime: Int32 = 600; Interval: Int32 = -1): Boolean;
 begin
   if (Interval = -1) then
     Interval := SRL.TruncatedGauss(50, 200);
@@ -240,7 +240,7 @@ begin
   Result := WaitUntil(Self.FindDrop, Interval, WaitTime);
 end;
 
-procedure TRSXPDrop.Draw(Bitmap: TMufasaBitmap); override;
+procedure TXPDrop.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen then
     Exit;
@@ -261,9 +261,9 @@ end;
   Global XPDrop variable.
 *)
 var
-  XPDrop: TRSXPDrop;
+  XPDrop: TXPDrop;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TGameClient.ClientModeChanged; override;
 begin
   inherited;
 

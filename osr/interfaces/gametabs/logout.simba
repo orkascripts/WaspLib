@@ -1,6 +1,6 @@
 (*
 # Logout
-Extends SRL's TRSLogout.
+Extends SRL's TLogout.
 *)
 
 {$DEFINE WL_LOGOUT_INCLUDED}
@@ -8,7 +8,7 @@ Extends SRL's TRSLogout.
   {$I WaspLib/osr.simba}
 {$ENDIF}
 
-procedure TRSLogout.ClearEnter();
+procedure TLogout.ClearEnter();
 begin
   if Keyboard.LastKey <> VK_RETURN then Exit;
   Antiban.RandomKeyboard();
@@ -17,7 +17,7 @@ end;
 (*
 ## Logout.ClickLogout
 ```pascal
-function TRSLogout.ClickLogout(attempts: Int32 = 5; time: Int32 = 20000): Boolean; override;
+function TLogout.ClickLogout(attempts: Int32 = 5; time: Int32 = 20000): Boolean; override;
 ```
 Clicks the logout button. Returns true if we succesfully logout of the game.
 Depending on the account biohash it might use the start buttons to rate the game.
@@ -27,7 +27,7 @@ Example:
 WriteLn Logout.ClickLogout();
 ```
 *)
-function TRSLogout.ClickLogout(attempts: Int32 = 5; tryTime: Int32 = 20000): Boolean; override;
+function TLogout.ClickLogout(attempts: Int32 = 5; tryTime: Int32 = 20000): Boolean; override;
 var
   interval: UInt64;
   i: Int32;
@@ -51,7 +51,7 @@ begin
   for i := 1 to attempts do
   begin
     Self.ClearEnter();
-    if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not RSClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then
+    if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not GameClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then
       Exit(True);
   end;
 end;

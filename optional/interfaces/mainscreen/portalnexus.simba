@@ -63,11 +63,11 @@ type
     HotKey: Int32;
   end;
 
-  TRSPortalNexus = record (TRSTitledInterface)
+  TPortalNexus = record (TTitledInterface)
     Destinations: array [ERSNexusDestination] of TPortalNexusDestination;
   end;
 
-procedure TRSPortalNexus.Setup(); override;
+procedure TPortalNexus.Setup(); override;
 var
   destination: ERSNexusDestination;
 begin
@@ -82,19 +82,19 @@ begin
 end;
 
 (*
-## TRSPortalNexus.ClickDestination
+## TPortalNexus.ClickDestination
 ```pascal
-function TRSPortalNexus.ClickDestination(destination: ERSNexusDestination, useKeyboard : Boolean = False): Boolean;
-function TRSPortalNexus.ClickDestination(destination: ERSNexusDestination; chance: Double = BioHash): Boolean; overload;
+function TPortalNexus.ClickDestination(destination: ERSNexusDestination, useKeyboard : Boolean = False): Boolean;
+function TPortalNexus.ClickDestination(destination: ERSNexusDestination; chance: Double = BioHash): Boolean; overload;
 ```
 Finds the destination in the scroll area and clicks it.
 
 Example:
 ```pascal
- WriteLn TRSPortalNexus.ClickPortalDestination(ERSNexusDestination.FALADOR);
+ WriteLn TPortalNexus.ClickPortalDestination(ERSNexusDestination.FALADOR);
 ```
 *)
-function TRSPortalNexus.ClickDestination(destination: ERSNexusDestination; useKeyboard : Boolean): Boolean;
+function TPortalNexus.ClickDestination(destination: ERSNexusDestination; useKeyboard : Boolean): Boolean;
 var
   box: TBox;
 begin
@@ -120,7 +120,7 @@ begin
   end;
 end;
 
-function TRSPortalNexus.ClickDestination(destination: ERSNexusDestination; chance: Double = BioHash): Boolean; overload;
+function TPortalNexus.ClickDestination(destination: ERSNexusDestination; chance: Double = BioHash): Boolean; overload;
 var
   useKeyboard: Boolean;
 begin
@@ -134,18 +134,18 @@ end;
 
 
 (*
-## TRSPortalNexus.FindDestinations
+## TPortalNexus.FindDestinations
 ```pascal
-function TRSPortalNexus.FindDestinations(out boxes: TBoxArray): TStringArray;
+function TPortalNexus.FindDestinations(out boxes: TBoxArray): TStringArray;
 ```
 Returns the visible destinations in the portal nexus interface.
 
 Example:
 ```pascal
- WriteLn TRSPortalNexus.FindDestinations();
+ WriteLn TPortalNexus.FindDestinations();
 ```
 *)
-function TRSPortalNexus.FindDestinations(out boxes: TBoxArray; scroll: Int32): TStringArray; overload;
+function TPortalNexus.FindDestinations(out boxes: TBoxArray; scroll: Int32): TStringArray; overload;
 const
   COLORS: TIntegerArray := [2004990, 1803744, 14737632, 16711422];
 var
@@ -187,19 +187,19 @@ begin
 end;
 
 (*
-## TRSPortalNexus.FindPortalDestination
+## TPortalNexus.FindPortalDestination
 ```pascal
-function TRSPortalNexus.FindPortalDestination(destination: ERSNexusDestination; out b: TBox): Boolean;
-function TRSPortalNexus.FindPortalDestination(destination: ERSNexusDestination): Boolean; overload;
+function TPortalNexus.FindPortalDestination(destination: ERSNexusDestination; out b: TBox): Boolean;
+function TPortalNexus.FindPortalDestination(destination: ERSNexusDestination): Boolean; overload;
 ```
 Finds the destination specified in the portal nexus.
 
 Example:
 ```pascal
- WriteLn TRSPortalNexus.FindPortalDestination(ERSNexusDestination.FALADOR);
+ WriteLn TPortalNexus.FindPortalDestination(ERSNexusDestination.FALADOR);
 ```
 *)
-function TRSPortalNexus.FindPortalDestination(destination: ERSNexusDestination; out b: TBox): Boolean;
+function TPortalNexus.FindPortalDestination(destination: ERSNexusDestination; out b: TBox): Boolean;
   function _DoScrolling(destination: ERSNexusDestination; direction: Boolean; out b: TBox): Boolean;
   var
     limit, i, scroll: Int32;
@@ -251,16 +251,16 @@ begin
   Result := _DoScrolling(destination, not direction, b);
 end;
 
-function TRSPortalNexus.FindPortalDestination(destination: ERSNexusDestination): Boolean; overload;
+function TPortalNexus.FindPortalDestination(destination: ERSNexusDestination): Boolean; overload;
 var
   b: TBox;
 begin
   Result := Self.FindPortalDestination(destination, b);
 end;
 
-procedure TRSPortalNexus.SetupAlignment(); overload;
+procedure TPortalNexus.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -268,10 +268,10 @@ begin
   alignment.MaxWidth := 490;
   alignment.MaxHeight := 315;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
       alignment.Top := InterfaceArea.Bounds.Y1;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
       alignment.Top := InterfaceArea.Bounds.Y1 - 1;
   end;
 
@@ -280,17 +280,17 @@ begin
   Self.ScrollArea := Box(Self.Bounds.X1 + 29, Self.Bounds.Y1 + 49, Self.Bounds.X2 - 197, Self.Bounds.Y2 - 20);
 end;
 
-function TRSPortalNexus.IsOpen(): Boolean;
+function TPortalNexus.IsOpen(): Boolean;
 begin
   Result := Self.IsTitle(Self.Name);
 end;
 
-function TRSPortalNexus.IsOpen(waitTime: Int32): Boolean; overload;
+function TPortalNexus.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TRSPortalNexus.Close(pressEscape: Boolean = False): Boolean;
+function TPortalNexus.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -299,9 +299,9 @@ begin
 end;
 
 var
- PortalNexus : TRSPortalNexus;
+ PortalNexus : TPortalNexus;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 

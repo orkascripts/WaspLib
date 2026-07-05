@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  TRSRegions = record
+  TRegions = record
     ABYSS:                      TBox;
     ALTARS:                     TBox;
     AL_KHARID:                  TBox;
@@ -115,7 +115,7 @@ type
   end;
 
 var
-  RSRegions: TRSRegions;
+  RSRegions: TRegions;
 
 begin
   RSRegions.ABYSS                      := [9670, 4424, 10559, 5400];

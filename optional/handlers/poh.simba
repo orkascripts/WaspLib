@@ -44,16 +44,16 @@ e.g., Nexus room, Combat Hall and Quest Hall are all identical.
 type
 (*
 ## PRSWalker
-TRSWalker pointer.
+TWalker pointer.
 *)
-  PRSPOHHandler = ^TRSPOHHandler;
+  PRSPOHHandler = ^TPOHHandler;
 
 (*
-(TRSPOHHandler)=
-## type TRSPOHHandler
+(TPOHHandler)=
+## type TPOHHandler
 ```pascal
 type
-  TRSPOHHandler = record
+  TPOHHandler = record
     Map: TPOHMap;
     RoomObjects: array [ERSRoomObject] of TRoomObject;
     EnableRunAtEnergy: Int32;
@@ -62,9 +62,9 @@ type
 ```
 The core record used to handle navigating a POH.
 *)
-  TRSPOHHandler = record(TSRLBaseRecord)
+  TPOHHandler = record(TSRLBaseRecord)
     Map: TPOHMap;
-    Walker: TRSWalkerV2;
+    Walker: TWalkerV2;
 
     RoomObjects: array [ERSRoomObject] of TRoomObject;
 
@@ -80,17 +80,17 @@ The core record used to handle navigating a POH.
   end;
 
 
-function TRSPOHHandler.Position(): TPoint; forward;
+function TPOHHandler.Position(): TPoint; forward;
 
 (*
 ## POH.Init()
 ```pascal
-procedure TRSPOHHandler.Init();
+procedure TPOHHandler.Init();
 ```
 Internal method automatically called for your on script startup along with SRL.Setup().
 You do not have to call it yourself.
 *)
-procedure TRSPOHHandler.InternalSetup();
+procedure TPOHHandler.InternalSetup();
 var
   obj: ERSRoomObject;
 begin
@@ -109,22 +109,22 @@ end;
 (*
 ## POH.GetAdjacentRooms()
 ```pascal
-function TRSPOHHandler.GetAdjacentRooms(p: TPoint): TPointArray; static;
+function TPOHHandler.GetAdjacentRooms(p: TPoint): TPointArray; static;
 ```
 Helper static method that returns coordinates that belong to the north, west, south and east rooms of the point passed in.
 This assumes the compass is set to `0` (North) or that you've rotated your coordinates so the math works as if you had the compass set that way.
 Ideally, you will want to pass in a room top left corner to this to get the top left corner of each adjacent room.
 *)
-function TRSPOHHandler.GetAdjacentRooms(p: TPoint): TPointArray; static;
+function TPOHHandler.GetAdjacentRooms(p: TPoint): TPointArray; static;
 begin
   Result := [p.Offset(-32,0), p.Offset(32, 0), p.Offset(0, -32), p.Offset(0, 32)];
 end;
 
 
 (*
-## TRSPOHHandler.GetRoomCoordinate()
+## TPOHHandler.GetRoomCoordinate()
 ```pascal
-function TRSPOHHandler.GetRoomCoordinate(topLeft, p: TPoint; angle: Double; rotation: Int32): TPoint; static;
+function TPOHHandler.GetRoomCoordinate(topLeft, p: TPoint; angle: Double; rotation: Int32): TPoint; static;
 ```
 Helper static method that converts a room point `p` (which is always between [0,0] and [32,32] to a point on the minimap.
 Optionally the point can be rotated on the room's center in 90º increments which is decided by `rotation`.
@@ -133,7 +133,7 @@ For example, if `rotation` is 3, the point will be rotated 90*3=270º on the roo
 This is useful to look for mainscreen objects in a room we don't know the rotation,
 we can brute force all the possible rotations and look for what we want.
 *)
-function TRSPOHHandler.GetRoomCoordinate(topLeft, p: TPoint; angle: Double; rotation: Int32): TPoint; static;
+function TPOHHandler.GetRoomCoordinate(topLeft, p: TPoint; angle: Double; rotation: Int32): TPoint; static;
 var
   roomCenter: TPoint;
 begin
@@ -154,16 +154,16 @@ end;
 (*
 ## POH.GetCuboid()
 ```pascal
-function TRSPOHHandler.GetCuboid(topLeft, p: TPoint; tile: Vector3; angle: Double; rotation: Int32): TCuboidEx; static;
+function TPOHHandler.GetCuboid(topLeft, p: TPoint; tile: Vector3; angle: Double; rotation: Int32): TCuboidEx; static;
 ```
 Static mehod that returns a `TCuboidEx` on the mainscreen of a point we specify `p` with a given `rotation` on the room's center.
-{ref}`TRSPOHHandler.GetRoomCoordinate()` is used to get the minimap point which then uses {ref}`Minimap.GetCuboidMS()` to give us a cuboid as a result.
+{ref}`TPOHHandler.GetRoomCoordinate()` is used to get the minimap point which then uses {ref}`Minimap.GetCuboidMS()` to give us a cuboid as a result.
 
 To work, this requires the room's `topLeft` TPoint and the compass `angle`.
 *)
-function TRSPOHHandler.GetCuboid(topLeft, p: TPoint; tile: Vector3; angle: Double; rotation: Int32): TCuboidEx; static;
+function TPOHHandler.GetCuboid(topLeft, p: TPoint; tile: Vector3; angle: Double; rotation: Int32): TCuboidEx; static;
 begin
-  p := TRSPOHHandler.GetRoomCoordinate(topLeft, p, angle, rotation);
+  p := TPOHHandler.GetRoomCoordinate(topLeft, p, angle, rotation);
   Result := Minimap.GetCuboidMS(p, tile);
 end;
 
@@ -171,21 +171,21 @@ end;
 (*
 ## POH.ContainsObject()
 ```pascal
-function TRSPOHHandler.ContainsObject(objType: ERSRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
+function TPOHHandler.ContainsObject(objType: ERSRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
 ```
 Checks if a {ref}`TRoomObject` stored in `POH.RoomObjects` exists in a room at a given `rotation`.
 *)
-function TRSPOHHandler.ContainsObjectEx(obj: TRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
+function TPOHHandler.ContainsObjectEx(obj: TRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
 var
   cuboid: TCuboidEx;
   atpa: T2DPointArray;
 begin
-  cuboid := TRSPOHHandler.GetCuboid(topLeft, obj.RoomOffset, obj.Shape, angle, rotation);
+  cuboid := TPOHHandler.GetCuboid(topLeft, obj.RoomOffset, obj.Shape, angle, rotation);
   atpa := MainScreen.FindObject(obj.Finder, cuboid.Bounds());
   Result := atpa <> [];
 end;
 
-function TRSPOHHandler.ContainsObject(objType: ERSRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
+function TPOHHandler.ContainsObject(objType: ERSRoomObject; topLeft: TPoint; angle: Double; rotation: Int32): Boolean;
 var
   obj: TRoomObject;
 begin
@@ -199,11 +199,11 @@ end;
 (*
 ## POH.MapRoomObjects()
 ```pascal
-procedure TRSPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
+procedure TPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
 ```
 Method responsible for mapping known {ref}`TRoomObject``TRoomObject` coordinates which later can be used to interact with them.
 *)
-procedure TRSPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
+procedure TPOHHandler.MapRoomObjects(room: ERSHouseRoom; topLeft: TPoint; roomIndex: TPoint; angle: Double);
 var
   rotation: Int32;
   p, center: TPoint;
@@ -272,13 +272,13 @@ end;
 (*
 ## POH.MapAdjacentRooms()
 ```pascal
-procedure TRSPOHHandler.MapAdjacentRooms(minimapBMP: TMufasaBitmap; topLeft, currentRoom: TPoint; angle: Double);
+procedure TPOHHandler.MapAdjacentRooms(minimapBMP: TMufasaBitmap; topLeft, currentRoom: TPoint; angle: Double);
 ```
 The core of the "POH Handler".
 This method is what's responsible for mapping unknown adjacent rooms (north, west, south and east).
 If you know what you are doing you can call this directly, but this is called automatically by {ref}`POH.Position()` and {ref}`POH.Setup()`.
 *)
-procedure TRSPOHHandler.MapAdjacentRooms(minimapBMP: TMufasaBitmap; topLeft, currentRoom: TPoint; angle: Double);
+procedure TPOHHandler.MapAdjacentRooms(minimapBMP: TMufasaBitmap; topLeft, currentRoom: TPoint; angle: Double);
 const
   FLOOR_COLOR_OFFSETS: TPointArray = [[5,5], [26,5], [26,26], [5, 26]];
 var
@@ -367,7 +367,7 @@ end;
 (*
 ## POH.Setup()
 ```pascal
-procedure TRSPOHHandler.Setup();
+procedure TPOHHandler.Setup();
 ```
 The method that sets up the "POH Handler" so it can be used.
 It's your responsibility to call it and it must be called from your POH entrance.
@@ -384,7 +384,7 @@ if MainScreen.WaitLoadingPOH(5000) then
   POH.Setup();
 ```
 *)
-procedure TRSPOHHandler.Setup();
+procedure TPOHHandler.Setup();
 var
   minimapBMP: TMufasaBitmap;
   p, center, topLeft: TPoint;
@@ -410,12 +410,12 @@ end;
 (*
 ## POH.LoadSuroundings()
 ```pascal
-procedure TRSPOHHandler.LoadSuroundings(minimapBMP: TMufasaBitmap; p: TPoint; angle: double);
+procedure TPOHHandler.LoadSuroundings(minimapBMP: TMufasaBitmap; p: TPoint; angle: double);
 ```
 Wrapper method that performs some common math required by {ref}`POH.MapAdjacentRooms()`.
 You can use this directly if you know what you are doing, but this is called automatically for you with {ref}`POH.Position()`.
 *)
-procedure TRSPOHHandler.LoadSuroundings(minimapBMP: TMufasaBitmap; p: TPoint; angle: double);
+procedure TPOHHandler.LoadSuroundings(minimapBMP: TMufasaBitmap; p: TPoint; angle: double);
 var
   topLeft: TPoint;
 begin
@@ -427,13 +427,13 @@ end;
 (*
 ## POH.Position()
 ```pascal
-function TRSPOHHandler.Position(): TPoint;
+function TPOHHandler.Position(): TPoint;
 ```
 Returns the player position relative to the `POH.Map`.
 Whenever this method is called, if there's unknown adjacent rooms (north, west, south and east),
 they will be mapped.
 *)
-function TRSPOHHandler.Position(): TPoint;
+function TPOHHandler.Position(): TPoint;
 const
   SAMPLE_SIZE: Int32 = 50;
 var
@@ -452,7 +452,7 @@ end;
 (*
 ## POH.DebugPosition()
 ```pascal
-procedure TRSPOHHandler.DebugPos();
+procedure TPOHHandler.DebugPos();
 ```
 Debugs the current player position on the `POH.Map`.
 
@@ -466,7 +466,7 @@ begin
 end;
 ```
 *)
-procedure TRSPOHHandler.DebugPosition();
+procedure TPOHHandler.DebugPosition();
 const
   SAMPLE_SIZE: Int32 = 50;
 var
@@ -506,7 +506,7 @@ end;
 (*
 ## POH.GetCurrentRoom()
 ```pascal
-function TRSPOHHandler.GetCurrentRoom(): ERSHouseRoom;
+function TPOHHandler.GetCurrentRoom(): ERSHouseRoom;
 ```
 Returns the current {ref}`ERSHouseRoom` we are on.
 
@@ -516,7 +516,7 @@ POH.Setup(); //call from the northwest tile of your exit portal.
 WriteLn POH.GetCurrentRoom();
 ```
 *)
-function TRSPOHHandler.GetCurrentRoom(): ERSHouseRoom;
+function TPOHHandler.GetCurrentRoom(): ERSHouseRoom;
 begin
   Result := Self.Map.GetRoom(Self.Position());
 end;
@@ -530,15 +530,15 @@ The following methods are related to interacting with {ref}`POH` {ref}`TRoomObje
 (*
 ## POH.Find
 ```pascal
-function TRSPOHHandler.FindEx(objType: ERSRoomObject; out cuboids: TCuboidExArray; out atpa: T2DPointArray):
-function TRSPOHHandler.FindAny(objType: ERSRoomObject; out tpa: TPointArray): Boolean;
-function TRSPOHHandler.FindAll(objType: ERSRoomObject; out atpa: T2DPointArray): Boolean;
+function TPOHHandler.FindEx(objType: ERSRoomObject; out cuboids: TCuboidExArray; out atpa: T2DPointArray):
+function TPOHHandler.FindAny(objType: ERSRoomObject; out tpa: TPointArray): Boolean;
+function TPOHHandler.FindAll(objType: ERSRoomObject; out atpa: T2DPointArray): Boolean;
 ```
 Method used to find a {ref}`TRoomObject` by specifying a {ref}`ERSRoomObject`.
 You can find any occurence of the object or all of them depending on the method you use.
 The extended version of the method is mostly for debugging.
 *)
-function TRSPOHHandler.FindEx(objType: ERSRoomObject; out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+function TPOHHandler.FindEx(objType: ERSRoomObject; out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -555,7 +555,7 @@ begin
   Result := obj.FindEx(mmPoints, radians, cuboids, atpa);
 end;
 
-function TRSPOHHandler.FindAny(objType: ERSRoomObject; out tpa: TPointArray): Boolean;
+function TPOHHandler.FindAny(objType: ERSRoomObject; out tpa: TPointArray): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -572,7 +572,7 @@ begin
   Result := obj.FindAny(mmPoints, radians, tpa);
 end;
 
-function TRSPOHHandler.FindAll(objType: ERSRoomObject; out atpa: T2DPointArray): Boolean;
+function TPOHHandler.FindAll(objType: ERSRoomObject; out atpa: T2DPointArray): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -591,14 +591,14 @@ end;
 
 
 (*
-## TRSPOHHandler.Draw()
+## TPOHHandler.Draw()
 ```pascal
-procedure TRSPOHHandler.Draw(out bitmap: TMufasaBitmap; objType: ERSRoomObject);
+procedure TPOHHandler.Draw(out bitmap: TMufasaBitmap; objType: ERSRoomObject);
 ```
 Internal method used to draw found {ref}`TRoomObject` in a TMufasaBitmap.
 An easy way to see this in action is to use `Debug(ERSRoomObject)`.
 *)
-procedure TRSPOHHandler.Draw(out bitmap: TMufasaBitmap; objType: ERSRoomObject);
+procedure TPOHHandler.Draw(out bitmap: TMufasaBitmap; objType: ERSRoomObject);
 var
   cuboids: TCuboidExArray;
   atpa: T2DPointArray;
@@ -614,9 +614,9 @@ end;
 (*
 ## POH.Interact
 ```pascal
-function TRSPOHHandler.Hover(objType: ERSRoomObject): Boolean;
-function TRSPOHHandler.Click(objType: ERSRoomObject): Boolean;
-function TRSPOHHandler.Select(objType: ERSRoomObject; options: TStringArray): Boolean;
+function TPOHHandler.Hover(objType: ERSRoomObject): Boolean;
+function TPOHHandler.Click(objType: ERSRoomObject): Boolean;
+function TPOHHandler.Select(objType: ERSRoomObject; options: TStringArray): Boolean;
 ```
 Method used to interact with a {ref}`TRoomObject` by specifying a {ref}`ERSRoomObject`.
 The interactions are self explanatory.
@@ -627,7 +627,7 @@ POH.Setup(); //call from the northwest tile of your exit portal.
 WriteLn POH.Hover(ERSRoomObject.POOL); //pool has to be on the same room, north, west, south or east.
 ```
 *)
-function TRSPOHHandler.Hover(objType: ERSRoomObject; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
+function TPOHHandler.Hover(objType: ERSRoomObject; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -652,7 +652,7 @@ begin
   end;
 end;
 
-function TRSPOHHandler.Click(objType: ERSRoomObject; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
+function TPOHHandler.Click(objType: ERSRoomObject; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -676,7 +676,7 @@ begin
   end;
 end;
 
-function TRSPOHHandler.Select(objType: ERSRoomObject; options: TStringArray; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
+function TPOHHandler.Select(objType: ERSRoomObject; options: TStringArray; angle: Single = $FFFF; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -703,9 +703,9 @@ end;
 (*
 ## POH.WalkInteract
 ```pascal
-function TRSPOHHandler.WalkHover(objType: ERSRoomObject; attempts: Int32): Boolean;
-function TRSPOHHandler.WalkClick(objType: ERSRoomObject; attempts: Int32): Boolean;
-function TRSPOHHandler.WalkSelect(objType: ERSRoomObject; options: TStringArray; attempts: Int32): Boolean;
+function TPOHHandler.WalkHover(objType: ERSRoomObject; attempts: Int32): Boolean;
+function TPOHHandler.WalkClick(objType: ERSRoomObject; attempts: Int32): Boolean;
+function TPOHHandler.WalkSelect(objType: ERSRoomObject; options: TStringArray; attempts: Int32): Boolean;
 ```
 Method used to walk and interact with a {ref}`TRoomObject` by specifying a {ref}`ERSRoomObject`.
 The interactions are self explanatory.
@@ -716,7 +716,7 @@ POH.Setup(); //call from the northwest tile of your exit portal.
 WriteLn POH.Hover(ERSRoomObject.POOL); //pool has to be on the same room, north, west, south or east.
 ```
 *)
-function TRSPOHHandler.WalkHover(objType: ERSRoomObject; attempts: Int32 = 2): Boolean;
+function TPOHHandler.WalkHover(objType: ERSRoomObject; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -745,7 +745,7 @@ begin
   end;
 end;
 
-function TRSPOHHandler.WalkClick(objType: ERSRoomObject; attempts: Int32 = 2): Boolean;
+function TPOHHandler.WalkClick(objType: ERSRoomObject; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -774,7 +774,7 @@ begin
   end;
 end;
 
-function TRSPOHHandler.WalkSelect(objType: ERSRoomObject; options: TStringArray; attempts: Int32 = 2): Boolean;
+function TPOHHandler.WalkSelect(objType: ERSRoomObject; options: TStringArray; attempts: Int32 = 2): Boolean;
 var
   obj: TRoomObject;
   mmPoints: TPointArray;
@@ -804,7 +804,7 @@ begin
 end;
 
 
-function TRSPOHHandler.OpenNexus(): Boolean;
+function TPOHHandler.OpenNexus(): Boolean;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -823,13 +823,13 @@ begin
   end;
 end;
 
-function TRSPOHHandler.NexusTeleport(destination: ERSNexusDestination): Boolean;
+function TPOHHandler.NexusTeleport(destination: ERSNexusDestination): Boolean;
 begin
   Result := Self.OpenNexus() and PortalNexus.ClickDestination(destination);
 end;
 
 
-function TRSPOHHandler.UsePool(): Boolean;
+function TPOHHandler.UsePool(): Boolean;
   function _IsMaxed(): Boolean;
   begin
     if Minimap.GetHPLevel() < Stats.GetLevel(ERSSkill.HITPOINTS) then
@@ -868,9 +868,9 @@ var
 ```pascal
 var POH
 ```
-Global variable to use the {ref}`TRSPOHHandler`.
+Global variable to use the {ref}`TPOHHandler`.
 *)
-  POH: TRSPOHHandler;
+  POH: TPOHHandler;
 
 procedure TSRL.Setup(); override;
 begin

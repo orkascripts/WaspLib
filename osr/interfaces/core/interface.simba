@@ -4,24 +4,24 @@
 {$ENDIF}
 
 type
-  TRSDropDown_Option = record
+  TDropDown_Option = record
     Text: String;
     Bounds: TBox;
   end;
 
-  TRSDropDown_OptionArray = array of TRSDropDown_Option;
+  TDropDown_OptionArray = array of TDropDown_Option;
 
-  TRSDropDown = record
+  TDropDown = record
     Index: Int32;
     Bounds: TBox;
     Middle: TPoint;
-    PParent: ^TRSInterface;
+    PParent: ^TInterface;
   end;
 
-  TRSDropDownArray = array of TRSDropDown;
+  TDropDownArray = array of TDropDown;
 
 //overriden to be able to pick Scroll UI Close button
-function TRSInterface.FindButtons(dimensions: TRSButtonDimensions): TRSButtonArray; override;
+function TInterface.FindButtons(dimensions: TGameButtonDimensions): TGameButtonArray; override;
 var
   tpa: TPointArray;
   atpa: T2DPointArray;
@@ -70,8 +70,8 @@ begin
   end;
 end;
 
-function TRSInterface.FindDropDown(Dimensions: TRSButtonDimensions): TRSDropDownArray;
-  function FindArrow(B: TBox; Color: TCTS0Color; Dimensions: TRSButtonDimensions): Boolean;
+function TInterface.FindDropDown(Dimensions: TGameButtonDimensions): TDropDownArray;
+  function FindArrow(B: TBox; Color: TCTS0Color; Dimensions: TGameButtonDimensions): Boolean;
   var
     TPA: TPointArray;
     ATPA: T2DPointArray;
@@ -149,18 +149,18 @@ end;
 
 
 
-function TRSDropDown.GetText(Font: TFontSet = RS_FONT_PLAIN_11): String; constref;
+function TDropDown.GetText(Font: TFontSet = RS_FONT_PLAIN_11): String; constref;
 begin
   Result := OCR.Recognize(Self.Bounds, TOCRColorFilter.Create([2070783, 1939197]), Font);
 end;
 
 
-function TRSDropDown.FindText(constref Text: String; constref Font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref;
+function TDropDown.FindText(constref Text: String; constref Font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref;
 begin
   Result := OCR.LocateText(Self.Bounds, Text, Font, TOCRColorFilter.Create([0]), 1);
 end;
 
-function TRSDropDown.FindText(Text: TStringArray; out Found: String; constref Font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
+function TDropDown.FindText(Text: TStringArray; out Found: String; constref Font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
 var
   I: Int32;
 begin
@@ -174,7 +174,7 @@ end;
 
 
 
-function TRSDropDown.IsOpen(out TPA: TPointArray): Boolean; constref;
+function TDropDown.IsOpen(out TPA: TPointArray): Boolean; constref;
 const
   COLOR: TCTS0Color := CTS0(4540231);
 var
@@ -199,7 +199,7 @@ begin
   Result := (TPA <> []) and (TPA.Bounds().Height() > 18);
 end;
 
-function TRSDropDown.IsOpen(): Boolean; constref; overload;
+function TDropDown.IsOpen(): Boolean; constref; overload;
 var
   TPA: TPointArray;
 begin
@@ -207,7 +207,7 @@ begin
 end;
 
 
-function TRSDropDown.Open(out TPA: TPointArray): Boolean; constref;
+function TDropDown.Open(out TPA: TPointArray): Boolean; constref;
 begin
   if Self = [] then
     Exit;
@@ -220,14 +220,14 @@ begin
   Result := WaitUntil(Self.IsOpen(TPA), 100, 2000);
 end;
 
-function TRSDropDown.Open(): Boolean; constref; overload;
+function TDropDown.Open(): Boolean; constref; overload;
 var
   tpa: TPointArray;
 begin
   Result := Self.Open(tpa);
 end;
 
-function TRSDropDown.Close(): Boolean; constref;
+function TDropDown.Close(): Boolean; constref;
 begin
   if Self = [] then
     Exit;
@@ -241,7 +241,7 @@ begin
 end;
 
 
-function TRSDropDown.GetOptions(constref font: TFontSet = RS_FONT_PLAIN_11): TRSDropDown_OptionArray; constref;
+function TDropDown.GetOptions(constref font: TFontSet = RS_FONT_PLAIN_11): TDropDown_OptionArray; constref;
 var
   tpa: TPointArray;
   i: Int32;
@@ -272,7 +272,7 @@ begin
 end;
 
 
-procedure TRSDropDown.Select(Option: TRSDropDown_Option; mouseAction: Int32 = MOUSE_LEFT); constref;
+procedure TDropDown.Select(Option: TDropDown_Option; mouseAction: Int32 = MOUSE_LEFT); constref;
 var
   From: TPoint;
   B: TBox;
@@ -293,9 +293,9 @@ begin
     CustomMouse.Click(mouseAction);
 end;
 
-function TRSDropDown.Select(text: TStringArray; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True; constref font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
+function TDropDown.Select(text: TStringArray; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True; constref font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
 var
-  choices: TRSDropDown_OptionArray;
+  choices: TDropDown_OptionArray;
   i, j: Int32;
 begin
   choices := Self.GetOptions(Font);
@@ -323,18 +323,18 @@ begin
   end;
 end;
 
-function TRSDropDown.Select(Text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True; constref font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
+function TDropDown.Select(Text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True; constref font: TFontSet = RS_FONT_PLAIN_11): Boolean; constref; overload;
 begin
   Result := Select([text], mouseAction, caseSensitive, closeIfNotFound, font);
 end;
 
 
 
-procedure TMufasaBitmap.DrawDropDowns(DropDowns: TRSDropDownArray);
+procedure TMufasaBitmap.DrawDropDowns(DropDowns: TDropDownArray);
 var
   i: int32;
-  Option: TRSDropDown_Option;
-  OptionArray: TRSDropDown_OptionArray;
+  Option: TDropDown_Option;
+  OptionArray: TDropDown_OptionArray;
 begin
   for i := 0 to High(DropDowns) do
   begin
@@ -352,7 +352,7 @@ begin
   end;
 end;
 
-procedure Debug(DropDowns: TRSDropDownArray); overload;
+procedure Debug(DropDowns: TDropDownArray); overload;
 var
   BMP: TMufasaBitmap;
 begin
@@ -363,9 +363,9 @@ begin
 end;
 
 
-function TRSInterface.RandomScroll(down: Boolean = True): Boolean;
+function TInterface.RandomScroll(down: Boolean = True): Boolean;
 var
-  scrollBar: TRSScrollBar;
+  scrollBar: TGameScrollBar;
   i, times: Int32;
 begin
   scrollBar := Self.GetScrollBar();

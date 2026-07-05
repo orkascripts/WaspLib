@@ -7,7 +7,7 @@ Extensions to SRL's {ref}`Chat` interface.
   {$I WaspLib/osr.simba}
 {$ENDIF}
 
-function TRSChat.HasContinue(): Boolean;
+function TChat.HasContinue(): Boolean;
 begin
   Result := Self.FindOption('Click here to continue', [CHAT_COLOR_BLUE, CHAT_COLOR_WHITE]) or
             Self.FindOption('Please wait', [CHAT_COLOR_BLUE, CHAT_COLOR_WHITE]);
@@ -16,11 +16,11 @@ end;
 (*
 ## Chat.LeveledUp
 ```pascal
-function TRSChat.LeveledUp(): Boolean; override;
+function TChat.LeveledUp(): Boolean; override;
 ```
 Overriden to take a screenshot of the chatbox when we leveled up.
 *)
-function TRSChat.LeveledUp(): Boolean; override;
+function TChat.LeveledUp(): Boolean; override;
 begin
   Result := inherited;
 
@@ -29,7 +29,7 @@ begin
 end;
 
 
-function TRSChat.HandleLevelUp(chance: Double = BioHash): Boolean;
+function TChat.HandleLevelUp(chance: Double = BioHash): Boolean;
 var
   useKeyboard: Boolean;
 begin
@@ -45,7 +45,7 @@ begin
   until Result;
 end;
 
-function TRSChat.FindQuery(query: String): Boolean; overload;
+function TChat.FindQuery(query: String): Boolean; overload;
 begin
   Result := query in Self.GetQuery();
 end;

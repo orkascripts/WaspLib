@@ -6,7 +6,7 @@
 
 // Tries to open GE
 (*
-function TRSGrandExchange.Open(): Boolean; override;
+function TGrandExchange.Open(): Boolean; override;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -33,7 +33,7 @@ begin
 end;
 *)
 // Walks to GE and attempts to open it while walking.
-function TRSGrandExchange.WalkOpen(): Boolean; overload;
+function TGrandExchange.WalkOpen(): Boolean; overload;
 begin
   if RSInterface.IsOpen() then
   begin
@@ -41,11 +41,10 @@ begin
     else RSInterface.Close();
   end;
 
-  if RSObjects.GEExchange.WalkClick then
+  if GameObjects.GEExchange.WalkClick then
   begin
     Minimap.WaitMoving;
     Result := WaitUntil((Self.IsOpen or BankPin.IsOpen),
                          SRL.TruncatedGauss(50, 1500), 3000);
   end;
 end;
-

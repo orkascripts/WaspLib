@@ -18,7 +18,7 @@
 {$ENDIF}
 type
   TUniversalTransport = record(TSRLBaseRecord)
-    ardougneCape: TRSItem;
+    ardougneCape: TItem;
     fairyTeleportItem: EFairyTeleportItem;
     PohSetup : Boolean;
     IsSetup: Boolean;
@@ -207,8 +207,8 @@ end;
 function TUniversalTransport.handleJewelleryTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
   startPosition: TPoint := ScriptWalker^.GetMyPos();
-  chargedJewellery: TRSItem;
-  chargedVariants: TRSItemArray := getChargedJewelleryNames(teleportLocation.item);
+  chargedJewellery: TItem;
+  chargedVariants: TItemArray := getChargedJewelleryNames(teleportLocation.item);
   didTeleport: Boolean;
   middleScreenJewellery: TStringArray := ['skills necklace'];
 begin
@@ -251,8 +251,8 @@ end;
 function TUniversalTransport.handleOtherTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
   didTeleport: Boolean;
-  teleportItem: TRSItem;
-  teleportItems: TRSItemArray := teleportLocation.items;
+  teleportItem: TItem;
+  teleportItems: TItemArray := teleportLocation.items;
   teleportDestination: String := teleportLocation.destination;
   startPosition: TPoint := ScriptWalker^.GetMyPos();
 begin
@@ -282,8 +282,8 @@ end;
 
 function TUniversalTransport.handleDiaryTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
-  numberedItems: TRSItemArray := getNumberedDiaryItems(teleportLocation.item);
-  numberedDiaryItem: TRSItem;
+  numberedItems: TItemArray := getNumberedDiaryItems(teleportLocation.item);
+  numberedDiaryItem: TItem;
   didTeleport: Boolean;
   startPosition: TPoint := ScriptWalker^.GetMyPos();
 begin
@@ -325,9 +325,9 @@ end;
 
 function TUniversalTransport.withdrawTeleportItem(constref teleportLocation: TTeleportLocation): Boolean;
 var
-  bankItem: TRSBankItem;
-  chargedJewellery: TRSItem;
-  chargedVariants: TRSItemArray;
+  bankItem: TBankItem;
+  chargedJewellery: TItem;
+  chargedVariants: TItemArray;
   teleportTabName: String;
 begin
   Self.DebugLn('Trying to withdraw');
@@ -486,7 +486,7 @@ begin
   if not WaitUntil(Minimap.InPOH(), 100, 10000) then
   begin
     WriteLn('Couldnt get to POH');
-    Exit; 
+    Exit;
   end;
   WaitUntil(Minimap.InPOH(), 100, 10000);
   if not Self.PohSetup then begin
@@ -670,7 +670,7 @@ end;
 // example usage/test
 //
 // var
-//   rsw: TRSWalker;
+//   rsw: TWalker;
 //   Transport: TUniversalTransport;
 //   teleportLocation: TTeleportLocation := RSTeleports.MINIGAME_NIGHTMARE_ZONE;
 // begin

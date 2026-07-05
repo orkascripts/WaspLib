@@ -4,7 +4,7 @@
 {$ENDIF}
 
 type
-  TRSMonsters = record
+  TMonsters = record
     AnyMonster,
     Frog,
     Man,
@@ -64,10 +64,10 @@ type
     Turoth,
     Bloodveld,
     Banshee,
-    TwistedBanshee, BlackKnight, Basilisk, BasiliskKnight: TRSMonster;
+    TwistedBanshee, BlackKnight, Basilisk, BasiliskKnight: TMonster;
   end;
 
-procedure TRSMonsters.Setup();
+procedure TMonsters.Setup();
 begin
   with Self.AnyMonster do
   begin
@@ -586,13 +586,13 @@ begin
 end;
 
 var
-  RSMonsters: TRSMonsters;
+  RSMonsters: TMonsters;
 
-procedure TRSWalker.InternalSetup(); override;
+procedure TWalker.InternalSetup(); override;
 begin
   inherited;
 
-  RSObjects.Setup();
+  GameObjects.Setup();
   RSNPCs.Setup();
   RSMonsters.Setup();
   RSGroundItems.Setup();

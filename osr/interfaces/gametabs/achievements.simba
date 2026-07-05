@@ -34,12 +34,12 @@ type
     WILDERNESS
   );
 
-  TRSAchievements = record(TRSInterface)
+  TAchievements = record(TInterface)
     Tabs: array [ERSAchievementTab] of TBox;
     isPostSetup: Boolean;
   end;
 
-function TRSAchievements.GetCurrentTab(): ERSAchievementTab;
+function TAchievements.GetCurrentTab(): ERSAchievementTab;
 const
   COLORS: array of TCTS2Color = [
     [4418165, 11, 0.18, 0.78],
@@ -56,7 +56,7 @@ begin
 end;
 
 
-function TRSAchievements.GetScrollArea(scrollBar: TRSScrollBar): TBox; override;
+function TAchievements.GetScrollArea(scrollBar: TGameScrollBar): TBox; override;
 var
   tab: ERSAchievementTab;
 begin
@@ -80,15 +80,15 @@ begin
 end;
 
 
-procedure TRSAchievements.Setup(); override;
+procedure TAchievements.Setup(); override;
 begin
   inherited;
   Self.Name := 'Achievements';
 end;
 
-procedure TRSAchievements.SetupAlignment(); overload;
+procedure TAchievements.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
   boxes: TBoxArray;
   i: Int32;
 begin
@@ -105,7 +105,7 @@ begin
     Self.Tabs[ERSAchievementTab(i)] := boxes[i];
 end;
 
-procedure TRSAchievements.ResetAlignment();
+procedure TAchievements.ResetAlignment();
 var
   boxes: TBoxArray;
   i: Int32;
@@ -116,7 +116,7 @@ begin
   Self.Tabs[ERSAchievementTab(3)] := [0,0,0,0];
 end;
 
-procedure TRSAchievements.PostSetup();
+procedure TAchievements.PostSetup();
 var
   boxes: TBoxArray;
 begin
@@ -126,31 +126,31 @@ begin
   Self.isPostSetup := True;
 end;
 
-function TRSAchievements.IsOpen(): Boolean;
+function TAchievements.IsOpen(): Boolean;
 begin
   Result := (GameTabs.GetCurrentTab = ERSGameTab.QUESTS);
 end;
 
-function TRSAchievements.Open(): Boolean;
+function TAchievements.Open(): Boolean;
 begin
   Result := GameTabs.Open(ERSGameTab.QUESTS);
 end;
 
 
-function TRSAchievements.GetButtons(): TRSButtonArray;
+function TAchievements.GetButtons(): TGameButtonArray;
 begin
   Result := Self.FindButtons([[89,52], [182, 24]]);
 end;
 
-function TRSAchievements.GetButton(button: ERSSummaryButton): TRSButton;
+function TAchievements.GetButton(button: ERSSummaryButton): TGameButton;
 var
-  Buttons: TRSButtonArray := Self.GetButtons();
+  Buttons: TGameButtonArray := Self.GetButtons();
 begin
   if Length(Buttons) = Length(ERSSummaryButton) then
     Result := Buttons[Button];
 end;
 
-function TRSAchievements.OpenTab(tab: ERSAchievementTab): Boolean;
+function TAchievements.OpenTab(tab: ERSAchievementTab): Boolean;
 var
   button: ERSSummaryButton;
 begin
@@ -177,9 +177,9 @@ begin
 end;
 
 
-procedure TRSAchievements.Draw(bitmap: TMufasaBitmap); override;
+procedure TAchievements.Draw(bitmap: TMufasaBitmap); override;
 var
-  buttons: TRSButtonArray;
+  buttons: TGameButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -190,7 +190,7 @@ begin
   buttons.Draw(bitmap);
 end;
 
-procedure TRSAchievements.MakeVisible(diary : ERSAchievementDiary);
+procedure TAchievements.MakeVisible(diary : ERSAchievementDiary);
 var
   CurrentScroll : Int32 := Self.GetScrollPosition;
   Min, Max : Int32;
@@ -208,7 +208,7 @@ begin
     Self.SetScrollPosition(Random(Min, Max));
 end;
 
-function TRSAchievements.GetDiaryBoxes(): TBoxArray;
+function TAchievements.GetDiaryBoxes(): TBoxArray;
 var
   tpa: TPointArray;
   atpa: T2DPointArray;
@@ -228,7 +228,7 @@ begin
   end;
 end;
 
-function TRSAchievements.GetDiaryBox(diary : ERSAchievementDiary): TBox;
+function TAchievements.GetDiaryBox(diary : ERSAchievementDiary): TBox;
 const
   EXPECTED_TEXT : TStringArray := ['Ardo', 'Dese', 'ador', 'Frem', 'Kand', 'Karam', 'Kour', 'Lumb', 'Moryt', 'Varr', 'West', 'dern'];
 var
@@ -249,7 +249,7 @@ begin
   Result := [0, 0];
 end;
 
-function TRSAchievements.GetDiaryLevel(diary : ERSAchievementDiary): Int32;
+function TAchievements.GetDiaryLevel(diary : ERSAchievementDiary): Int32;
 begin
   if not Self.Open() then Exit(-1);
   if not Self.isPostSetup then
@@ -259,10 +259,10 @@ begin
 end;
 
 var
-  Achievements: TRSAchievements;
+  Achievements: TAchievements;
 
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 
@@ -282,5 +282,3 @@ begin
 
   Achievements.Draw(Bitmap);
 end;
-
-

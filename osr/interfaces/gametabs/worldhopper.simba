@@ -12,30 +12,30 @@ World hopper is resposible for hopping worlds with the logged in world hopper in
 
 type
 (*
-## type TRSWorldHopper
+## type TWorldHopper
 ```pascal
 type
-  TRSWorldHopper = record(TRSInterface)
+  TWorldHopper = record(TInterface)
     SILVER, YELLOW: Int32;
     ReadyTime: UInt64;
   end;
 ```
 WorldHopper record.
 *)
-  TRSWorldHopper = record(TRSInterface)
+  TWorldHopper = record(TInterface)
     SILVER, YELLOW: Int32;
     ServerMessageBox: TBox;
     Cooldown: TCountDown;
   end;
 
 (*
-## TRSWorldHopper.Setup
+## TWorldHopper.Setup
 ```pascal
-procedure TRSWorldHopper.Setup(); override;
+procedure TWorldHopper.Setup(); override;
 ```
 Internal method used to setup the WorldHopper.
 *)
-procedure TRSWorldHopper.Setup(); override;
+procedure TWorldHopper.Setup(); override;
 begin
   inherited;
 
@@ -46,9 +46,9 @@ begin
   Self.Cooldown.Setup(8000);
 end;
 
-procedure TRSWorldHopper.SetupAlignment(); overload;
+procedure TWorldHopper.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 begin
   alignment.Left := GameTab.Bounds.X1 - 3;
   alignment.Right := GameTab.Bounds.X2 + 3;
@@ -68,20 +68,20 @@ begin
 end;
 
 (*
-## TRSWorldHopper.Scroll
+## TWorldHopper.Scroll
 ```pascal
-procedure TRSWorldHopper.Scroll(down: Boolean);
+procedure TWorldHopper.Scroll(down: Boolean);
 ```
 Scroll one page up or down of the world hopper.
 
 Example:
 ```pascal
-TRSWorldHopper.Scroll(True);
+TWorldHopper.Scroll(True);
 ```
 *)
-procedure TRSWorldHopper.Scroll(down: Boolean; forceMove: Boolean = True);
+procedure TWorldHopper.Scroll(down: Boolean; forceMove: Boolean = True);
 var
-  scrollBar: TRSScrollBar;
+  scrollBar: TGameScrollBar;
 begin
   scrollBar := Self.GetScrollBar();
   if not scrollBar.IsVisible() or not Self.CanScroll() then
@@ -89,31 +89,31 @@ begin
 
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    RSClient.RemoteInput.DisableRealInput();
+    GameClient.RemoteInput.DisableRealInput();
   {$ENDIF}
 
   Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), down, forceMove);
 
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    RSClient.RemoteInput.EnableRealInput();
+    GameClient.RemoteInput.EnableRealInput();
   {$ENDIF}
 end;
 
 (*
-## TRSWorldHopper.ClickWorld
+## TWorldHopper.ClickWorld
 ```pascal
-procedure TRSWorldHopper.ClickWorld(ocrBounds: TBox);
+procedure TWorldHopper.ClickWorld(ocrBounds: TBox);
 ```
 Click a world in the world hopper.
 
 Example:
 ```pascal
-TRSWorldHopper.ReadWorlds(ocrBounds);
-TRSWorldHopper.ClickWorld(ocrBounds[0]);
+TWorldHopper.ReadWorlds(ocrBounds);
+TWorldHopper.ClickWorld(ocrBounds[0]);
 ```
 *)
-procedure TRSWorldHopper.ClickWorld(ocrBounds: TBox);
+procedure TWorldHopper.ClickWorld(ocrBounds: TBox);
 begin
   ocrBounds.X1 := Self.Bounds.X1;
   ocrBounds.X2 := Self.Bounds.X2 - 16;
@@ -121,18 +121,18 @@ begin
 end;
 
 (*
-## TRSWorldHopper.GetCurrentWorld
+## TWorldHopper.GetCurrentWorld
 ```pascal
-function TRSWorldHopper.GetCurrentWorld(): Int32;
+function TWorldHopper.GetCurrentWorld(): Int32;
 ```
 Returns the current world we are on.
 
 Example:
 ```pascal
-WriteLn TRSWorldHopper.GetCurrentWorld();
+WriteLn TWorldHopper.GetCurrentWorld();
 ```
 *)
-function TRSWorldHopper.GetCurrentWorld(): Int32;
+function TWorldHopper.GetCurrentWorld(): Int32;
 var
   b: TBox;
 begin
@@ -142,19 +142,19 @@ begin
 end;
 
 (*
-## TRSWorldHopper.ReadWorlds
+## TWorldHopper.ReadWorlds
 ```pascal
-function TRSWorldHopper.ReadWorlds(out boxes: TBoxArray): TIntegerArray;
-function TRSWorldHopper.ReadWorlds(): TIntegerArray;  overload;
+function TWorldHopper.ReadWorlds(out boxes: TBoxArray): TIntegerArray;
+function TWorldHopper.ReadWorlds(): TIntegerArray;  overload;
 ```
 Returns currently visible worlds.
 
 Example:
 ```pascal
-WriteLn TRSWorldHopper.ReadWorlds();
+WriteLn TWorldHopper.ReadWorlds();
 ```
 *)
-function TRSWorldHopper.ReadWorlds(out boxes: TBoxArray): TIntegerArray;
+function TWorldHopper.ReadWorlds(out boxes: TBoxArray): TIntegerArray;
 var
   tpa: TPointArray;
   i, value, x2: Int32;
@@ -189,7 +189,7 @@ begin
   end;
 end;
 
-function TRSWorldHopper.ReadWorlds(): TIntegerArray;  overload;
+function TWorldHopper.ReadWorlds(): TIntegerArray;  overload;
 var
   boxes: TBoxArray;
 begin
@@ -197,7 +197,7 @@ begin
 end;
 
 
-function TRSWorldHopper.SortWorlds(): Boolean;
+function TWorldHopper.SortWorlds(): Boolean;
 var
   Arrow : TPointArray;
   Attempt : Int32;
@@ -222,13 +222,13 @@ begin
 end;
 
 (*
-## TRSWorldHopper.WaitForHop
+## TWorldHopper.WaitForHop
 ```pascal
-function TRSWorldHopper.WaitForHop(world: Int32; ocrBounds: TBox; coolDownOnFail: Boolean=True): Boolean;
+function TWorldHopper.WaitForHop(world: Int32; ocrBounds: TBox; coolDownOnFail: Boolean=True): Boolean;
 ```
 Exits false if "Please wait" not found, presumably due to combat.
 *)
-function TRSWorldHopper.WaitForHop(world: Int32; coolDownOnFail: Boolean = True): Boolean;
+function TWorldHopper.WaitForHop(world: Int32; coolDownOnFail: Boolean = True): Boolean;
 var
   filter: TOCRColorFilter;
 begin
@@ -253,18 +253,18 @@ begin
 end;
 
 (*
-## TRSWorldHopper.Hop
+## TWorldHopper.Hop
 ```pascal
-function TRSWorldHopper.Hop(targetWorlds: TIntegerArray): Boolean;
+function TWorldHopper.Hop(targetWorlds: TIntegerArray): Boolean;
 ```
 Hops to a different world from the specified **targetWorlds**.
 
 Example:
 ```pascal
-WriteLn TRSWorldHopper.Hop([303, 304, 305]);
+WriteLn TWorldHopper.Hop([303, 304, 305]);
 ```
 *)
-function TRSWorldHopper.Hop(targetWorlds: TIntegerArray; doSorting: Boolean = True): Boolean;
+function TWorldHopper.Hop(targetWorlds: TIntegerArray; doSorting: Boolean = True): Boolean;
 var
   visible: TIntegerArray;
   boxes: TBoxArray;
@@ -314,9 +314,9 @@ begin
 end;
 
 var
-  WorldHopper: TRSWorldHopper;
+  WorldHopper: TWorldHopper;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
   WorldHopper.SetupAlignment();

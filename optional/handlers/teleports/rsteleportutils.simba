@@ -30,33 +30,33 @@ type
     worldPoint: TPoint;
     teleportType: ETeleportType;
     magicLevel: Int32;
-    item: TRSItem;
-    items: TRSItemArray;
+    item: TItem;
+    items: TItemArray;
     destination: String;
     dispatcherRing: Boolean;
     interfaceHotkey: String;
   end;
 
   TTeleportJewellery = record
-    unchargedName: TRSItem;
-    chargedNames: TRSItemArray;
+    unchargedName: TItem;
+    chargedNames: TItemArray;
   end;
 
   TDiaryTeleportItem = record
-    baseItem: TRSItem;
-    numberedItems: TRSItemArray;
+    baseItem: TItem;
+    numberedItems: TItemArray;
   end;
 
 var
   TeleportJewellery: array of TTeleportJewellery;
 
-function setupTeleportJewellery(unchargedName: TRSItem; chargedName: TRSItem): TTeleportJewellery;
+function setupTeleportJewellery(unchargedName: TItem; chargedName: TItem): TTeleportJewellery;
 begin
   result.unchargedName := unchargedName;
   result.chargedNames := chargedName.GetArray();
 end;
 
-function setupDiaryTeleportItem(baseItem: TRSItem): TDiaryTeleportItem;
+function setupDiaryTeleportItem(baseItem: TItem): TDiaryTeleportItem;
 var
   i: Int32;
 begin
@@ -71,7 +71,7 @@ begin
   Result := [worldPoint, teleportType, level, '', [], destination, False, interfaceKey];
 end;
 
-function setupTeleportLocation(teleportType: ETeleportType; item: TRSItem; destination: String; worldPoint: TPoint; interfaceKey: String = ''): TTeleportLocation; overload;
+function setupTeleportLocation(teleportType: ETeleportType; item: TItem; destination: String; worldPoint: TPoint; interfaceKey: String = ''): TTeleportLocation; overload;
 begin
   Result := [worldPoint, teleportType, 0, item, [], destination, False, interfaceKey];
 end;
@@ -81,7 +81,7 @@ begin
   Result := [worldPoint, teleportType, 0, '', [], destination, dispatcherRing, ''];
 end;
 
-function setupTeleportLocation(teleportType: ETeleportType; items: TRSItemArray; destination: String; worldPoint: TPoint): TTeleportLocation; overload;
+function setupTeleportLocation(teleportType: ETeleportType; items: TItemArray; destination: String; worldPoint: TPoint): TTeleportLocation; overload;
 begin
   Result := [worldPoint, teleportType, 0, '', items, destination, False, ''];
 end;
@@ -140,7 +140,7 @@ begin
   ];
 end;
 
-function getChargedJewelleryNames(unchargedName: TRSItem): TRSItemArray;
+function getChargedJewelleryNames(unchargedName: TItem): TItemArray;
 var
   i: Int32;
 begin
@@ -154,7 +154,7 @@ begin
   raise unchargedName + ' does not match any jewellery in getTeleportJewellery';
 end;
 
-function getNumberedDiaryItems(baseItem: TRSItem): TRSItemArray;
+function getNumberedDiaryItems(baseItem: TItem): TItemArray;
 var
   diaryTeleport: TDiaryTeleportItem;
 begin

@@ -52,14 +52,14 @@ type
 ```pascal
 THouseHandler = record(TSRLBaseRecord)
   Loader: THouseLoader;
-  Walker: TRSWalkerV2;
+  Walker: TWalkerV2;
 
-  Objects: array [EHouseObject] of TRSObjectV2;
+  Objects: array [EHouseObject] of TObjectV2;
 
   Downscale: Int32;
   Similarity: Double;
 
-  Sample: TRSMapSample;
+  Sample: TMapSample;
   Cache: TMatchTemplateRGBCache;
 
   Graph: TWebGraphV2;
@@ -70,26 +70,26 @@ The core record used to handle navigating a POH.
 *)
   THouseHandler = record(TSRLBaseRecord)
     Loader: THouseLoader;
-    Walker: TRSWalkerV2;
+    Walker: TWalkerV2;
 
-    Objects: array [EHouseObject] of TRSObjectV2;
-    Teleports: array [EHouseTeleport] of TRSObjectV2;
+    Objects: array [EHouseObject] of TObjectV2;
+    Teleports: array [EHouseTeleport] of TObjectV2;
 
     Downscale: Int32;
     Similarity: Double;
 
-    Sample: TRSMapSample;
+    Sample: TMapSample;
     Cache: TMatchTemplateRGBCache;
 
     Graph: TWebGraphV2;
     IsSetup: Boolean;
 
-    Entrance: TRSObjectV2;
+    Entrance: TObjectV2;
 
     TeleportMode: EHouseTeleportMode;
     CapeTab: ERSGameTab;
     TeleportPlace: EHouseTeleportPlace;
-    HouseTeleportItem: TRSItem;
+    HouseTeleportItem: TItem;
   end;
 
 function THouseHandler.Position(): TPoint; forward;
@@ -169,7 +169,7 @@ begin
     end;
 end;
 
-function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TRSObjectV2;
+function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TObjectV2;
 var
   idx, coordinate: TPoint;
   room: THouseRoom;
@@ -322,7 +322,7 @@ begin
   SetLength(Result.Names, Length(Result.Nodes));
 end;
 
-function THouseHandler.GetChunk(): TRSMapChunk;
+function THouseHandler.GetChunk(): TMapChunk;
 begin
   Result := Self.Loader.Location.GetChunk();
 end;
@@ -545,7 +545,7 @@ begin
   cleanMinimap := Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 1);
 
   p := cleanMinimap.GetCenter();
-  if RSClient.Mode = ERSClientMode.FIXED then
+  if GameClient.Mode = EClientMode.FIXED then
     p := p.Offset(0, 8).Rotate(-Minimap.GetCompassAngle(False), p);
 
   cleanMinimap.DrawBoxFilled([p.X - 1, p.Y - 1, p.X + 1, p.Y + 1], False, $FFFFFF);
@@ -588,7 +588,7 @@ end;
 
 function THouseHandler.Enter(): Boolean;
 var
-  CAPES: TRSItemArray = ['Construct. cape', 'Construct. cape(t)', 'Max cape'];
+  CAPES: TItemArray = ['Construct. cape', 'Construct. cape(t)', 'Max cape'];
   slot: Int32;
   option: String;
   loading, outside: Boolean;
@@ -1024,7 +1024,7 @@ begin
       combobox.Create(panel, 'Larder:', 'Does this room have a larder?', [0,0],[166,50], True);
       combobox.AddItemArray(['None', 'Normal', 'Oak', 'Teak']);
       combobox.SetName('larder');
-      
+
       tmp := room.Objects - KITCHEN_RANGES;
       if SetCount(tmp) <> 1 then
         combobox.SetItemIndex(0)
@@ -1032,11 +1032,11 @@ begin
         combobox.SetItemIndex(SetFirst(tmp) - Ord(EHouseObject.LARDER) + 1);
 
       combobox.ComboBox.setOnChange(@Self.POHObjectUpdate);
-      
+
       combobox.Create(panel, 'Range:', 'Does this room have a range?', [0,50],[166,50], True);
       combobox.AddItemArray(['None', 'Fancy']);
       combobox.SetName('range');
-      
+
       tmp := room.Objects - KITCHEN_LARDERS;
       if SetCount(tmp) <> 1 then
         combobox.SetItemIndex(0)
@@ -1584,4 +1584,3 @@ begin
   room.SetItemIndex(Ord(House.Loader.ReadRoom(House.Loader.Selected.Matrix).Room));
   Self.RoomUpdate(room.ComboBox);
 end;
-

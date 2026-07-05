@@ -213,7 +213,7 @@ begin
 end;
 
 
-procedure TAntiban.MoveItems(items: TRSItemArray);
+procedure TAntiban.MoveItems(items: TItemArray);
 var
   currentSlots, newSlots, tmp: TIntegerArray;
   i: Int32;
@@ -251,7 +251,7 @@ end;
 
 procedure TAntiban.CheckCharges();
 const
-  ITEM_LIST: TRSItemArray = [
+  ITEM_LIST: TItemArray = [
     'Infernal axe', 'Crystal axe', 'Infernal harpoon', 'Crystal harpoon',
     'Infernal pickaxe', 'Crystal pickaxe', 'Bryophyta''s staff',
     'Ring of endurance', 'Ring of suffering (ri)', 'Ring of suffering (r)',
@@ -261,8 +261,8 @@ const
     'Sanguinesti staff'
   ];
 var
-  equippedArray: TRSItemArray;
-  item: TRSItem;
+  equippedArray: TItemArray;
+  item: TItem;
 begin
   if not Equipment.Open() then
     Exit;
@@ -283,7 +283,7 @@ end;
 
 procedure TAntiban.CheckSlayerHelm();
 const
-  ITEM_LIST: TRSItemArray = [
+  ITEM_LIST: TItemArray = [
   'Slayer helmet', 'Black slayer helmet', 'Green slayer helmet', 'Red slayer helmet',
   'Purple slayer helmet', 'Turquoise slayer helmet', 'Hydra slayer helmet',
   'Twisted slayer helmet', 'Tztok slayer helmet', 'Vampyric slayer helmet',
@@ -313,7 +313,7 @@ end;
 
 procedure TAntiban.CheckSlayerBracelet(); //TODO: Add equipping if it expired in the equipment
 var
-  item: TRSItem;
+  item: TItem;
   inInventory: Boolean;
 begin
   item := 'null';
@@ -561,7 +561,7 @@ end;
 procedure TAntiban.RandomBankButton();
 var
   RandomButton: ERSBankButton;
-  BankButton: TRSButton;
+  BankButton: TGameButton;
 begin
   if not Bank.IsOpen then
     Exit;

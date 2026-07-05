@@ -10,7 +10,7 @@ begin
   Result := Self.InRange(p, dist);
 end;
 
-function TRSMinimap.PointWithinZoom(p: TPoint): Boolean; deprecated 'Use TRSMinimap.InZoomRange() instead.';
+function TMinimap.PointWithinZoom(p: TPoint): Boolean; deprecated 'Use TMinimap.InZoomRange() instead.';
 begin
   Result := Self.InZoomRange(p);
 end;
@@ -46,9 +46,7 @@ var
 {$H+}
 
 
-function TRSWalker.GetMMPoly(tpa: TPointArray): TPointArray; deprecated 'Use TRSWalker.WorldToMM() instead.';
+function TWalker.GetMMPoly(tpa: TPointArray): TPointArray; deprecated 'Use TWalker.WorldToMM() instead.';
 begin
   Result := Self.WorldToMM(tpa);
 end;
-
-

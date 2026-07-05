@@ -11,15 +11,15 @@ Fairy rings interface.
 type
   ERSFairyRingDial = (LEFT, MIDDLE, RIGHT);
 
-  TRSFairyRing = record (TRSInterface)
+  TFairyRing = record (TInterface)
     Dials: array [ERSFairyRingDial] of String;
     DialBoxes: array [ERSFairyRingDial] of TBox;
-    TravelLog: TRSInterface;
-    Item: TRSItem;
-    FairyRings: TRSObjectV2;
+    TravelLog: TInterface;
+    Item: TItem;
+    FairyRings: TObjectV2;
   end;
 
-procedure TRSFairyRing.SetupFairyRings();
+procedure TFairyRing.SetupFairyRings();
 begin
   if Self.FairyRings.Name = 'Fairy ring' then Exit;
 
@@ -37,7 +37,7 @@ begin
 end;
 
 
-function TRSFairyRing._Pos(): TPoint;
+function TFairyRing._Pos(): TPoint;
 begin
   if ScriptWalker = nil then Exit(Map.Position());
   Result := ScriptWalker^.GetMyPos();
@@ -50,13 +50,13 @@ end;
 ```pascal
 procedure FairyRing.Setup();
 ```
-Initializes TRSFairyRing variables.
+Initializes TFairyRing variables.
 
 ```{note}
 This is automatically called on the **FairyRing** variable.
 ```
 *)
-procedure TRSFairyRing.Setup(); override;
+procedure TFairyRing.Setup(); override;
 const
   STRINGS: TStringArray = ['ADCB', 'ILKJ', 'PSRQ'];
 var
@@ -72,9 +72,9 @@ begin
   Self.TravelLog.Name := 'FairyRing.TravelLog';
 end;
 
-procedure TRSFairyRing.SetupAlignment(); overload;
+procedure TFairyRing.SetupAlignment(); overload;
 var
-  alignment: TRSInterfaceAlignment;
+  alignment: TInterfaceAlignment;
 var
   boxes: TBoxArray;
   dial: ERSFairyRingDial;
@@ -84,14 +84,14 @@ begin
   alignment.MaxWidth := 500;
   alignment.MaxHeight := 320;
 
-  case RSClient.Mode of
-    ERSClientMode.FIXED:
+  case GameClient.Mode of
+    EClientMode.FIXED:
     begin
       alignment.Top := InterfaceArea.Bounds.Y1;
       alignment.Bottom := InterfaceArea.Bounds.Y2;
     end;
 
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
+    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
     begin
       alignment.Top := InterfaceArea.Bounds.Y1 + 2;
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 2;
@@ -125,7 +125,7 @@ end;
 (*
 ## FairyRing.IsOpen
 ```pascal
-function TRSFairyRing.IsOpen(): Boolean;
+function TFairyRing.IsOpen(): Boolean;
 ```
 Returns true/false whether the FairyRing interface is open or not.
 
@@ -134,7 +134,7 @@ Example:
  WriteLn FairyRing.IsOpen();
 ```
 *)
-function TRSFairyRing.IsOpen(): Boolean;
+function TFairyRing.IsOpen(): Boolean;
 begin
   Result := InRange(SRL.CountColor(CTS2(3949742, 14, 0.03, 0.70), Self.Bounds), 18000, 19000);
 end;
@@ -142,8 +142,8 @@ end;
 (*
 ## FairyRing.Close
 ```pascal
-function TRSFairyRing.Close(pressEscape: Boolean): Boolean;
-function TRSFairyRing.Close(chance: Double = BioHash): Boolean; overload;
+function TFairyRing.Close(pressEscape: Boolean): Boolean;
+function TFairyRing.Close(chance: Double = BioHash): Boolean; overload;
 ```
 Closes the FairyRing interface, depending on `pressEscape` the function will either click the button
 or press escape.
@@ -153,14 +153,14 @@ Example:
  WriteLn FairyRing.Close();
 ```
 *)
-function TRSFairyRing.Close(pressEscape: Boolean): Boolean;
+function TFairyRing.Close(pressEscape: Boolean): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
   Result := RSInterface.ClickClose(pressEscape);
 end;
 
-function TRSFairyRing.Close(chance: Double = BioHash): Boolean; overload;
+function TFairyRing.Close(chance: Double = BioHash): Boolean; overload;
 begin
   Result := RSInterface.Close(chance);
 end;
@@ -169,7 +169,7 @@ end;
 (*
 ## FairyRing.HandleItem
 ```pascal
-function TRSFairyRing.HandleItem(): Boolean;
+function TFairyRing.HandleItem(): Boolean;
 ```
 Magically finds, caches for next usages and equips dramen or lunar staff with the minimum tab opening possible.
 If no item is found, we will assume the user has the elite lumbridge and draynor diary complete for next uses.
@@ -180,9 +180,9 @@ Example:
 WriteLn FairyRing.Item;
 ```
 *)
-function TRSFairyRing.HandleItem(attempts: Int32 = 2): Boolean;
+function TFairyRing.HandleItem(attempts: Int32 = 2): Boolean;
 const
-  ITEMS: TRSItemArray = ['Dramen staff', 'Lunar staff'];
+  ITEMS: TItemArray = ['Dramen staff', 'Lunar staff'];
 var
   slot, i: Int32;
   tabI, otherI: PRSItemGameTab;
@@ -261,16 +261,16 @@ end;
 (*
 ## FairyRing.Open
 ```pascal
-function TRSFairyRing.Open(): Boolean;
+function TFairyRing.Open(): Boolean;
 ```
-Attempts to open the closest fairy ring RSObject.
+Attempts to open the closest fairy ring GameObject.
 
 Example:
 ```pascal
  WriteLn FairyRing.Open();
 ```
 *)
-function TRSFairyRing.Open(): Boolean;
+function TFairyRing.Open(): Boolean;
 begin
   if RSInterface.IsOpen() and not RSInterface.Close() then
     Exit;
@@ -287,7 +287,7 @@ begin
     Result := Self.FairyRings.SelectOption(['onfigure']);
   end
   else
-    Result := RSObjects.FairyRing.SelectOption(['onfigure']);
+    Result := GameObjects.FairyRing.SelectOption(['onfigure']);
 
   if not Result then
     Exit;
@@ -299,16 +299,16 @@ end;
 (*
 ## FairyRing.WalkOpen
 ```pascal
-function TRSFairyRing.WalkOpen(): Boolean;
+function TFairyRing.WalkOpen(): Boolean;
 ```
-Attempts to walk to if needed and open the closest fairy ring RSObject.
+Attempts to walk to if needed and open the closest fairy ring GameObject.
 
 Example:
 ```pascal
  WriteLn FairyRing.WalkOpen();
 ```
 *)
-function TRSFairyRing.WalkOpen(): Boolean;
+function TFairyRing.WalkOpen(): Boolean;
 begin
   if RSInterface.IsOpen() and not RSInterface.Close() then
     Exit;
@@ -325,7 +325,7 @@ begin
     Result := Self.FairyRings.WalkSelectOption(['onfigure']);
   end
   else
-    Result := RSObjects.FairyRing.WalkSelectOption(['onfigure']);
+    Result := GameObjects.FairyRing.WalkSelectOption(['onfigure']);
 
   if not Result then Exit;
 
@@ -336,7 +336,7 @@ end;
 (*
 ## FairyRing.IsLetterValid
 ```pascal
-function TRSFairyRing.IsLetterValid(letter: Char; dial: ERSFairyRingDial): Boolean;
+function TFairyRing.IsLetterValid(letter: Char; dial: ERSFairyRingDial): Boolean;
 ```
 Checks if the **letter** passed on is valid for the given **dial**.
 
@@ -345,7 +345,7 @@ Example:
  WriteLn FairyRing.IsLetterValid('z', ERSFairyRingDial.LEFT);
 ```
 *)
-function TRSFairyRing.IsLetterValid(letter: Char; dial: ERSFairyRingDial): Boolean;
+function TFairyRing.IsLetterValid(letter: Char; dial: ERSFairyRingDial): Boolean;
 begin
   Result := Self.Dials[dial].Contains(letter);
 end;
@@ -353,7 +353,7 @@ end;
 (*
 ## FairyRing.IsCodeValid
 ```pascal
-function TRSFairyRing.IsCodeValid(code: String): Boolean;
+function TFairyRing.IsCodeValid(code: String): Boolean;
 ```
 Checks if the a given **code** is a valid fairy ring code.
 
@@ -362,7 +362,7 @@ Example:
  WriteLn FairyRing.IsCodeValid('abc');
 ```
 *)
-function TRSFairyRing.IsCodeValid(code: String): Boolean;
+function TFairyRing.IsCodeValid(code: String): Boolean;
 var
   i: Int32;
 begin
@@ -379,7 +379,7 @@ end;
 (*
 ## FairyRing.GetLetterBox
 ```pascal
-function TRSFairyRing.GetLetterBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetLetterBox(dial: ERSFairyRingDial): TBox;
 ```
 Returns the current letter box of a fairy ring dial.
 
@@ -388,7 +388,7 @@ Example:
  Debug(FairyRing.GetLetterBox(ERSFairyRingDial.MIDDLE));
 ```
 *)
-function TRSFairyRing.GetLetterBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetLetterBox(dial: ERSFairyRingDial): TBox;
 begin
   Result := Self.DialBoxes[dial];
   Result.X1 += 60;
@@ -400,7 +400,7 @@ end;
 (*
 ## FairyRing.GetLetter
 ```pascal
-function TRSFairyRing.GetLetter(dial: ERSFairyRingDial): Char;
+function TFairyRing.GetLetter(dial: ERSFairyRingDial): Char;
 ```
 Returns the letter of a fairy ring dial.
 
@@ -410,7 +410,7 @@ Example:
 ```
 *)
 
-function TRSFairyRing.GetLetter(dial: ERSFairyRingDial): Char;
+function TFairyRing.GetLetter(dial: ERSFairyRingDial): Char;
 var
   cc : integer;
 begin
@@ -455,7 +455,7 @@ end;
 (*
 ## FairyRing.GetCurrentCode
 ```pascal
-function TRSFairyRing.GetCurrentCode(): String;
+function TFairyRing.GetCurrentCode(): String;
 ```
 Returns the full current fairy ring code set in the dials.
 
@@ -464,7 +464,7 @@ Example:
  WriteLn FairyRing.GetCurrentCode();
 ```
 *)
-function TRSFairyRing.GetCurrentCode(): String;
+function TFairyRing.GetCurrentCode(): String;
 begin
   Result := Self.GetLetter(ERSFairyRingDial.LEFT) +
             Self.GetLetter(ERSFairyRingDial.MIDDLE) +
@@ -475,8 +475,8 @@ end;
 (*
 ## FairyRing.GetRotationBox
 ```pascal
-function TRSFairyRing.GetLeftRotationBox(dial: ERSFairyRingDial): TBox;
-function TRSFairyRing.GetRightRotationBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetLeftRotationBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetRightRotationBox(dial: ERSFairyRingDial): TBox;
 ```
 Returns the left or right rotation box of the given **dial**.
 
@@ -485,13 +485,13 @@ Example:
  Debug(FairyRing.GetLeftRotationBox(ERSFairyRingDial.LEFT));
 ```
 *)
-function TRSFairyRing.GetLeftRotationBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetLeftRotationBox(dial: ERSFairyRingDial): TBox;
 begin
   Result := Self.DialBoxes[dial];
   Result.X2 -= 80;
 end;
 
-function TRSFairyRing.GetRightRotationBox(dial: ERSFairyRingDial): TBox;
+function TFairyRing.GetRightRotationBox(dial: ERSFairyRingDial): TBox;
 begin
   Result := Self.DialBoxes[dial];
   Result.X1 += 80;
@@ -501,8 +501,8 @@ end;
 (*
 ## FairyRing.Spin
 ```pascal
-function TRSFairyRing.SpinLeft(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
-function TRSFairyRing.SpinRight(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SpinLeft(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SpinRight(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
 ```
 Spins the given **dial** left or right. By default it waits for the rotation to finish but it can be skipped with **skipWait**.
 
@@ -511,7 +511,7 @@ Example:
  WriteLn FairyRing.SpinLeft(ERSFairyRingDial.LEFT);
 ```
 *)
-function TRSFairyRing.SpinLeft(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SpinLeft(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
 var
   c, tmp: Char;
 begin
@@ -524,7 +524,7 @@ begin
   end;
 end;
 
-function TRSFairyRing.SpinRight(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SpinRight(dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
 var
   c, tmp: Char;
 begin
@@ -541,7 +541,7 @@ end;
 (*
 ## FairyRing.SetDial
 ```pascal
-function TRSFairyRing.SetDial(letter: Char; dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SetDial(letter: Char; dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
 ```
 Spins the dial so that the current selected letter is the specified one.
 
@@ -550,7 +550,7 @@ Example:
  WriteLn FairyRing.SetDial('c', ERSFairyRingDial.LEFT);
 ```
 *)
-function TRSFairyRing.SetDial(letter: Char; dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
+function TFairyRing.SetDial(letter: Char; dial: ERSFairyRingDial; skipWait: Boolean = False): Boolean;
   function _FindChar(str: String; letter: Char): Int32;
   begin
     for Result := 1 to Length(str) do
@@ -601,7 +601,7 @@ end;
 (*
 ## FairyRing.DialCode
 ```pascal
-function TRSFairyRing.DialCode(code: String; attempts: Int32 = 3): Boolean;
+function TFairyRing.DialCode(code: String; attempts: Int32 = 3): Boolean;
 ```
 Dials in a full code on the fairy ring. Codes casing is ignored.
 **attempts** is a helper parameter and shouldn't be touched if you don't know what you are doing.
@@ -611,7 +611,7 @@ Example:
  WriteLn FairyRing.DialCode('cip');
 ```
 *)
-function TRSFairyRing.DialCode(code: String; attempts: Int32 = 3): Boolean;
+function TFairyRing.DialCode(code: String; attempts: Int32 = 3): Boolean;
 var
   i: Int32;
 begin
@@ -642,7 +642,7 @@ end;
 (*
 ## FairyRing.GetTeleportButton
 ```pascal
-function TRSFairyRing.GetTeleportButton(): TBox;
+function TFairyRing.GetTeleportButton(): TBox;
 ```
 Returns the box of the teleport button.
 
@@ -651,7 +651,7 @@ Example:
  Debug(FairyRing.GetTeleportButton());
 ```
 *)
-function TRSFairyRing.GetTeleportButton(): TBox;
+function TFairyRing.GetTeleportButton(): TBox;
 begin
   Result := Self.Bounds;
   Result.X1 += 166;
@@ -663,7 +663,7 @@ end;
 (*
 ## FairyRing.ClickTeleportButton
 ```pascal
-function TRSFairyRing.ClickTeleportButton(): Boolean;
+function TFairyRing.ClickTeleportButton(): Boolean;
 ```
 Clicks the fairy ring the teleport button.
 
@@ -672,7 +672,7 @@ Example:
  WriteLn FairyRing.ClickTeleportButton();
 ```
 *)
-function TRSFairyRing.ClickTeleportButton(): Boolean;
+function TFairyRing.ClickTeleportButton(): Boolean;
 var
   pos: TPoint;
 begin
@@ -687,8 +687,8 @@ end;
 (*
 ## FairyRing.GetLogCodes
 ```pascal
-function TRSFairyRing.GetLogCodes(out boxes: TBoxArray): TStringArray;
-function TRSFairyRing.GetLogCodes(): TStringArray; overload;
+function TFairyRing.GetLogCodes(out boxes: TBoxArray): TStringArray;
+function TFairyRing.GetLogCodes(): TStringArray; overload;
 ```
 Returns the visible codes in the fairy ring travel log.
 
@@ -697,7 +697,7 @@ Example:
  WriteLn FairyRing.GetLogCodes();
 ```
 *)
-function TRSFairyRing.GetLogCodes(out boxes: TBoxArray): TStringArray;
+function TFairyRing.GetLogCodes(out boxes: TBoxArray): TStringArray;
 const
   COLORS: TIntegerArray = [$3F3FFF, $7F7FFF];
 var
@@ -726,7 +726,7 @@ begin
   end;
 end;
 
-function TRSFairyRing.GetLogCodes(): TStringArray; overload;
+function TFairyRing.GetLogCodes(): TStringArray; overload;
 const
   COLORS: TIntegerArray = [$3F3FFF, $7F7FFF];
 var
@@ -754,8 +754,8 @@ end;
 (*
 ## FairyRing.FindLogCode
 ```pascal
-function TRSFairyRing.FindLogCode(code: String; out b: TBox): Boolean;
-function TRSFairyRing.FindLogCode(code: String): Boolean; overload;
+function TFairyRing.FindLogCode(code: String; out b: TBox): Boolean;
+function TFairyRing.FindLogCode(code: String): Boolean; overload;
 ```
 Finds the code specified in the travel log. Codes casing is ignored.
 
@@ -764,7 +764,7 @@ Example:
  WriteLn FairyRing.FindLogCode('cip');
 ```
 *)
-function TRSFairyRing.FindLogCode(code: String; out b: TBox): Boolean;
+function TFairyRing.FindLogCode(code: String; out b: TBox): Boolean;
   function _DoScrolling(code: String; direction: Boolean; out b: TBox): Boolean;
   var
     limit, i: Int32;
@@ -817,7 +817,7 @@ begin
   Result := _DoScrolling(code, not direction, b);
 end;
 
-function TRSFairyRing.FindLogCode(code: String): Boolean; overload;
+function TFairyRing.FindLogCode(code: String): Boolean; overload;
 var
   b: TBox;
 begin
@@ -828,7 +828,7 @@ end;
 (*
 ## FairyRing.ClickLogCode
 ```pascal
-function TRSFairyRing.ClickLogCode(code: String): Boolean;
+function TFairyRing.ClickLogCode(code: String): Boolean;
 ```
 Finds and clicks the code specified in the travel log. Codes casing is ignored.
 
@@ -837,7 +837,7 @@ Example:
  WriteLn FairyRing.ClickLogCode('cip');
 ```
 *)
-function TRSFairyRing.ClickLogCode(code: String): Boolean;
+function TFairyRing.ClickLogCode(code: String): Boolean;
 var
   b: TBox;
 begin
@@ -856,7 +856,7 @@ end;
 (*
 ## FairyRing.HandleInterface
 ```pascal
-function TRSFairyRing.HandleInterface(code: String): Boolean;
+function TFairyRing.HandleInterface(code: String): Boolean;
 ```
 Completely handles the fairy ring interface to set a code and teleport.
 Will use both the log and the dials depending on the user biohash.
@@ -866,7 +866,7 @@ Example:
  WriteLn FairyRing.HandleInterface('cip');
 ```
 *)
-function TRSFairyRing.HandleInterface(code: String): Boolean;
+function TFairyRing.HandleInterface(code: String): Boolean;
 begin
   if Antiban.BioDice(70) then  //use travel log or dial code...
   begin
@@ -883,10 +883,10 @@ end;
 (*
 ## FairyRing.Teleport
 ```pascal
-function TRSFairyRing.Teleport(code: String): Boolean;
+function TFairyRing.Teleport(code: String): Boolean;
 ```
 Teleports the user to the specified fairy ring code.
-If the fairy ring interface is not open, the **RSObject** will be used to find the closest one and open it.
+If the fairy ring interface is not open, the **GameObject** will be used to find the closest one and open it.
 If the code is on the right click context menu, it will be used.
 You can also optional pass in "Zanaris" or "BKS" to go to zanaris.
 
@@ -895,7 +895,7 @@ Example:
  WriteLn FairyRing.Teleport('cip');
 ```
 *)
-function TRSFairyRing.Teleport(code: String): Boolean;
+function TFairyRing.Teleport(code: String): Boolean;
 var
   contextMenuTeleport: Boolean;
 begin
@@ -918,7 +918,7 @@ begin
     if not Self.FairyRings.Hover() then
       Exit;
   end
-  else if not RSObjects.FairyRing.Hover() then
+  else if not GameObjects.FairyRing.Hover() then
     Exit;
 
   contextMenuTeleport := ChooseOption.Select(code, MOUSE_LEFT, False, False);
@@ -938,10 +938,10 @@ end;
 (*
 ## FairyRing.WalkTeleport
 ```pascal
-function TRSFairyRing.WalkTeleport(code: String): Boolean;
+function TFairyRing.WalkTeleport(code: String): Boolean;
 ```
 Teleports the user to the specified fairy ring code.
-If the fairy ring interface is not open, the **RSObject** will be used to find the closest one and open it.
+If the fairy ring interface is not open, the **GameObject** will be used to find the closest one and open it.
 If the fairy ring is not visible, we will walk to it.
 If the code is on the right click context menu, it will be used.
 You can also optional pass in "Zanaris" or "BKS" to go to zanaris.
@@ -951,7 +951,7 @@ Example:
  WriteLn FairyRing.Teleport('cip');
 ```
 *)
-function TRSFairyRing.WalkTeleport(code: String): Boolean;
+function TFairyRing.WalkTeleport(code: String): Boolean;
 var
   contextMenuTeleport: Boolean;
   pos: TPoint;
@@ -970,7 +970,7 @@ begin
     if not Self.FairyRings.WalkHover() then
       Exit;
   end
-  else if not RSObjects.FairyRing.WalkHover() then
+  else if not GameObjects.FairyRing.WalkHover() then
     Exit;
 
   contextMenuTeleport := ChooseOption.Select(code, MOUSE_LEFT, False, False);
@@ -991,7 +991,7 @@ begin
 end;
 
 
-procedure TRSFairyRing.Draw(bitmap: TMufasaBitmap); override;
+procedure TFairyRing.Draw(bitmap: TMufasaBitmap); override;
 var
   dial: ERSFairyRingDial;
   b: TBox;
@@ -1019,9 +1019,9 @@ end;
 Global FairyRing variable.
 *)
 var
-  FairyRing: TRSFairyRing;
+  FairyRing: TFairyRing;
 
-procedure TRSClient.ClientModeChanged(); override;
+procedure TGameClient.ClientModeChanged(); override;
 begin
   inherited;
 
@@ -1042,14 +1042,14 @@ begin
   FairyRing.Draw(bitmap);
 end;
 
-function TRSMainScreen.IsVisible(p: TPoint): Boolean; override;
+function TMainScreen.IsVisible(p: TPoint): Boolean; override;
 begin
   Result := inherited;
   if Result and FairyRing.IsOpen() then
     Exit(False);
 end;
 
-function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
+function TMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
 begin
   Result := inherited;
   if Result and FairyRing.IsOpen() then
