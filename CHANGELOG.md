@@ -1,3 +1,12 @@
+## [20.4.42](https://github.com/Torwent/WaspLib/compare/v20.4.41...v20.4.42) (2026-07-06)
+
+
+### Bug Fixes
+
+* more renames ([001fa0c](https://github.com/Torwent/WaspLib/commit/001fa0cff3004d488ae50bd232c9c64521457c53))
+
+
+
 ## [20.4.41](https://github.com/Torwent/WaspLib/compare/v20.4.40...v20.4.41) (2026-07-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * more renames ([28928b8](https://github.com/Torwent/WaspLib/commit/28928b89197bf3db4bfb09f66b88e9c1fed2e478))
-
-
-
-## [20.4.37](https://github.com/Torwent/WaspLib/compare/v20.4.36...v20.4.37) (2026-07-05)
-
-
-### Bug Fixes
-
-* more renames ([7a07cd8](https://github.com/Torwent/WaspLib/commit/7a07cd86815bee20992a569a29cca81842883d1f))
 
 
 
