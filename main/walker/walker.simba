@@ -9,7 +9,7 @@ Extensions to SRL's TWalker.
 {$ENDIF}
 
 var
-  ScriptWalker: PRSWalker;
+  ScriptWalker: PWalker;
 
 (*
 ## type THeightMap

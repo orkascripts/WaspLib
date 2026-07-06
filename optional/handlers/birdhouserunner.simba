@@ -311,7 +311,7 @@ begin
   end;
 end;
 
-procedure OnWalkEvent(Sender: PRSWalker; Position: TPoint; Destination: TPoint);
+procedure OnWalkEvent(Sender: PWalker; Position: TPoint; Destination: TPoint);
 begin
 
   if Sender <> @BirdhouseRunner.RSW then
@@ -1130,7 +1130,7 @@ end;
 
 procedure TBirdHouseInclude.BirdhouseRun();
 var
-  CachedWalker : PRSWalker;
+  CachedWalker : PWalker;
 
 begin
   CachedWalker := ScriptWalker;

@@ -74,7 +74,7 @@ class var
 end;
 
 PWalkerObjectArray = array of Pointer;
-PRSWalkerObject = ^TWalkerObject;
+PWalkerObject = ^TWalkerObject;
 ```
 Parent record of all TWalkerObjects.
 *)
@@ -100,7 +100,7 @@ Parent record of all TWalkerObjects.
   end;
 
   PWalkerObjectArray = array of Pointer;
-  PRSWalkerObject = ^TWalkerObject;
+  PWalkerObject = ^TWalkerObject;
 
 (*
 ## Walker.Click
@@ -510,16 +510,16 @@ begin
 end;
 
 
-function PWalkerObjectArray.GetClosestEx(value: TPoint): PRSWalkerObject;
+function PWalkerObjectArray.GetClosestEx(value: TPoint): PWalkerObject;
 var
   i: Int32;
-  tmp: PRSWalkerObject;
+  tmp: PWalkerObject;
   closest: Double = $FFFFFF;
   current: Double;
 begin
   for i := High(Self) downto 0 do
   begin
-    tmp := PRSWalkerObject(Self[i]);
+    tmp := PWalkerObject(Self[i]);
     if tmp^.Coordinates = [] then
     begin
       Delete(Self, i, 1);
@@ -535,7 +535,7 @@ begin
   end;
 end;
 
-function PWalkerObjectArray.GetClosest(): PRSWalkerObject;
+function PWalkerObjectArray.GetClosest(): PWalkerObject;
 begin
   if (Self = []) or (ScriptWalker = nil) then
     Exit;
@@ -2231,7 +2231,7 @@ begin
 end;
 
 
-function TBank.Hover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TBank.Hover(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();
@@ -2242,7 +2242,7 @@ begin
   Result := Bank.Hover(PGameObject(walkerObject)^);
 end;
 
-function TBank.Open(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TBank.Open(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();
@@ -2253,7 +2253,7 @@ begin
   Result := Bank.Open(PGameObject(walkerObject)^);
 end;
 
-function TBank.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TBank.WalkHover(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();
@@ -2264,7 +2264,7 @@ begin
   Result := Bank.WalkHover(PGameObject(walkerObject)^);
 end;
 
-function TBank.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TBank.WalkOpen(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();
@@ -2321,7 +2321,7 @@ begin
 end;
 
 
-function TDepositBox.Hover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TDepositBox.Hover(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
@@ -2329,7 +2329,7 @@ begin
   Result := Self.Hover(PGameObject(walkerObject)^);
 end;
 
-function TDepositBox.Open(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TDepositBox.Open(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
@@ -2337,7 +2337,7 @@ begin
   Result := Self.Open(PGameObject(walkerObject)^);
 end;
 
-function TDepositBox.WalkHover(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TDepositBox.WalkHover(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.DepositBoxes.GetClosest();
@@ -2345,7 +2345,7 @@ begin
   Result := Self.WalkHover(PGameObject(walkerObject)^);
 end;
 
-function TDepositBox.WalkOpen(walkerObject: PRSWalkerObject = nil): Boolean; overload;
+function TDepositBox.WalkOpen(walkerObject: PWalkerObject = nil): Boolean; overload;
 begin
   if walkerObject = nil then
     walkerObject := WalkerObjects.Banks.GetClosest();

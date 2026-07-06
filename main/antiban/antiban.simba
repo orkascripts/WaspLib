@@ -722,7 +722,7 @@ begin
   end;
 end;
 
-procedure TAntiban.WalkingTasks({$H-}walker: PRSWalker; position: TPoint; destination: TPoint);{$H+} overload;
+procedure TAntiban.WalkingTasks({$H-}walker: PWalker; position: TPoint; destination: TPoint);{$H+} overload;
 begin
   Self.WalkingTasks();
 end;

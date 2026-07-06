@@ -225,7 +225,7 @@ begin
     if i mod divider = 0 then
       Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
-    if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * RSTranslator.TileArea then Continue; //remove very small spaces
+    if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * Translator.TileArea then Continue; //remove very small spaces
 
     bounds := atpa[i].Bounds();
     if Max(bounds.Width(), bounds.Height()) < GENERATED_GRAPH.NodeRadius then //mark spaces less than NodeRadius with a single node and continue
@@ -495,7 +495,7 @@ begin
 
   cleanMinimap.Free();
 
-  Result := RSTranslator.Normalize(Result);
+  Result := Translator.Normalize(Result);
 end;
 
 (*

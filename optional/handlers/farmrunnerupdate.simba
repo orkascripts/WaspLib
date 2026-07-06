@@ -1024,7 +1024,7 @@ begin
     Debug(Mainscreen.Bounds);
 end;
 
-procedure _OnWalkEvent(Sender: PRSWalker; Position: TPoint; Destination: TPoint);
+procedure _OnWalkEvent(Sender: PWalker; Position: TPoint; Destination: TPoint);
 begin
   if Sender <> @ScriptWalker^ then
     Exit;

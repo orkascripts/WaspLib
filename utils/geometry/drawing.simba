@@ -4,7 +4,7 @@
 {$ENDIF}
 
 
-procedure Debug(PWalker: PRSWalker; TileArray: TPointArray); overload;
+procedure Debug(ptr: PWalker; TileArray: TPointArray); overload;
 var
   Bitmap: TMufasaBitmap;
   I: Int32;
@@ -13,7 +13,7 @@ begin
   Bitmap.FromClient();
 
   for I := 0 to High(TileArray) do
-    ATPA += PWalker^.GetTileMS(TileArray[I]).ToTPA.Connect;
+    ATPA += ptr^.GetTileMS(TileArray[I]).ToTPA.Connect;
 
   for I:= 0 to High(ATPA) do
     Bitmap.DrawTPA(ATPA[I], DEBUG_COLORS[I mod Length(DEBUG_COLORS)]);
