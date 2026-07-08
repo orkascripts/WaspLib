@@ -30,18 +30,12 @@ Some things in WaspLib could be coming to SRL in the future but others are just 
  - Lumbridge castle
  - Slayer tower
  - Much much more
-
- ![Image of WaspLib Map](https://github.com/Torwent/WaspLib/raw/master/osr/walker/map.png)
-
+ 
  ## Tile accurate object, npc and ground item detection
  WaspLib also provides tile accurate object and npc detection framework.
  You can use this when you want to find something only in one specific tile.
  For example if you are doing smithing on Varrock West and only want to use the southern most bank and the northern most anvil. WaspLib let's you do that easily.
  
- ![Image of rsobjects0](https://github.com/Torwent/WaspLib/raw/master/docs/images/rsobjects/rsobjects0.png)
- ![Image of rsobjects1](https://github.com/Torwent/WaspLib/raw/master/docs/images/rsobjects/rsobjects1.png)
- ![Image of rsobjects2](https://github.com/Torwent/WaspLib/raw/master/docs/images/rsobjects/rsobjects2.png)
-
  ## Extra Interfaces
  WaspLib supports several interfaces that SRL does not.
  Examples of this are:
