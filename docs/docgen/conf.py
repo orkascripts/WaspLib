@@ -161,7 +161,7 @@ texinfo_documents = [(master_doc, project, project+' Documentation', author, pro
 
 
 # -- Extension configuration -------------------------------------------------
-intersphinx_mapping = {'SRL-T': ('https://torwent.github.io/SRL-T', None)}
+intersphinx_mapping = {'SRL-T': ('https://orkascripts.github.io/SRL-T', None)}
 intersphinx_disabled_reftypes = ["*"]
 
 myst_enable_extensions = [

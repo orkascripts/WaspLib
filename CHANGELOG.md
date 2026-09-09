@@ -1,3 +1,6 @@
+Release notes for versions after the last entry below are published on the GitHub Releases page:
+https://github.com/orkascripts/WaspLib/releases
+
 ## [20.4.42](https://github.com/Torwent/WaspLib/compare/v20.4.41...v20.4.42) (2026-07-06)
 
 

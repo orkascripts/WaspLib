@@ -1,15 +1,15 @@
 name: Compile Test
 on:
   push:
-    branches:
-      - master
+    branches: [main]
+  pull_request:
 
 env:
   simba-download: https://github.com/Villavu/Simba/releases/download/simba1400-release/Simba-Win32.exe
-  srl-download: https://github.com/Torwent/SRL-T.git
+  srl-download: https://github.com/orkascripts/SRL-T.git
 
 jobs:
-  compile:
+  test:
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -21,10 +21,10 @@ jobs:
           cd ..
           curl --retry 5 -L -o ./Simba.exe ${{ env.simba-download }}
           mkdir ./Includes
-          git clone ${{ env.srl-download }}
+          git clone --depth 1 ${{ env.srl-download }}
           mv ./SRL-T/ ./Includes/SRL-T/
           cp -r ./WaspLib/ ./Includes/WaspLib/
-          echo '{$I SRL-T/osr.simba}{$I WaspLib/optional.simba}' > test.simba
+          echo '{$I SRL-T/main.simba}{$I WaspLib/optional.simba}' > test.simba
 
       - name: Test Compile Includes
         shell: bash
