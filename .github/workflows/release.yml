@@ -1,0 +1,41 @@
+name: Release
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - ".github/**"
+      - "docs/**"
+      - "**.md"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.repository_owner == 'orkascripts'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Next version from the conventional commits
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          preset: angular
+          tag-prefix: v
+          output-file: "false"
+          skip-version-file: "true"
+          skip-commit: "true"
+          skip-on-empty: "true"
+          git-push: "true"
+
+      - name: Publish the GitHub release
+        if: steps.changelog.outputs.skipped == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: ${{ steps.changelog.outputs.tag }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
