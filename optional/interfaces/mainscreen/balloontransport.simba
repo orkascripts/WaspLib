@@ -1,26 +1,26 @@
 {$DEFINE RELD_BALLOON_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 type
-  EBalloonButton = (
+  ERSBalloonButton = (
     GRAND_TREE_BALLOON, CASTLE_WARS_BALLOON, ENTRANA_BALLOON,
     TAVERLEY_BALLOON, CRAFTING_GUILD_BALLOON, VARROCK_BALLOON,
     CLOSE_BALLOON
   );
 
-  TBalloonTransport = type TInterface;
+  TRSBalloonTransport = type TRSInterface;
 
-procedure TBalloonTransport.Setup(); override;
+procedure TRSBalloonTransport.Setup(); override;
 begin
   inherited;
   Self.ButtonColors := [CTS1(8564948, 0)];
 end;
 
-procedure TBalloonTransport.SetupAlignment(); overload;
+procedure TRSBalloonTransport.SetupAlignment(); overload;
 var
-  alignment: TInterfaceAlignment;
+  alignment: TRSInterfaceAlignment;
 begin
   inherited;
 
@@ -32,22 +32,22 @@ begin
   alignment.MaxHeight := 334;
 end;
 
-function TBalloonTransport.GetButton(button: EBalloonButton): TGameButton;
+function TRSBalloonTransport.GetButton(button: ERSBalloonButton): TRSButton;
 begin
   case button of
-    EBalloonButton.GRAND_TREE_BALLOON:
+    ERSBalloonButton.GRAND_TREE_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 52, Self.Bounds().Y1 + 130, Self.Bounds().X2 - 385, Self.Bounds().Y2 - 162);
-    EBalloonButton.CASTLE_WARS_BALLOON:
+    ERSBalloonButton.CASTLE_WARS_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 62, Self.Bounds().Y1 + 235, Self.Bounds().X2 - 365, Self.Bounds().Y2 - 55);
-    EBalloonButton.ENTRANA_BALLOON:
+    ERSBalloonButton.ENTRANA_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 198, Self.Bounds().Y1 + 122, Self.Bounds().X2 - 240, Self.Bounds().Y2 - 185);
-    EBalloonButton.TAVERLEY_BALLOON:
+    ERSBalloonButton.TAVERLEY_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 265, Self.Bounds().Y1 + 58, Self.Bounds().X2 - 167, Self.Bounds().Y2 - 250);
-    EBalloonButton.CRAFTING_GUILD_BALLOON:
+    ERSBalloonButton.CRAFTING_GUILD_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 290, Self.Bounds().Y1 + 138, Self.Bounds().X2 - 140, Self.Bounds().Y2 - 155);
-    EBalloonButton.VARROCK_BALLOON:
+    ERSBalloonButton.VARROCK_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 358, Self.Bounds().Y1 + 32, Self.Bounds().X2 - 80, Self.Bounds().Y2 - 280);
-    EBalloonButton.CLOSE_BALLOON:
+    ERSBalloonButton.CLOSE_BALLOON:
       Result.Bounds := Box(Self.Bounds().X1 + 481, Self.Bounds().Y1 + 10, Self.Bounds().X2 - 8, Self.Bounds().Y2 - 303);
   end;
 
@@ -56,26 +56,26 @@ begin
   Result.Middle := Result.Bounds.Middle();
 end;
 
-function TBalloonTransport.GetButtons(): TGameButtonArray;
+function TRSBalloonTransport.GetButtons(): TRSButtonArray;
 var
   i: Int32;
 begin
-  for i := 0 to Ord(High(EBalloonButton)) do
-    Result += Self.GetButton(EBalloonButton(i));
+  for i := 0 to Ord(High(ERSBalloonButton)) do
+    Result += Self.GetButton(ERSBalloonButton(i));
 end;
 
-function TBalloonTransport.IsOpen(): Boolean;
+function TRSBalloonTransport.IsOpen(): Boolean;
 begin
   WriteLn SRL.CountColor(Self.ButtonColors[0], Self.Bounds());
   Result := InRange(SRL.CountColor(Self.ButtonColors[0], Self.Bounds()), 2100, 2500);
 end;
 
-function TBalloonTransport.IsOpen(waitTime: Int32): Boolean; overload;
+function TRSBalloonTransport.IsOpen(waitTime: Int32): Boolean; overload;
 begin
   Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), waitTime);
 end;
 
-function TBalloonTransport.ClickCloseButton(pressEscape: Boolean = False): Boolean;
+function TRSBalloonTransport.ClickCloseButton(pressEscape: Boolean = False): Boolean;
 begin
   if pressEscape then
   begin
@@ -86,7 +86,7 @@ begin
     Result := Self.GetButton(CLOSE_BALLOON).Click();
 end;
 
-function TBalloonTransport.Close(pressEscape: Boolean = False): Boolean;
+function TRSBalloonTransport.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -95,9 +95,9 @@ begin
 end;
 
 var
- BalloonTransport : TBalloonTransport;
+ BalloonTransport : TRSBalloonTransport;
 
-procedure TGameClient.ClientModeChanged(); override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 

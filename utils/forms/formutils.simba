@@ -2081,7 +2081,7 @@ begin
     Self.AddItem(value);
 end;
 
-procedure TLabeledCombobox.AddItemArray(valueArray: TItemArray); overload;
+procedure TLabeledCombobox.AddItemArray(valueArray: TRSItemArray); overload;
 var
   value: String;
 begin

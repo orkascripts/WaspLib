@@ -1,5 +1,5 @@
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$IFNDEF WL_HOUSE_INCLUDED}
@@ -15,7 +15,7 @@ type
 {$SCOPEDENUMS ON}
   EBirdHouseWood = (BEST, REGULAR, OAK, WILLOW, TEAK, MAPLE, MAHOGANY, YEW, MAGIC, REDWOOD);
 
-function EBirdHouseWood.GetLogs(): TItem;
+function EBirdHouseWood.GetLogs(): TRSItem;
 begin
   case Self of
     EBirdHouseWood.REGULAR:  Result := 'Logs';
@@ -30,7 +30,7 @@ begin
   end;
 end;
 
-function EBirdHouseWood.GetHouse(): TItem;
+function EBirdHouseWood.GetHouse(): TRSItem;
 begin
   case Self of
     EBirdHouseWood.REGULAR:  Result := 'Bird house';
@@ -79,8 +79,8 @@ type
 
   TBirdHouse = record
     State: EBirdHouseState;
-    MushTree: EMushTreeLocation;
-    Obj: TObjectV2;
+    MushTree: ERSMushTreeLocation;
+    Obj: TRSObjectV2;
   end;
 
   TBirdHouseHandler = record(TSRLBaseRecord)
@@ -90,14 +90,14 @@ type
     Houses: array [EBirdHouseLocation] of TBirdHouse;
     Wood: EBirdHouseWood;
     Items: record
-      Logs, House, Seeds: TItem;
+      Logs, House, Seeds: TRSItem;
     end;
 
     Timer: TCountDown;
 
     OnStart, OnStop, IsFinished: function (): Boolean of object;
 
-    Map: TMap; //TMap exclusive to the TBirdHouseHandler
+    Map: TRSMap; //TRSMap exclusive to the TBirdHouseHandler
     Position: TPoint;
   end;
 
@@ -112,7 +112,7 @@ var
   a, b: EBirdHouseWood;
   craft, hunt: Int32;
 begin
-  craft := Stats.GetLevel(ESkill.CRAFTING);
+  craft := Stats.GetLevel(ERSSkill.CRAFTING);
   case craft of
     0..4: RaiseException('You can''t build birdhouses with ' + ToStr(craft) + ' crafting.');
     5..14:  a := EBirdHouseWood.REGULAR;
@@ -126,7 +126,7 @@ begin
     else    a := EBirdHouseWood.REDWOOD;
   end;
 
-  hunt := Stats.GetLevel(ESkill.CRAFTING);
+  hunt := Stats.GetLevel(ERSSkill.CRAFTING);
   case hunt of
     0..4: RaiseException('You can''t build birdhouses with ' + ToStr(hunt) + ' hunter.');
     5..13:  b := EBirdHouseWood.REGULAR;
@@ -165,7 +165,7 @@ begin
     with Self.Houses[loc] do
     begin
       i := Ord(loc);
-      MushTree := EMushTreeLocation(1 + (i div 2) * 2);
+      MushTree := ERSMushTreeLocation(1 + (i div 2) * 2);
 
       Obj.SetupEx([0.8,0.8, 5], [COORDINATES[i]]);
       Obj.SetupUpText(['Space', 'house']);
@@ -182,7 +182,7 @@ var
 begin
   Self.Map.Loader.Load([Chunk([56,61,60,57], 0), Chunk([58,60,58,60], 1)], 8, 80);
 
-  //add map to our handler map regardless of where it came from, TMap or TWalker
+  //add map to our handler map regardless of where it came from, TRSMap or TRSWalker
   sizeMap := [Self.Map.Loader.Map.getWidth(), Self.Map.Loader.Map.getHeight()];
   sizeBMP := [bmp.getWidth(), bmp.getHeight()];
 
@@ -211,7 +211,7 @@ begin
   Self.Map.InternalSetup();
 end;
 
-procedure TBirdHouseHandler.Setup(map: PRSMap; wood: EBirdHouseWood; seeds: TItem);
+procedure TBirdHouseHandler.Setup(map: PRSMap; wood: EBirdHouseWood; seeds: TRSItem);
 begin
   Self.InternalSetup(map^.Loader.Map);
 
@@ -221,7 +221,7 @@ begin
   Self._Setup();
 end;
 
-procedure TBirdHouseHandler.Setup(map: PRSWalker; wood: EBirdHouseWood; seeds: TItem); overload;
+procedure TBirdHouseHandler.Setup(map: PRSWalker; wood: EBirdHouseWood; seeds: TRSItem); overload;
 begin
   Self.InternalSetup(map^.Map.Map);
 
@@ -231,7 +231,7 @@ begin
   Self._Setup();
 end;
 
-procedure TBirdHouseHandler.Setup(wood: EBirdHouseWood; seeds: TItem); overload;
+procedure TBirdHouseHandler.Setup(wood: EBirdHouseWood; seeds: TRSItem); overload;
 begin
   Self.Map.Loader.Load([Chunk([56,61,60,57], 0), Chunk([58,60,58,60], 1)], 8, 80);
   Self.Map.InternalSetup();
@@ -436,10 +436,10 @@ var
 {$SCOPEDENUMS OFF}
 
 (*
-//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TWalker AND TMAP
+//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TRSWALKER AND TRSMAP
 
 var
-  rsw: TWalker;
+  rsw: TRSWalker;
 begin
   rsw.SetupRegion(RSRegions.ARDOUGNE);
   BirdHouseHandler.Setup(@rsw, EBirdHouseWood.MAHOGANY, 'Guam seed');

@@ -4,25 +4,25 @@ Anvil interface.
 *)
 
 {$DEFINE WL_ANVIL_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 type
-  EAnvilButton = (
+  ERSAnvilButton = (
     QUANTITY_ONE, QUANTITY_FIVE, QUANTITY_TEN,
     QUANTITY_X, QUANTITY_UNSET, QUANTITY_ALL, QUANTITY_CUSTOM
   );
 
-  TAnvil = record(TTitledInterface)
-    Items: TItemInterface;
+  TRSAnvil = record(TRSTitledInterface)
+    Items: TRSItemInterface;
     SlotsArea: TBox;
   end;
 
 (*
 ## Anvil.GetSlots
 ```pascal
-function TAnvil.GetSlots: TBoxArray;
+function TRSAnvil.GetSlots: TBoxArray;
 ```
 Returns the all available anvil slots.
 
@@ -31,7 +31,7 @@ Example:
 Debug(Anvil.GetSlots());
 ```
 *)
-function TAnvil.GetSlots(): TBoxArray;
+function TRSAnvil.GetSlots(): TBoxArray;
 var
   TPA: TPointArray;
   ATPA: T2DPointArray;
@@ -70,7 +70,7 @@ Initializes Anvil variables.
 This is automatically called on the **Anvil** variable.
 ```
 *)
-procedure TAnvil.Setup(); override;
+procedure TRSAnvil.Setup(); override;
 begin
   inherited;
 
@@ -83,9 +83,9 @@ begin
   Self.Items.SlotBoxesFunction := @Self.GetSlots;
 end;
 
-procedure TAnvil.SetupAlignment(); overload;
+procedure TRSAnvil.SetupAlignment(); overload;
 var
-  alignment: TInterfaceAlignment;
+  alignment: TRSInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -93,10 +93,10 @@ begin
   alignment.MaxWidth := 500;
   alignment.MaxHeight := 320;
 
-  case GameClient.Mode of
-    EClientMode.FIXED:
+  case RSClient.Mode of
+    ERSClientMode.FIXED:
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 1;
-    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
+    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
       alignment.Bottom := InterfaceArea.Bounds.Y2 - 2;
   end;
 
@@ -108,15 +108,15 @@ begin
 end;
 
 
-function TAnvil.GetButtons(): TGameButtonArray;
+function TRSAnvil.GetButtons(): TRSButtonArray;
 begin
   Result := Self.FindButtons([[37, 37]]);
 end;
 
-function TAnvil.GetButton(button: EAnvilButton): TGameButton;
+function TRSAnvil.GetButton(button: ERSAnvilButton): TRSButton;
 var
-  buttons: TGameButtonArray;
-  b: TGameButton;
+  buttons: TRSButtonArray;
+  b: TRSButton;
   textArray: TStringArray;
   foundString: String;
 begin
@@ -125,21 +125,21 @@ begin
 
   textArray := ['1', '5', '10', 'X', '?', 'All'];
 
-  if button <> EAnvilButton.QUANTITY_CUSTOM then
+  if button <> ERSAnvilButton.QUANTITY_CUSTOM then
   begin
     for b in Buttons do
-      if b.FindText(textArray[Ord(button)], FONT_PLAIN_11, [$FFFFFF, $1F98FF]) then
+      if b.FindText(textArray[Ord(button)], RS_FONT_PLAIN_11, [$FFFFFF, $1F98FF]) then
         Exit(b);
     Exit;
   end;
 
   b := Buttons[High(Buttons)];
-  if not b.FindText([], FONT_PLAIN_11, foundString) then
+  if not b.FindText([], RS_FONT_PLAIN_11, foundString) then
     Exit(b);
 end;
 
 
-function TAnvil.GetSlot(Slot: Int32): TBox;
+function TRSAnvil.GetSlot(Slot: Int32): TBox;
 var
   Slots: TBoxArray := Self.GetSlots;
 begin
@@ -147,7 +147,7 @@ begin
     Result := Slots[Slot];
 end;
 
-function TAnvil.GetItemSlot(Slot: Int32): TBox;
+function TRSAnvil.GetItemSlot(Slot: Int32): TBox;
 var
   B: TBox := Self.GetSlot(Slot);
 begin
@@ -160,8 +160,8 @@ end;
 (*
 ## Anvil.IsOpen
 ```pascal
-function TAnvil.IsOpen(): Boolean;
-function TAnvil.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+function TRSAnvil.IsOpen(): Boolean;
+function TRSAnvil.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 ```
 Returns true/false whether the anvil interface is open or not.
 
@@ -170,13 +170,13 @@ Example:
  WriteLn Anvil.IsOpen();
 ```
 *)
-function TAnvil.IsOpen(): Boolean;
+function TRSAnvil.IsOpen(): Boolean;
 begin
-  Result := GameInterface.IsOpen(EInterfaceType.CLASSIC) and
+  Result := RSInterface.IsOpen(ERSInterfaceType.CLASSIC) and
             (SRL.CountColor(CTS0(65280, 0), Self.Bounds) >= 300);
 end;
 
-function TAnvil.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+function TRSAnvil.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 begin
   if (interval = -1) then
     interval := SRL.TruncatedGauss(50, 1500);
@@ -188,8 +188,8 @@ end;
 (*
 ## Anvil.Close
 ```pascal
-function TAnvil.Close(pressEscape: Boolean): Boolean;
-function TAnvil.Close(chance: Double = BioHash): Boolean; overload;
+function TRSAnvil.Close(pressEscape: Boolean): Boolean;
+function TRSAnvil.Close(chance: Double = BioHash): Boolean; overload;
 ```
 Closes the anvil interface, depending on `pressEscape` the function will either click the button
 or press escape.
@@ -199,21 +199,21 @@ Example:
  WriteLn Anvil.Close;
 ```
 *)
-function TAnvil.Close(pressEscape: Boolean): Boolean;
+function TRSAnvil.Close(pressEscape: Boolean): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
 
-  Result := GameInterface.Close(pressEscape);
+  Result := RSInterface.Close(pressEscape);
 end;
 
-function TAnvil.Close(chance: Double = BioHash): Boolean; overload;
+function TRSAnvil.Close(chance: Double = BioHash): Boolean; overload;
 begin
-  Result := GameInterface.Close(chance);
+  Result := RSInterface.Close(chance);
 end;
 
 
-function TAnvil.ClickSlot(slot: Int32; forceClick: Boolean = False): Boolean;
+function TRSAnvil.ClickSlot(slot: Int32; forceClick: Boolean = False): Boolean;
 const
   AVAILABLE = $FFFFFF;
 begin
@@ -228,18 +228,18 @@ begin
 end;
 
 
-function TAnvil.SmithSlot(slot: Int32; quantity: EAnvilButton): Boolean;
+function TRSAnvil.SmithSlot(slot: Int32; quantity: ERSAnvilButton): Boolean;
 begin
   Result := Self.GetButton(quantity).Enable() and Self.ClickSlot(slot);
 end;
 
-function TAnvil.FindItem(item: TItem; out slot: Int32): Boolean;
+function TRSAnvil.FindItem(item: TRSItem; out slot: Int32): Boolean;
 begin
   slot := Self.Items.IndexOf([item]);
   Result := slot > -1;
 end;
 
-function TAnvil.SmithItem(Item: TItem; Quantity: EAnvilButton): Boolean;
+function TRSAnvil.SmithItem(Item: TRSItem; Quantity: ERSAnvilButton): Boolean;
 var
   Slot: Int32;
 begin
@@ -250,11 +250,11 @@ begin
 end;
 
 
-procedure TAnvil.Draw(bitmap: TMufasaBitmap); override;
+procedure TRSAnvil.Draw(bitmap: TMufasaBitmap); override;
 var
   boxes: TBoxArray;
   i: Int32;
-  buttons: TGameButtonArray;
+  buttons: TRSButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -276,9 +276,9 @@ end;
 Global Anvil variable.
 *)
 var
-  Anvil: TAnvil;
+  Anvil: TRSAnvil;
 
-procedure TGameClient.ClientModeChanged(); override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
@@ -299,25 +299,25 @@ begin
   Anvil.Draw(bitmap);
 end;
 
-function TMainScreen.IsVisible(p: TPoint): Boolean; override;
+function TRSMainScreen.IsVisible(p: TPoint): Boolean; override;
 begin
   Result := inherited;
 
-  if not Result or (GameClient.Mode = EClientMode.FIXED) then
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
   if Anvil.Bounds.Expand(5).Contains(p) and Anvil.IsOpen() then
     Exit(False);
 end;
 
-function TMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
+function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
 begin
   Result := inherited;
 
   if Result and useCenter then
     Exit;
 
-  if not Result or (GameClient.Mode = EClientMode.FIXED) then
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
   if Anvil.Bounds.Expand(5).ContainsAll(tpa) and Anvil.IsOpen() then

@@ -3,20 +3,20 @@
 Lectern interface.
 *)
 {$DEFINE WL_LECTERN_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 type
   ERSLecternType = (UNKNOWN, STANDARD, ANCIENT, LUNAR, ARCEUUS);
 
-  TLectern = record (TTitledInterface)
-    TABLETS: array [ERSLecternType] of TItemArray;
-    Items: TItemInterface;
+  TRSLectern = record (TRSTitledInterface)
+    TABLETS: array [ERSLecternType] of TRSItemArray;
+    Items: TRSItemInterface;
     CreateButton: TBox;
   end;
 
-function TLectern.SlotBoxesFunction(): TBoxArray;
+function TRSLectern.SlotBoxesFunction(): TBoxArray;
 var
   b: TBox;
   tpa: TPointArray;
@@ -31,9 +31,9 @@ begin
   end;
 end;
 
-procedure TLectern.Setup(); override;
+procedure TRSLectern.Setup(); override;
 const
-  STANDARD_TABLETS: TItemArray = [
+  STANDARD_TABLETS: TRSItemArray = [
     'enchant sapphire or opal', 'bones to bananas', 'varrock teleport',
     'enchant emerald or jade', 'lumbridge teleport', 'falador teleport',
     'teleport to house', 'camelot teleport', 'kourend castle teleport',
@@ -41,17 +41,17 @@ const
     'watchtower teleport', 'bones to peaches', 'enchant dragonstone',
     'enchant onyx'
   ];
-  ANCIENT_TABLETS: TItemArray = [
+  ANCIENT_TABLETS: TRSItemArray = [
     'paddewwa teleport', 'senntisten teleport', 'kharyrll teleport',
     'lassar teleport', 'dareeyak teleport', 'carrallanger teleport',
     'annakarl teleport', 'ghorrock teleport'
   ];
-  LUNAR_TABLETS: TItemArray = [
+  LUNAR_TABLETS: TRSItemArray = [
     'moonclan teleport', 'ourania teleport', 'waterbirth teleport',
     'barbarian teleport', 'khazard teleport', 'fishing guild teleport',
     'catherby teleport', 'ice plateau teleport'
   ];
-  ARCEUUS_TABLETS: TItemArray = [
+  ARCEUUS_TABLETS: TRSItemArray = [
     'arceuus library teleport', 'draynor manor teleport',
     'battlefront teleport', 'mind altar teleport', 'salve graveyard teleport',
     'fenkenstrain''s castle teleport', 'west ardougne teleport',
@@ -72,9 +72,9 @@ begin
   Self.Items.SlotBoxesFunction := @Self.SlotBoxesFunction;
 end;
 
-procedure TLectern.SetupAlignment(); overload;
+procedure TRSLectern.SetupAlignment(); overload;
 var
-  alignment: TInterfaceAlignment;
+  alignment: TRSInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -82,10 +82,10 @@ begin
   alignment.MaxWidth := 456;
   alignment.MaxHeight := 302;
 
-  case GameClient.Mode of
-    EClientMode.FIXED:
+  case RSClient.Mode of
+    ERSClientMode.FIXED:
         alignment.Top := InterfaceArea.Bounds.Y1;
-    EClientMode.RESIZABLE_CLASSIC, EClientMode.RESIZABLE_MODERN:
+    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
         alignment.Top := InterfaceArea.Bounds.Y1 - 1;
   end;
 
@@ -105,7 +105,7 @@ begin
 end;
 
 
-function TLectern.GetLecternType(): ERSLecternType;
+function TRSLectern.GetLecternType(): ERSLecternType;
 begin
   case Self.GetTitle() of
     'Spell Tablets': Exit(ERSLecternType.STANDARD);
@@ -115,7 +115,7 @@ begin
   end;
 end;
 
-function TLectern.IsOpen(waitTime: Int32 = 0; interval: Int32 = -1): Boolean;
+function TRSLectern.IsOpen(waitTime: Int32 = 0; interval: Int32 = -1): Boolean;
 begin
   if waitTime = 0 then
     Exit(Self.GetLecternType() <> ERSLecternType.UNKNOWN);
@@ -127,9 +127,9 @@ begin
 end;
 
 
-function TLectern._FindIndex(lecternType: ERSLecternType = ERSLecternType.UNKNOWN): Int32;
+function TRSLectern._FindIndex(lecternType: ERSLecternType = ERSLecternType.UNKNOWN): Int32;
 var
-  item: TItem;
+  item: TRSItem;
 begin
   if lecternType = ERSLecternType.UNKNOWN then
   begin
@@ -149,7 +149,7 @@ begin
   Result := -1;
 end;
 
-function TLectern.ContainsTablet(tablet: TItem): Boolean;
+function TRSLectern.ContainsTablet(tablet: TRSItem): Boolean;
 begin
   if Self.TABLETS[Self.GetLecternType()].Find(ToStr(tablet).ToLower()) = -1  then
     Exit;
@@ -157,14 +157,14 @@ begin
   Result := Self.Items.Contains(tablet);
 end;
 
-function TLectern.GetTabletBox(tablet: TItem): TBox;
+function TRSLectern.GetTabletBox(tablet: TRSItem): TBox;
 begin
   if Self.TABLETS[Self.GetLecternType()].Find(ToStr(tablet).ToLower()) > -1  then
     Self.Items.Find([tablet], Result);
 end;
 
 
-function TLectern._GetTabletButton(tablet: TBox): TBox;
+function TRSLectern._GetTabletButton(tablet: TBox): TBox;
 var
   limit: TBox;
 begin
@@ -184,31 +184,31 @@ begin
     Result.Y2 := limit.Y2;
 end;
 
-function TLectern.GetTabletButton(tablet: TItem): TBox;
+function TRSLectern.GetTabletButton(tablet: TRSItem): TBox;
 begin
   Result := Self._GetTabletButton(Self.GetTabletBox(tablet));
 end;
 
 
-function TLectern.CreateButtonEnabled(): Boolean;
+function TRSLectern.CreateButtonEnabled(): Boolean;
 begin
   Result := SRL.CountColor(2070783, Self.CreateButton) > 0;
 end;
 
-function TLectern.IsTabletSelected(tablet: TBox): Boolean;
+function TRSLectern.IsTabletSelected(tablet: TBox): Boolean;
 begin
   if Self.CreateButtonEnabled() then
     Result := SRL.CountColor(CTS2(2700350, 2, 0.68, 1.59), Self._GetTabletButton(tablet)) > 0;
 end;
 
-function TLectern.IsTabletSelected(tablet: TItem): Boolean; overload;
+function TRSLectern.IsTabletSelected(tablet: TRSItem): Boolean; overload;
 begin
   if Self.CreateButtonEnabled() then
     Result := SRL.CountColor(CTS2(2700350, 2, 0.68, 1.59), Self.GetTabletButton(tablet)) > 0;
 end;
 
 
-function TLectern.ScrollToTablet(tablet: TItem): Boolean;
+function TRSLectern.ScrollToTablet(tablet: TRSItem): Boolean;
 var
   lecternType: ERSLecternType;
   i, j: Int32;
@@ -235,7 +235,7 @@ begin
   end;
 end;
 
-function TLectern.ScrollToTablet(tablet: TItem; out bounds: TBox): Boolean; overload;
+function TRSLectern.ScrollToTablet(tablet: TRSItem; out bounds: TBox): Boolean; overload;
 var
   lecternType: ERSLecternType;
   i, j: Int32;
@@ -263,7 +263,7 @@ begin
 end;
 
 
-function TLectern.Close(pressEscape: Boolean = False): Boolean;
+function TRSLectern.Close(pressEscape: Boolean = False): Boolean;
   function _ClickCloseButton(PressEscape: Boolean = False): Boolean;
   var
     b: TBox;
@@ -297,7 +297,7 @@ begin
 end;
 
 
-function TLectern.HoverTablet(tablet: TItem): Boolean;
+function TRSLectern.HoverTablet(tablet: TRSItem): Boolean;
 var
   b: TBox;
 begin
@@ -306,7 +306,7 @@ begin
     Mouse.Move(b);
 end;
 
-function TLectern.ClickTablet(tablet: TItem): Boolean;
+function TRSLectern.ClickTablet(tablet: TRSItem): Boolean;
 begin
   if Self.IsTabletSelected(tablet) then
     Exit(True);
@@ -319,7 +319,7 @@ begin
 end;
 
 
-function TLectern.ClickCreateButton(): Boolean;
+function TRSLectern.ClickCreateButton(): Boolean;
 begin
   if not Self.CreateButtonEnabled() then
     Exit;
@@ -327,7 +327,7 @@ begin
   Result := WaitUntil(not Self.IsOpen(), 300, 3000);
 end;
 
-function TLectern.MakeTablet(tablet: TItem): Boolean;
+function TRSLectern.MakeTablet(tablet: TRSItem): Boolean;
 begin
   if Self.CreateButtonEnabled() then
   begin
@@ -363,7 +363,7 @@ begin
 end;
 
 
-procedure TLectern.Draw(bitmap: TMufasaBitmap); override;
+procedure TRSLectern.Draw(bitmap: TMufasaBitmap); override;
 var
   boxes: TBoxArray;
   b: TBox;
@@ -381,9 +381,9 @@ begin
 end;
 
 var
-  Lectern: TLectern;
+  Lectern: TRSLectern;
 
-procedure TGameClient.ClientModeChanged(); override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 

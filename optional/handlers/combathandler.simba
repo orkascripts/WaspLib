@@ -8,8 +8,8 @@ for general purpose combat this should be enough!
 *)
 
 {$DEFINE WL_COMBAT_HANDLER_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$IFNDEF WL_LOOT_HANDLER_INCLUDED}
@@ -17,7 +17,7 @@ for general purpose combat this should be enough!
 {$ENDIF}
 
 const
-  WEAPONS: TItemArray = [
+  WEAPONS: TRSItemArray = [
     'Keris partisan', 'Keris partisan of breaching',
     'Ghrazi rapier', 'Blade of saeldor (c)', 'Inquisitor''s mace',
     'Toktz-xil-ak', 'Abyssal whip', 'Abyssal bludgeon',
@@ -29,12 +29,12 @@ const
     'Magic shortbow (i)', 'Armadyl crossbow', 'Dragon hunter crossbow',
     'Venator bow', 'Dragon crossbow', 'Rune crossbow', 'Adamant dart',
     'Mithril dart', 'Rune scimitar', 'Dorgeshuun crossbow',
-    'Leaf-bladed sword', 'Leaf-bladed battleaxe', 'Zombie axe',
-	'Osmumten''s fang', 'Noxious halberd', 'Dual macuahuitl',
+    'Leaf-bladed sword', 'Leaf-bladed battleaxe', 'Zombie axe', 
+	'Osmumten''s fang', 'Noxious halberd', 'Dual macuahuitl', 
 	'Arkan blade', 'Null'
   ];
 
-  SHIELDS: TItemArray = [
+  SHIELDS: TRSItemArray = [
     'Avernic defender', 'Dragon defender', 'Rune defender',
     'Adamant defender', 'Mithril defender', 'Black defender',
     'Steel defender', 'Iron defender', 'Bronze defender',
@@ -44,7 +44,7 @@ const
     'Null'
   ];
 
-  SPEC_WEAPONS: TItemArray = [
+  SPEC_WEAPONS: TRSItemArray = [
     'Burning claws', 'Dragon claws', '4153', '12848', 'Granite maul', 'Abyssal dagger',
     'Abyssal dagger (p++)', 'Dragon dagger', 'Dragon dagger(p++)',
     'Dragon sword', 'Dragon longsword', 'Dinh''s bulwark', 'Abyssal tentacle',
@@ -53,25 +53,25 @@ const
     'Osmumten''s fang', 'Arkan blade', 'Null'
   ];
 
-  BRACELETS: TItemArray = [
+  BRACELETS: TRSItemArray = [
     'Bracelet of slaughter',
     'Expeditious bracelet',
     'Null'
   ];
 
-  DWARF_CANNON: TItemArray = [
+  DWARF_CANNON: TRSItemArray = [
     'Cannon base',
     'Cannon stand',
     'Cannon barrels',
     'Cannon furnace'
   ];
 
-  CANNON_BALLS: TItemArray = [
+  CANNON_BALLS: TRSItemArray = [
     'Cannonball',
     'Granite cannonball'
   ];
 
-  REMAINS: TItemArray = [
+  REMAINS: TRSItemArray = [
     'Bones', 'Wolf bones', 'Monkey bones', 'Bat bones', 'Big bones',
     'Jogre bones', 'Zogre bones', 'Babydragon bones', 'Wyrm bones',
     'Wyvern bones', 'Dragon bones', 'Drake bones', 'Lava dragon bones',
@@ -80,7 +80,7 @@ const
     'Abyssal ashes', 'Infernal ashes'
   ];
 
-  ENSOULED_HEADS: TItemArray = [
+  ENSOULED_HEADS: TRSItemArray = [
     'Ensouled goblin head', 'Ensouled monkey head', 'Ensouled imp head',
     'Ensouled minotaur head', 'Ensouled scorpion head', 'Ensouled unicorn head',
     'Ensouled dog head', 'Ensouled chaos druid head', 'Ensouled giant head',
@@ -114,17 +114,17 @@ type
     CAST_ALCH, USE_SOUL_BEARER
   );
 
-  TCombatHandler = record(TSRLBaseRecord)
+  TRSCombatHandler = record(TSRLBaseRecord)
     State: ECombatState;
-    Monster: TNPCV2;
+    Monster: TRSNPCV2;
 
     MonsterWalkerCoord, SafeSpot: TPoint;
 
     BraceletTimer, InCombatTimer: TCountDown;
 
-    CombatStyle: TCombatStyle;
+    CombatStyle: TRSCombatStyle;
 
-    Weapon, Shield, SpecWeapon, Bracelet: TItem;
+    Weapon, Shield, SpecWeapon, Bracelet: TRSItem;
 
     MinHitPoints, MinPrayPoints, WeaponSpec, NextSpec, AttackMonsterDelay: Int32;
     TotalKills: UInt32;
@@ -134,10 +134,10 @@ type
     SlayerTaskFinishedVisible, SlayerTaskFinished, LootEnabled, BuryBones,
     IsFighting, Looted, IsSetup: Boolean;
 
-    HandleConsumables: array [EConsumable] of Boolean;
+    HandleConsumables: array [ERSConsumable] of Boolean;
   end;
 
-procedure TCombatHandler._SetupGear();
+procedure TRSCombatHandler._SetupGear();
 begin
   if Self.GearIsSetup then Exit;
 
@@ -168,7 +168,7 @@ begin
   Self.DebugLn('Current shield: ' + ToStr(Self.Shield) + '.');
 
   if Equipment.ContainsItem('Bonecrusher necklace') then
-    Antiban.Skills += ESkill.PRAYER;
+    Antiban.Skills += ERSSkill.PRAYER;
 
   for Self.SpecWeapon in SPEC_WEAPONS do
   begin
@@ -181,7 +181,7 @@ begin
   end;
 
   if Inventory.ContainsAny(['Bonecrusher', 'Bonecrusher necklace', 'Ash sanctifier']) then
-    Antiban.Skills += ESkill.PRAYER;
+    Antiban.Skills += ERSSkill.PRAYER;
 
   if Self.SpecWeapon <> 'Null' then
     Self.WeaponSpec := WeaponData.GetInt(ToStr(Self.SpecWeapon), 'special_attack')
@@ -216,7 +216,7 @@ begin
 end;
 
 
-procedure TCombatHandler._ShouldHandleConsumable(consumable: EConsumable);
+procedure TRSCombatHandler._ShouldHandleConsumable(consumable: ERSConsumable);
 begin
   Self.HandleConsumables[consumable] := Inventory.ContainsAny(CONSUMABLE_ARRAYS[consumable]);
 
@@ -228,9 +228,9 @@ begin
   end;
 end;
 
-procedure TCombatHandler.Setup(npc: TNPCV2; timer: Int64 = 4000; safeSpotTile: TPoint = [-1, -1]);
+procedure TRSCombatHandler.Setup(npc: TRSNPCV2; timer: Int64 = 4000; safeSpotTile: TPoint = [-1, -1]);
 var
-  eConsum: EConsumable;
+  eConsumable: ERSConsumable;
 begin
   if Self.IsSetup then Exit;
 
@@ -241,21 +241,21 @@ begin
 
   Self.InCombatTimer.Setup(Timer);
 
-  if not GameClient.IsLoggedIn() then
+  if not RSClient.IsLoggedIn() then
     Login.LoginPlayer();
 
-  ChatButtons.Open(EChatButton.GAME_CHAT);
+  ChatButtons.Open(ERSChatButton.GAME_CHAT);
   Self.SlayerTaskFinishedVisible := Chat.FindMessage('Slayer master', [CHAT_COLOR_RED]);
 
-  for eConsum := EConsumable(0) to EConsumable(High(EConsumable)-2) do
-    Self._ShouldHandleConsumable(eConsum);
+  for eConsumable := ERSConsumable(0) to ERSConsumable(High(ERSConsumable)-2) do
+    Self._ShouldHandleConsumable(eConsumable);
 
-  for eConsum := EConsumable.STRENGTH_BOOST to EConsumable.BOOST do
+  for eConsumable := ERSConsumable.STRENGTH_BOOST to ERSConsumable.BOOST do
   begin
-    if Self.HandleConsumables[eConsum] then
+    if Self.HandleConsumables[eConsumable] then
       Break;
-    if eConsum = EConsumable.BOOST then
-      Self._ShouldHandleConsumable(EConsumable.BOOST);
+    if eConsumable = ERSConsumable.BOOST then
+      Self._ShouldHandleConsumable(ERSConsumable.BOOST);
   end;
 
   Self.HandleCannon := Inventory.ContainsAll(DWARF_CANNON) and
@@ -275,7 +275,7 @@ begin
   Self.IsSetup := True;
 end;
 
-procedure TCombatHandler.Setup(manage: Boolean; npc: TNPCV2; lootValue: Int32 = 5000; timer: Int64 = 4000; safeSpotTile: TPoint =  [-1, -1]);  overload;
+procedure TRSCombatHandler.Setup(manage: Boolean; npc: TRSNPCV2; lootValue: Int32 = 5000; timer: Int64 = 4000; safeSpotTile: TPoint =  [-1, -1]);  overload;
 begin
   if Self.IsSetup then Exit;
 
@@ -296,7 +296,7 @@ begin
   end;
 end;
 
-function TCombatHandler.GetMonsterDot(msCoord: TPoint): TPoint;
+function TRSCombatHandler.GetMonsterDot(msCoord: TPoint): TPoint;
 var
   me, monster: TPoint;
   b: TBox;
@@ -304,7 +304,7 @@ var
 begin
   monster := MainScreen.PointToMM(msCoord, 0).ToPoint();
   b := Box(monster, 12, 12);
-  dots := Minimap.GetDots(EMinimapDot.NPC, b);
+  dots := Minimap.GetDots(ERSMinimapDot.NPC, b);
   if dots = [] then Exit;
 
   Result := dots.Sorted(monster)[0];
@@ -317,11 +317,11 @@ begin
   end;
 end;
 
-function TCombatHandler.WaitHitSplats(): Boolean;
+function TRSCombatHandler.WaitHitSplats(): Boolean;
 var
   t: UInt64;
   i: Int32;
-  tmp, splats: THitsplatArray;
+  tmp, splats: TRSHitsplatArray;
   b: TBox;
 begin
   t := GetTickCount() + 3000;
@@ -347,7 +347,7 @@ begin
   end;
 end;
 
-function TCombatHandler.AttackMonster(attempts: Int32 = 3): Boolean;
+function TRSCombatHandler.AttackMonster(attempts: Int32 = 3): Boolean;
 begin
   if Self.Monster.SelectOption(['Attack'], attempts) then
   begin
@@ -356,7 +356,7 @@ begin
   end;
 end;
 
-function TCombatHandler.WalkAttackMonster(attempts: Int32 = 3): Boolean;
+function TRSCombatHandler.WalkAttackMonster(attempts: Int32 = 3): Boolean;
 begin
   if not Self.Monster.Filter.Walker or Self.UseSafeSpot or Self.Monster.IsVisible() then
     Exit(Self.AttackMonster(attempts));
@@ -369,9 +369,9 @@ begin
 end;
 
 
-function TCombatHandler.Loot(dots: TPointArray = []; attempt: Int32 = 0): Boolean;
+function TRSCombatHandler.Loot(dots: TPointArray = []; attempt: Int32 = 0): Boolean;
 var
-  match: TItemFinderMatch;
+  match: TRSItemFinderMatch;
   size: Single;
   p: TPoint;
   b: TBox;
@@ -392,7 +392,7 @@ begin
 
   b := Box(p, Ceil(size), Ceil(size)).Expand(12);
 
-  if not WaitUntil(Length(tmp := Minimap.GetDots(EMinimapDot.ITEM, b)) > Length(dots), 300, 3000) then
+  if not WaitUntil(Length(tmp := Minimap.GetDots(ERSMinimapDot.ITEM, b)) > Length(dots), 300, 3000) then
     Exit(Self.Loot(tmp, attempt+1));
 
   dots := tmp.Difference(dots);
@@ -417,13 +417,13 @@ begin
 end;
 
 
-procedure TCombatHandler.SetupGear();
+procedure TRSCombatHandler.SetupGear();
 begin
   Self._SetupGear();
   Self.ManageGear := Self.GearIsSetup;
 end;
 
-function TCombatHandler.CheckBracelet(): Boolean;
+function TRSCombatHandler.CheckBracelet(): Boolean;
 begin
   if Self.Bracelet = 'Null' then
     Exit;
@@ -434,7 +434,7 @@ begin
     Self.BraceletTimer.Restart(Random((-2 * ONE_MINUTE), (2 * ONE_MINUTE)));
 end;
 
-function TCombatHandler.NeedBracelet(): Boolean;
+function TRSCombatHandler.NeedBracelet(): Boolean;
 begin
   if Self.Bracelet = 'Null' then
     Exit;
@@ -443,7 +443,7 @@ begin
             Inventory.ContainsItem(Self.Bracelet) and not Self.CheckBracelet();
 end;
 
-function TCombatHandler.EquipBracelet(): Boolean;
+function TRSCombatHandler.EquipBracelet(): Boolean;
 var
   count: Int32;
 begin
@@ -470,7 +470,7 @@ begin
 end;
 
 
-function TCombatHandler.NeedRegear(): Boolean;
+function TRSCombatHandler.NeedRegear(): Boolean;
 begin
   Result := ((Self.Weapon <> 'Null') and Inventory.ContainsItem(Self.Weapon)) or
             ((Self.Shield <> 'Null') and Inventory.ContainsItem(Self.Shield));
@@ -478,7 +478,7 @@ begin
   Self.DoingSpec := not Result;
 end;
 
-function TCombatHandler.ReGear(): Boolean;
+function TRSCombatHandler.ReGear(): Boolean;
 begin
   repeat
     if (Self.Weapon <> 'Null') then
@@ -494,7 +494,7 @@ begin
 end;
 
 
-function TCombatHandler.CanSpec(): Boolean;
+function TRSCombatHandler.CanSpec(): Boolean;
 begin
   if (Self.WeaponSpec = 0) then
     Exit;
@@ -508,7 +508,7 @@ begin
   Self.DoingSpec := Result;
 end;
 
-function TCombatHandler.DoSpec(): Boolean;
+function TRSCombatHandler.DoSpec(): Boolean;
 begin
   if (Self.SpecWeapon <> Self.Weapon) and Inventory.ClickItem(Self.SpecWeapon) then
     if not WaitUntil(Inventory.ContainsItem(Self.Weapon), 100, 4000) then
@@ -535,7 +535,7 @@ begin
 end;
 
 
-function TCombatHandler.DoBuryBones(): Boolean;
+function TRSCombatHandler.DoBuryBones(): Boolean;
 var
   slots: TIntegerArray;
   slot: Int32;
@@ -551,22 +551,22 @@ begin
 end;
 
 
-function TCombatHandler.NeedAntiPoison(): Boolean;
+function TRSCombatHandler.NeedAntiPoison(): Boolean;
 begin
-  if not Self.HandleConsumables[EConsumable.POISON] then Exit;
+  if not Self.HandleConsumables[ERSConsumable.POISON] then Exit;
 
   Result := PoisonHandler.NeedToConsume() or Minimap.IsPoisoned() or Minimap.IsEnvenomed();
 end;
 
-function TCombatHandler.NeedConsumable(consumable: EConsumable): Boolean;
+function TRSCombatHandler.NeedConsumable(consumable: ERSConsumable): Boolean;
 begin
   Result := Self.HandleConsumables[consumable] and CONSUMABLE_HANDLER_ARRAY[consumable]^.NeedToConsume();
 end;
 
 
-function TCombatHandler.ShouldAlch(): Boolean;
+function TRSCombatHandler.ShouldAlch(): Boolean;
 var
-  match: TItemFinderMatch;
+  match: TRSItemFinderMatch;
 begin
   match := Inventory.Items.FindAny(RSAlchHandler.ItemArray);
   Result := match <> [];
@@ -575,7 +575,7 @@ begin
     RSAlchHandler.Item := match.Item;
 end;
 
-function TCombatHandler.CastAlch(): Boolean;
+function TRSCombatHandler.CastAlch(): Boolean;
 begin
   if RSAlchHandler.CastAlchemy() then
   begin
@@ -585,18 +585,18 @@ begin
 end;
 
 
-function TCombatHandler.UseSoulBearer(): Boolean;
+function TRSCombatHandler.UseSoulBearer(): Boolean;
 begin
   Result := Inventory.ClickItem('Soul bearer', 'Fill');
   if Result then Self.IsFighting := False;
 end;
 
 
-function TCombatHandler.Terminate(): Boolean;
+function TRSCombatHandler.Terminate(): Boolean;
 begin
   if not MainScreen.FindGrave() then
   begin
-    Magic.CastSpell(ESpell.VARROCK_TELEPORT);
+    Magic.CastSpell(ERSSpell.VARROCK_TELEPORT);
     Wait(10000);
   end;
 
@@ -605,7 +605,7 @@ begin
 end;
 
 
-procedure TCombatHandler.CheckSlayerTask();
+procedure TRSCombatHandler.CheckSlayerTask();
 begin
   if not Self.SlayerTaskFinishedVisible and Self.SlayerTaskFinished then
     Exit;
@@ -617,13 +617,13 @@ begin
 end;
 
 
-function TCombatHandler.WaitCombatEnd(): Boolean;
+function TRSCombatHandler.WaitCombatEnd(): Boolean;
 var
   t: UInt64;
 begin
   t := GetTickCount() + 3400;
   repeat
-    if not GameClient.IsLoggedIn() then
+    if not RSClient.IsLoggedIn() then
       Exit(True);
 
     if MainScreen.InCombat() then
@@ -643,7 +643,7 @@ begin
 end;
 
 
-function TCombatHandler.Consume(consumable: EConsumable): Boolean;
+function TRSCombatHandler.Consume(consumable: ERSConsumable): Boolean;
 begin
   Result := Inventory.Consume(consumable);
 
@@ -657,7 +657,7 @@ begin
 end;
 
 
-function TCombatHandler.WalkSafeSpot(): Boolean;
+function TRSCombatHandler.WalkSafeSpot(): Boolean;
 begin
   WriteLn(Self.Monster.Walker^.Position, ' and ', Self.SafeSpot);
   Self.IsFighting := False;
@@ -666,19 +666,19 @@ end;
 
 
 //Check for pending action combat handler is taking care of.
-function TCombatHandler.GetConsumableState(): ECombatState;
+function TRSCombatHandler.GetConsumableState(): ECombatState;
 var
   pray: Int32;
 begin
   if Minimap.GetHPLevel() <= Self.MinHitPoints then
   begin
-    if Self.HandleConsumables[EConsumable.FOOD] then
+    if Self.HandleConsumables[ERSConsumable.FOOD] then
       Exit(ECombatState.EAT_FOOD);
 
     Exit(ECombatState.LOW_HEALTH);
   end;
 
-  if Self.HandleConsumables[EConsumable.PRAYER] then
+  if Self.HandleConsumables[ERSConsumable.PRAYER] then
   begin
     pray := Minimap.GetPrayerLevel();
 
@@ -687,16 +687,16 @@ begin
 
     if (pray <= Self.MinPrayPoints) then
     begin
-      if Inventory.ContainsConsumable(EConsumable.PRAYER) then
+      if Inventory.ContainsConsumable(ERSConsumable.PRAYER) then
         Exit(ECombatState.DRINK_PRAYER);
 
       Exit(ECombatState.LOW_PRAYER);
     end;
   end;
 
-  if Self.NeedConsumable(EConsumable.ANTI_FIRE) then
+  if Self.NeedConsumable(ERSConsumable.ANTI_FIRE) then
   begin
-    if Inventory.ContainsConsumable(EConsumable.ANTI_FIRE) then
+    if Inventory.ContainsConsumable(ERSConsumable.ANTI_FIRE) then
       Exit(ECombatState.DRINK_ANTIFIRE);
 
     Exit(ECombatState.NO_ANTIFIRE);
@@ -704,31 +704,31 @@ begin
 
   if Self.NeedAntiPoison() then
   begin
-    if Self.HandleConsumables[EConsumable.POISON] and Inventory.ContainsConsumable(EConsumable.POISON) then
+    if Self.HandleConsumables[ERSConsumable.POISON] and Inventory.ContainsConsumable(ERSConsumable.POISON) then
       Exit(ECombatState.DRINK_ANTIPOISON);
   end;
 
   Result := ECombatState.UNKNOWN_COMBAT_STATE;
 end;
 
-function TCombatHandler.GetBoostState(): ECombatState;
+function TRSCombatHandler.GetBoostState(): ECombatState;
 begin
-  if Self.NeedConsumable(EConsumable.STRENGTH_BOOST) then
+  if Self.NeedConsumable(ERSConsumable.STRENGTH_BOOST) then
     Exit(ECombatState.DRINK_STR_BOOST);
 
-  if Self.NeedConsumable(EConsumable.ATTACK_BOOST) then
+  if Self.NeedConsumable(ERSConsumable.ATTACK_BOOST) then
     Exit(ECombatState.DRINK_ATK_BOOST);
 
-  if Self.NeedConsumable(EConsumable.DEFENCE_BOOST) then
+  if Self.NeedConsumable(ERSConsumable.DEFENCE_BOOST) then
     Exit(ECombatState.DRINK_DEF_BOOST);
 
-  if Self.NeedConsumable(EConsumable.RANGING_BOOST) then
+  if Self.NeedConsumable(ERSConsumable.RANGING_BOOST) then
     Exit(ECombatState.DRINK_RNG_BOOST);
 
-  if Self.NeedConsumable(EConsumable.MAGIC_BOOST) then
+  if Self.NeedConsumable(ERSConsumable.MAGIC_BOOST) then
     Exit(ECombatState.DRINK_MGC_BOOST);
 
-  if Self.NeedConsumable(EConsumable.BOOST) then
+  if Self.NeedConsumable(ERSConsumable.BOOST) then
     Exit(ECombatState.DRINK_BOOST);
 
   Result := ECombatState.UNKNOWN_COMBAT_STATE;
@@ -736,7 +736,7 @@ end;
 
 
 
-function TCombatHandler.FindTaggedMonsters(dots: TPointArray; offset: TPoint = [0, 0]): TPointArray;
+function TRSCombatHandler.FindTaggedMonsters(dots: TPointArray; offset: TPoint = [0, 0]): TPointArray;
 var
   i, j, hi: Int32;
   rotatedDots, last: TPointArray;
@@ -780,19 +780,19 @@ begin
   end;
 end;
 
-function TCombatHandler.FindTaggedMonsters(): TPointArray; overload;
+function TRSCombatHandler.FindTaggedMonsters(): TPointArray; overload;
 begin
-  Result := Self.FindTaggedMonsters(Minimap.GetDots(EMinimapDot.NPC));
+  Result := Self.FindTaggedMonsters(Minimap.GetDots(ERSMinimapDot.NPC));
 end;
 
-function TCombatHandler.FindRoamingMonsters(): TPointArray;
+function TRSCombatHandler.FindRoamingMonsters(): TPointArray;
 begin
-  Result := Minimap.GetDots(EMinimapDot.NPC).Offset(2, 2);
+  Result := Minimap.GetDots(ERSMinimapDot.NPC).Offset(2, 2);
   Result := Result.Difference(Self.FindTaggedMonsters(Result, [0, 0]));
 end;
 
 
-function TCombatHandler.GetState(): ECombatState;
+function TRSCombatHandler.GetState(): ECombatState;
 begin
   Result := Self.GetConsumableState();
   if Result <> ECombatState.UNKNOWN_COMBAT_STATE then
@@ -847,7 +847,7 @@ begin
 end;
 
 //Check for pending action combat handler is taking care of and do them.
-procedure TCombatHandler.DoActions(handlerState: ECombatState = ECombatState.UNKNOWN_COMBAT_STATE);
+procedure TRSCombatHandler.DoActions(handlerState: ECombatState = ECombatState.UNKNOWN_COMBAT_STATE);
 begin
   if handlerState = ECombatState.UNKNOWN_COMBAT_STATE then
     handlerState := Self.GetState();
@@ -858,16 +858,16 @@ begin
     ECombatState.CAST_ALCH:        Self.CastAlch();
     ECombatState.USE_SOUL_BEARER:  Self.UseSoulBearer();
 
-    ECombatState.EAT_FOOD:         Self.Consume(EConsumable.FOOD);
-    ECombatState.DRINK_PRAYER:     Self.Consume(EConsumable.PRAYER);
-    ECombatState.DRINK_ANTIFIRE:   Self.Consume(EConsumable.ANTI_FIRE);
-    ECombatState.DRINK_ANTIPOISON: Self.Consume(EConsumable.POISON);
-    ECombatState.DRINK_STR_BOOST:  Self.Consume(EConsumable.STRENGTH_BOOST);
-    ECombatState.DRINK_ATK_BOOST:  Self.Consume(EConsumable.ATTACK_BOOST);
-    ECombatState.DRINK_DEF_BOOST:  Self.Consume(EConsumable.DEFENCE_BOOST);
-    ECombatState.DRINK_RNG_BOOST:  Self.Consume(EConsumable.RANGING_BOOST);
-    ECombatState.DRINK_MGC_BOOST:  Self.Consume(EConsumable.MAGIC_BOOST);
-    ECombatState.DRINK_BOOST:      Self.Consume(EConsumable.BOOST);
+    ECombatState.EAT_FOOD:         Self.Consume(ERSConsumable.FOOD);
+    ECombatState.DRINK_PRAYER:     Self.Consume(ERSConsumable.PRAYER);
+    ECombatState.DRINK_ANTIFIRE:   Self.Consume(ERSConsumable.ANTI_FIRE);
+    ECombatState.DRINK_ANTIPOISON: Self.Consume(ERSConsumable.POISON);
+    ECombatState.DRINK_STR_BOOST:  Self.Consume(ERSConsumable.STRENGTH_BOOST);
+    ECombatState.DRINK_ATK_BOOST:  Self.Consume(ERSConsumable.ATTACK_BOOST);
+    ECombatState.DRINK_DEF_BOOST:  Self.Consume(ERSConsumable.DEFENCE_BOOST);
+    ECombatState.DRINK_RNG_BOOST:  Self.Consume(ERSConsumable.RANGING_BOOST);
+    ECombatState.DRINK_MGC_BOOST:  Self.Consume(ERSConsumable.MAGIC_BOOST);
+    ECombatState.DRINK_BOOST:      Self.Consume(ERSConsumable.BOOST);
 
     ECombatState.ENABLE_QPRAY:     Minimap.EnablePrayer();
 
@@ -890,9 +890,9 @@ begin
 end;
 
 var
-  CombatHandler: TCombatHandler;
+  CombatHandler: TRSCombatHandler;
 
-function TXPBar.EarnedXP(): Boolean; override;
+function TRSXPBar.EarnedXP(): Boolean; override;
 begin
   Result := inherited;
 
@@ -901,7 +901,7 @@ begin
 end;
 
 
-function TMainScreen.FindHitsplats(): THitsplatArray; override;
+function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; override;
 begin
   Result := inherited;
 
@@ -909,20 +909,20 @@ begin
     CombatHandler.InCombatTimer.Restart(Random(0, 3000));
 end;
 
-function TMainScreen.FindDepletedHPBar(): Boolean;
+function TRSMainScreen.FindDepletedHPBar(): Boolean;
 var
-  Bar: THPBar;
+  Bar: TRSHPBar;
 begin
   for Bar in Self.FindHPBars() do
     if Bar.Percent = 0 then
       Exit(True);
 end;
 
-function TMainScreen.InCombat(): Boolean; override;
+function TRSMainScreen.InCombat(): Boolean; override;
 var
-  splats: THitsplatArray;
+  splats: TRSHitsplatArray;
   gotXP, hasSplats: Boolean;
-  tmp: TNPCV2;
+  tmp: TRSNPCV2;
   cuboids: TCuboidExArray;
   cuboid: TCuboidEx;
   b: TBox;
@@ -972,14 +972,14 @@ begin
     CombatHandler.InCombatTimer.Restart();
 end;
 
-function TCombat.GetAutoRetaliate(): Boolean; override;
+function TRSCombat.GetAutoRetaliate(): Boolean; override;
 begin
   CombatHandler.AutoRetaliateChecked := True;
   Result := inherited;
   CombatHandler.AutoRetaliateEnabled := Result;
 end;
 
-function TCombat.SetAutoRetaliate(value: Boolean): Boolean; override;
+function TRSCombat.SetAutoRetaliate(value: Boolean): Boolean; override;
 begin
   CombatHandler.AutoRetaliateChecked := True;
   Result := inherited;
@@ -989,48 +989,48 @@ begin
 end;
 
 //TODO: NEED TO REVIEW EVERYTHING BELOW. This is probably all useless or not used.
-function TPrayer.HasProperPrayers(): Boolean;
+function TRSPrayer.HasProperPrayers(): Boolean;
 var
-  prayer: EPrayer;
-  activePrayers: EPrayerArray;
+  prayer: ERSPrayer;
+  activePrayers: ERSPrayerArray;
 begin
-  if CombatHandler.CombatStyle.CombatType = ECombatType.UNKNOWN then
+  if CombatHandler.CombatStyle.CombatType = ERSCombatType.UNKNOWN then
     CombatHandler.CombatStyle.GetCombatType;
 
   activePrayers := Self.GetActivePrayers();
 
   case CombatHandler.CombatStyle.CombatType of
-    ECombatType.RANGED:
+    ERSCombatType.RANGED:
       for prayer in RANGED_PRAYERS do
          if activePrayers.Find(prayer) > -1 then
            Exit(True);
 
-    ECombatType.MELEE:
+    ERSCombatType.MELEE:
       for prayer in MELEE_PRAYERS do
          if activePrayers.Find(prayer) > -1 then
            Exit(True);
 
-    ECombatType.MAGIC:
+    ERSCombatType.MAGIC:
       for prayer in MAGIC_PRAYERS do
          if activePrayers.Find(prayer) > -1 then
            Exit(True);
   end;
 end;
 
-function TPrayer.FixPrayers(): Boolean;
+function TRSPrayer.FixPrayers(): Boolean;
 var
   i: Int32;
 begin
-  if CombatHandler.CombatStyle.CombatType = ECombatType.UNKNOWN then
+  if CombatHandler.CombatStyle.CombatType = ERSCombatType.UNKNOWN then
     CombatHandler.CombatStyle.GetCombatType();
 
   case CombatHandler.CombatStyle.CombatType of
-    ECombatType.RANGED:
+    ERSCombatType.RANGED:
       for i := 0 to Ord(High(RANGED_PRAYERS)) do
         if Self.ActivatePrayer(RANGED_PRAYERS[i]) then
           Exit(True);
 
-    ECombatType.MELEE:
+    ERSCombatType.MELEE:
         for i := 0 to Ord(High(MELEE_PRAYERS)) do
         begin
           if i > 1 then
@@ -1044,7 +1044,7 @@ begin
             Exit(True);
         end;
 
-    ECombatType.MAGIC:
+    ERSCombatType.MAGIC:
       for i := 0 to Ord(High(MAGIC_PRAYERS)) do
         if Self.ActivatePrayer(MAGIC_PRAYERS[i]) then
           Exit(True);
@@ -1052,23 +1052,23 @@ begin
 end;
 
 
-function TQuickPrayer.SelectBestPrayers(): Boolean;
+function TRSQuickPrayer.SelectBestPrayers(): Boolean;
 var
   i: Int32;
 begin
-  if CombatHandler.CombatStyle.CombatType = ECombatType.UNKNOWN then
+  if CombatHandler.CombatStyle.CombatType = ERSCombatType.UNKNOWN then
     CombatHandler.CombatStyle.GetCombatType();
 
   if not Self.Open() then
     Exit;
 
   case CombatHandler.CombatStyle.CombatType of
-    ECombatType.RANGED:
+    ERSCombatType.RANGED:
       for i := 0 to High(RANGED_PRAYERS) do
         if Result := Self.SelectPrayer(RANGED_PRAYERS[i]) then
           Break;
 
-    ECombatType.MELEE:
+    ERSCombatType.MELEE:
         for i := 0 to High(MELEE_PRAYERS) do
         begin
           if i > 1 then
@@ -1082,7 +1082,7 @@ begin
             Break;
         end;
 
-    ECombatType.MAGIC:
+    ERSCombatType.MAGIC:
       for i := 0 to High(MAGIC_PRAYERS) do
         if Result := Self.SelectPrayer(MAGIC_PRAYERS[i]) then
           Break;
@@ -1092,9 +1092,9 @@ begin
 end;
 
 
-function TMinimap.EnablePrayer(checkPrayers: Boolean): Boolean; overload;
+function TRSMinimap.EnablePrayer(checkPrayers: Boolean): Boolean; overload;
 begin
-  if checkPrayers and (CombatHandler.CombatStyle.CombatType = ECombatType.UNKNOWN) then
+  if checkPrayers and (CombatHandler.CombatStyle.CombatType = ERSCombatType.UNKNOWN) then
     CombatHandler.CombatStyle.GetCombatType();
 
   Result := Self.EnablePrayer();

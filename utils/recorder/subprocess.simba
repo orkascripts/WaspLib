@@ -85,14 +85,14 @@ var
   MicroSRL: TSRL;
 
 type
-  EClientMode = (
+  ERSClientMode = (
     UNKNOWN,
     FIXED,
     RESIZABLE_CLASSIC,
     RESIZABLE_MODERN
   );
 
-  TInterfaceAlignment = record
+  TRSInterfaceAlignment = record
     Left, Right, Top, Bottom: record
       Method: function: Int32 of object;
       Offset: Int32;
@@ -104,29 +104,29 @@ type
     end;
   end;
 
-  TInterface = record
-    Mode: EClientMode;
+  TRSInterface = record
+    Mode: ERSClientMode;
 
     Cache: record
       Enabled: Boolean;
 
       X1, Y1, X2, Y2: record
-        Mode: EClientMode;
+        Mode: ERSClientMode;
         ClientWidth, ClientHeight: Int32;
         Value: Int32;
       end;
     end;
 
-    Alignment: TInterfaceAlignment;
+    Alignment: TRSInterfaceAlignment;
   end;
 
 
-procedure TInterface.SetupAlignment(mode: EClientMode);
+procedure TRSInterface.SetupAlignment(mode: ERSClientMode);
 begin
   Self.Mode := Mode;
 end;
 
-function TInterface.X1(): Int32;
+function TRSInterface.X1(): Int32;
 var
   Left, Right, Width, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -163,7 +163,7 @@ begin
     Self.Cache.X1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TInterface.X2(): Int32;
+function TRSInterface.X2(): Int32;
 var
   Left, Right, Width, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -200,7 +200,7 @@ begin
     Self.Cache.X2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TInterface.Y1(): Int32;
+function TRSInterface.Y1(): Int32;
 var
   Top, Bottom, Height, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -237,7 +237,7 @@ begin
     Self.Cache.Y1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TInterface.Y2(): Int32;
+function TRSInterface.Y2(): Int32;
 var
   Top, Bottom, Height, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -274,30 +274,30 @@ begin
     Self.Cache.Y2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TInterface.Bounds: TBox;
+function TRSInterface.Bounds: TBox;
 begin
   Result := [Self.X1, Self.Y1, Self.X2, Self.Y2];
 end;
 
-function TInterface.Width(): Int32;
+function TRSInterface.Width(): Int32;
 begin
   Result := Self.X2() - Self.X1() + 1;
 end;
 
-function TInterface.Height(): Int32;
+function TRSInterface.Height(): Int32;
 begin
   Result := Self.Y2() - Self.Y1() + 1;
 end;
 
 
-type TRootInterface = type TInterface;
+type TRSRootInterface = type TRSInterface;
 
-function TRootInterface.Y1(): Int32; override;
+function TRSRootInterface.Y1(): Int32; override;
 begin
   Result := 0;
 end;
 
-function TRootInterface.X2(): Int32; override;
+function TRSRootInterface.X2(): Int32; override;
 var
   ClientWidth, ClientHeight: Int32;
 begin
@@ -306,12 +306,12 @@ begin
   Result := ClientWidth - 1;
 end;
 
-var RootInterface: TRootInterface;
+var RootInterface: TRSRootInterface;
 
 type
-  TGameTabs = type TInterface;
+  TRSGameTabs = type TRSInterface;
 
-  EGameTab = (
+  ERSGameTab = (
     COMBAT,
     STATS,
     QUESTS,
@@ -330,46 +330,46 @@ type
   );
 
 {
-function TGameTabs.X1: Int32; constref; override;
+function TRSGameTabs.X1: Int32; constref; override;
 begin
   Result := inherited
 end;
 }
 
 // Needed because depending on the client width the tabs stack into row(s)
-function TGameTabs.Y1(): Int32; override;
+function TRSGameTabs.Y1(): Int32; override;
 begin
   Result := inherited;
 
-  if (Self.Mode = EClientMode.RESIZABLE_MODERN) and (RootInterface.Width >= 948) then
+  if (Self.Mode = ERSClientMode.RESIZABLE_MODERN) and (RootInterface.Width >= 948) then
     Result += 36;
 end;
 
-function TGameTabs.Y2(): Int32; override;
+function TRSGameTabs.Y2(): Int32; override;
 begin
   Result := inherited;
 
-  if (Self.Mode = EClientMode.RESIZABLE_MODERN) and (RootInterface.Width >= 948) then
+  if (Self.Mode = ERSClientMode.RESIZABLE_MODERN) and (RootInterface.Width >= 948) then
     Result += 36;
 end;
 
-function TGameTabs.GetTabBoxes(): TBoxArray;
+function TRSGameTabs.GetTabBoxes(): TBoxArray;
 var
   I: Int32;
 begin
   case Self.Mode of
-    EClientMode.FIXED, EClientMode.RESIZABLE_CLASSIC:
+    ERSClientMode.FIXED, ERSClientMode.RESIZABLE_CLASSIC:
       begin
         Result := Grid(7, 2, 30, 33, [3, 265], [Self.X1 + 6, Self.Y1 + 1]);
       end;
 
-    EClientMode.RESIZABLE_MODERN:
+    ERSClientMode.RESIZABLE_MODERN:
       begin
         // One row
         if (RootInterface.Width >= 948) then
         begin
           Result := Grid(14, 1, 30, 33, [3, 0], [Self.X1() - 197, Self.Y2() - 70]);
-          for I := Ord(EGameTab.MUSIC) downto Ord(EGameTab.FRIENDS) - 1 do
+          for I := Ord(ERSGameTab.MUSIC) downto Ord(ERSGameTab.FRIENDS) - 1 do
             Result[I] := Result[I-1];
         end else
         // Two rows
@@ -382,40 +382,40 @@ begin
   end;
 end;
 
-function TGameTabs.GetTabBox(Tab: EGameTab): TBox;
+function TRSGameTabs.GetTabBox(Tab: ERSGameTab): TBox;
 var
   Tabs: TBoxArray := Self.GetTabBoxes;
 begin
-  if (Tabs = []) or (Tab = EGameTab.UNKNOWN_2) then
+  if (Tabs = []) or (Tab = ERSGameTab.UNKNOWN_2) then
     Exit;
   Result := Tabs[Tab];
 end;
 
-function TGameTabs.GetCurrentTab(): EGameTab;
+function TRSGameTabs.GetCurrentTab(): ERSGametab;
 var
   Tabs: TBoxArray;
   I: Int32;
 begin
   Tabs := Self.GetTabBoxes();
 
-  if (Self.Mode = EClientMode.RESIZABLE_MODERN) and (MicroSRL.CountColor(8639715, Tabs[EGameTab.LOGOUT]) > 0) then
-    Exit(EGameTab.LOGOUT);
+  if (Self.Mode = ERSClientMode.RESIZABLE_MODERN) and (MicroSRL.CountColor(8639715, Tabs[ERSGameTab.LOGOUT]) > 0) then
+    Exit(ERSGameTab.LOGOUT);
 
   for I := 0 to High(Tabs) do
     if (MicroSRL.CountColor(CTS1(1778534, 22), Tabs[I]) > 50) then
-      Exit(EGameTab(I));
+      Exit(ERSGameTab(I));
 
-  Exit(EGameTab.UNKNOWN_2);
+  Exit(ERSGameTab.UNKNOWN_2);
 end;
 
-function TGameTabs.IsQuestsOpen(): Boolean;
+function TRSGameTabs.IsQuestsOpen(): Boolean;
 begin
-  Result := Self.GetCurrentTab() = EGameTab.QUESTS;
+  Result := Self.GetCurrentTab() = ERSGameTab.QUESTS;
 end;
 
-var GameTabs: TGameTabs;
+var GameTabs: TRSGameTabs;
 
-function DetectClientMode(): EClientMode;
+function DetectClientMode(): ERSClientMode;
 var
   W, H: Int32;
 begin
@@ -432,9 +432,9 @@ begin
   // Music tab in each mode there are different colors at W-4, H-21
   // Two colors each because tab can be active(red) or not(grey)
   case GetColor(W-4, H-21) of
-    2435372, 658467: Result := EClientMode.FIXED;
-    3555653, 922425: Result := EClientMode.RESIZABLE_MODERN;
-    2896180, 790059: Result := EClientMode.RESIZABLE_CLASSIC;
+    2435372, 658467: Result := ERSClientMode.FIXED;
+    3555653, 922425: Result := ERSClientMode.RESIZABLE_MODERN;
+    2896180, 790059: Result := ERSClientMode.RESIZABLE_CLASSIC;
   end;
 
   GameTabs.SetupAlignment(Result);

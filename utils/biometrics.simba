@@ -548,7 +548,7 @@ begin
 end;
 
 
-procedure TWalkerV2.AntibanClick(randomness: Int32); override;
+procedure TRSWalkerV2.AntibanClick(randomness: Int32); override;
 begin
   if randomness > 0 then
     Antiban.BioClick(MOUSE_LEFT)

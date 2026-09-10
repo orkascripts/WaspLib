@@ -1,8 +1,8 @@
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
 
 
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$IFNDEF ANDREW_MUSHTREE_INCLUDED}
@@ -17,7 +17,7 @@ type
   TFarmPatch = record
     //Basically a placeholder for now
     Patch: EFarmPatch;
-    Obj: TObjectV2;
+    Obj: TRSObjectV2;
     Timestamp: UInt64;
   end;
 
@@ -29,7 +29,7 @@ type
 
     OnStart, OnStop, IsFinished: function (): Boolean of object;
 
-    Map: TMap; //local TMap exclusive to the TFarmHandler
+    Map: TRSMap; //local TRSMap exclusive to the TFarmHandler
   end;
 
 function TFarmHandler._IsFinished(): Boolean;
@@ -44,7 +44,7 @@ var
 begin
   Self.Map.Loader.Load([Chunk([56,61,60,57], 0), Chunk([58,60,58,60], 1)], 8, 80);
 
-  //add map to our handler map regardless of where it came from, TMap or TWalker
+  //add map to our handler map regardless of where it came from, TRSMap or TRSWalker
   sizeMap := [Self.Map.Loader.Map.getWidth(), Self.Map.Loader.Map.getHeight()];
   sizeBMP := [bmp.getWidth(), bmp.getHeight()];
 
@@ -101,9 +101,9 @@ var
 
 
 (*
-//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TWalker AND TMAP
+//EXAMPLE TEST OF SHOWING THE MAPS JOINED TOGETHER BETWEEN TRSWALKER AND TRSMAP
 var
-  rsw: TWalker;
+  rsw: TRSWalker;
 begin
   rsw.SetupRegion(RSRegions.ARDOUGNE);
   FarmHandler.Setup(@rsw, EBirdHouseWood.MAHOGANY, 'Guam seed');

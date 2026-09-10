@@ -5,25 +5,25 @@ Simple tool to help make RSMonsters.
 
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
 {$I SRL-T/osr.simba}
-{$I WaspLib/main.simba}
+{$I WaspLib/osr.simba}
 {$H-}
 
 var
 //Add an existing on if you want. E.G.:
-//MONSTER: TMonster = @RSMonsters.BlackDemon;
+//MONSTER: TRSMonster = @RSMonsters.BlackDemon;
   MONSTER: PRSMonster = @RSMonsters.BlackDemon;
 
 const
   MAP_NAME: String := WALKER_MAP;
 
 type
-  TNamedShape = record
+  TRSNamedShape = record
     Name: String;
     Circle: TCircle;
     Polygon: TPointArray;
   end;
 
-  TMonsterMapper = record
+  TRSMonsterMapper = record
     Form: TForm;
     Panel: TPanel;
     ButtonNewPolygon, ButtonNewCircle,
@@ -37,17 +37,17 @@ type
     VisibleArea: TBox;
 
     Index: Int32;
-    ShapeArray: array of TNamedShape;
+    ShapeArray: array of TRSNamedShape;
 
     SelectedPoint: TPoint;
     MovingPoint, Dragging: Boolean;
   end;
 
 var
-  MapMaker: TMonsterMapper;
+  MapMaker: TRSMonsterMapper;
 
 //Mouse
-procedure TMonsterMapper.OnMouseMove(sender: TObject; Shift: TShiftState; X, Y: Int32);
+procedure TRSMonsterMapper.OnMouseMove(sender: TObject; Shift: TShiftState; X, Y: Int32);
 var
   diff: TPoint;
   tpa: TPointArray;
@@ -92,7 +92,7 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.OnMouseDown(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
+procedure TRSMonsterMapper.OnMouseDown(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
   function checkCorners(tpa: TPointArray): Boolean;
   var
     i: Int32
@@ -232,7 +232,7 @@ begin
   Self.Dragging := True;
 end;
 
-procedure TMonsterMapper.OnMouseUp(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
+procedure TRSMonsterMapper.OnMouseUp(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
 begin
   if Button <> mbLeft then
     Exit;
@@ -242,7 +242,7 @@ begin
 end;
 
 
-procedure TMonsterMapper.DrawShapes(area: TBox);
+procedure TRSMonsterMapper.DrawShapes(area: TBox);
 var
   canvas: TCanvas;
   tpa: TPointArray;
@@ -333,7 +333,7 @@ begin
   end;
 end;
 
-procedure TMonsterMapper.PaintArea(sender: TObject; canvas: TCanvas; r: TRect);
+procedure TRSMonsterMapper.PaintArea(sender: TObject; canvas: TCanvas; r: TRect);
 begin
   Self.VisibleArea := [r.Left, r.Top, r.Right, r.Bottom];
   Self.DrawShapes(Self.VisibleArea);
@@ -341,7 +341,7 @@ end;
 
 
 
-procedure TMonsterMapper.MoveToShape();
+procedure TRSMonsterMapper.MoveToShape();
 var
   p: TPoint;
 begin
@@ -358,7 +358,7 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.DeleteShapes(all: Boolean = False);
+procedure TRSMonsterMapper.DeleteShapes(all: Boolean = False);
 begin
   if all then
   begin
@@ -383,7 +383,7 @@ begin
     Self.RenameEdit.Clear();
 end;
 
-procedure TMonsterMapper.ListBoxOnClick(sender: TObject);
+procedure TRSMonsterMapper.ListBoxOnClick(sender: TObject);
 begin
   Self.Index := Self.ShapesList.getItemIndex();
   if Self.Index < 0 then
@@ -396,13 +396,13 @@ begin
     Self.RadiusEdit.setText(ToStr(Self.ShapeArray[Self.Index].Circle.Radius));
 end;
 
-procedure TMonsterMapper.OnUnSelectNode(sender: TObject);
+procedure TRSMonsterMapper.OnUnSelectNode(sender: TObject);
 begin
   Self.ImageBox.Update();
 end;
 
 
-procedure TMonsterMapper.OnRename(sender: TObject);
+procedure TRSMonsterMapper.OnRename(sender: TObject);
 var
   str: String;
 begin
@@ -415,7 +415,7 @@ begin
   Self.ShapeArray[Self.Index].Name := str;
 end;
 
-procedure TMonsterMapper.OnRadius(sender: TObject);
+procedure TRSMonsterMapper.OnRadius(sender: TObject);
 var
   radius: Int32;
 begin
@@ -433,7 +433,7 @@ end;
 
 
 
-procedure TMonsterMapper.OnDelete(sender: TObject);
+procedure TRSMonsterMapper.OnDelete(sender: TObject);
 begin
   if Self.Index < 0 then
     Exit;
@@ -442,15 +442,15 @@ begin
   Self.MoveToShape();
 end;
 
-procedure TMonsterMapper.OnReset(sender: TObject);
+procedure TRSMonsterMapper.OnReset(sender: TObject);
 begin
   Self.DeleteShapes(True);
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.OnNewPolygon(sender: TObject);
+procedure TRSMonsterMapper.OnNewPolygon(sender: TObject);
 var
-  shape: TNamedShape;
+  shape: TRSNamedShape;
 begin
   shape.Polygon := Box(Self.VisibleArea.Center(), 30, 30).ToRectangle().ToTPA();
   shape.Name := 'New Polygon';
@@ -462,9 +462,9 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.OnNewCircle(sender: TObject);
+procedure TRSMonsterMapper.OnNewCircle(sender: TObject);
 var
-  shape: TNamedShape;
+  shape: TRSNamedShape;
 begin
   shape.Circle.X := Self.VisibleArea.Center().X;
   shape.Circle.Y := Self.VisibleArea.Center().Y;
@@ -479,7 +479,7 @@ begin
 end;
 
 
-procedure TMonsterMapper.OnPrintSelected(sender: TObject);
+procedure TRSMonsterMapper.OnPrintSelected(sender: TObject);
 var
   str: String;
   tpa: TPointArray;
@@ -504,14 +504,14 @@ begin
   WriteLn(LineEnding, LineEnding);
 end;
 
-procedure TMonsterMapper.OnPrint(sender: TObject);
+procedure TRSMonsterMapper.OnPrint(sender: TObject);
 var
   radii, copyRadii: TIntegerArray;
   hi, i: Int32;
   tpa: TPointArray;
   circle: TCircle;
   str, height: String;
-  arr: array of TNamedShape;
+  arr: array of TRSNamedShape;
   added: Boolean;
 begin
   if Self.ShapeArray = [] then
@@ -582,7 +582,7 @@ begin
 end;
 
 
-procedure TMonsterMapper.OnKeyDown(sender: TObject; var key: Word; shift: TShiftState);
+procedure TRSMonsterMapper.OnKeyDown(sender: TObject; var key: Word; shift: TShiftState);
 var
   tmp: TPointArray;
 begin
@@ -622,21 +622,21 @@ end;
 
 
 //Form stuff.
-procedure TMonsterMapper.OnFormShow(sender: TObject);
+procedure TRSMonsterMapper.OnFormShow(sender: TObject);
 begin
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.OnFormClose(sender: TObject; var CloseAction: TCloseAction);
+procedure TRSMonsterMapper.OnFormClose(sender: TObject; var CloseAction: TCloseAction);
 begin
   Self.OnPrint(nil);
 end;
 
 
-procedure TMonsterMapper.Init();
+procedure TRSMonsterMapper.Init();
 var
   i: Int32;
-  shape: TNamedShape;
+  shape: TRSNamedShape;
 begin
   Self.Index := -1;
   Self.RenameEdit.Clear();
@@ -663,10 +663,10 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TMonsterMapper.Run();
+procedure TRSMonsterMapper.Run();
 var
-  walker: TWalker;
-  customMonster: TMonster;
+  walker: TRSWalker;
+  customMonster: TRSMonster;
 begin
   try
     with Self.Form do
@@ -832,7 +832,7 @@ begin
   end;
 end;
 
-procedure TWalker.InternalSetup(); override;
+procedure TRSWalker.InternalSetup(); override;
 begin
   Self.Name := 'Walker';
   ScriptWalker := @Self;
@@ -840,7 +840,7 @@ begin
 end;
 
 
-function TWalker.GetMyPos(): TPoint; override;
+function TRSWalker.GetMyPos(): TPoint; override;
 begin
   Result := [0, 0];
 end;

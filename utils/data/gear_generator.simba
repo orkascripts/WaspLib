@@ -2,7 +2,7 @@
 
 const
   PATH = {$macro CURRENT_DIRECTORY} + 'gear.json';
-  DATA_URL = 'https://raw.githubusercontent.com/0xNeffarion/osrsreboxed-db/master/docs/items-json-slot/';
+  OSRSBOX_URL = 'https://raw.githubusercontent.com/0xNeffarion/osrsreboxed-db/master/docs/items-json-slot/';
   ENDPOINTS = [ 'head', 'cape', 'neck', 'ammo','weapon', 'body', 'shield', 'legs', 'hands', 'feet', 'ring','2h'];
 
 var
@@ -25,7 +25,7 @@ begin
     strArray := [];
     for j := 0 to arr.High() do strArray += arr.getString(j);
 
-    url := DATA_URL + 'items-' + key + '.json';
+    url := OSRSBOX_URL + 'items-' + key + '.json';
     json.Init(GetPage(url));
 
     urlKeys := json.keys();

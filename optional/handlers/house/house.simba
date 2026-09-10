@@ -29,8 +29,8 @@ e.g., Nexus room, Combat Hall and Quest Hall are all identical.
 *)
 
 {$DEFINE WL_HOUSE_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$IFNDEF WL_HOUSEMAP_INCLUDED}
@@ -52,14 +52,14 @@ type
 ```pascal
 THouseHandler = record(TSRLBaseRecord)
   Loader: THouseLoader;
-  Walker: TWalkerV2;
+  Walker: TRSWalkerV2;
 
-  Objects: array [EHouseObject] of TGameObjectV2;
+  Objects: array [EHouseObject] of TRSObjectV2;
 
   Downscale: Int32;
   Similarity: Double;
 
-  Sample: TMapSample;
+  Sample: TRSMapSample;
   Cache: TMatchTemplateRGBCache;
 
   Graph: TWebGraphV2;
@@ -70,26 +70,26 @@ The core record used to handle navigating a POH.
 *)
   THouseHandler = record(TSRLBaseRecord)
     Loader: THouseLoader;
-    Walker: TWalkerV2;
+    Walker: TRSWalkerV2;
 
-    Objects: array [EHouseObject] of TGameObjectV2;
-    Teleports: array [EHouseTeleport] of TGameObjectV2;
+    Objects: array [EHouseObject] of TRSObjectV2;
+    Teleports: array [EHouseTeleport] of TRSObjectV2;
 
     Downscale: Int32;
     Similarity: Double;
 
-    Sample: TMapSample;
+    Sample: TRSMapSample;
     Cache: TMatchTemplateRGBCache;
 
     Graph: TWebGraphV2;
     IsSetup: Boolean;
 
-    Entrance: TGameObjectV2;
+    Entrance: TRSObjectV2;
 
     TeleportMode: EHouseTeleportMode;
-    CapeTab: EGameTab;
+    CapeTab: ERSGameTab;
     TeleportPlace: EHouseTeleportPlace;
-    HouseTeleportItem: TItem;
+    HouseTeleportItem: TRSItem;
   end;
 
 function THouseHandler.Position(): TPoint; forward;
@@ -169,7 +169,7 @@ begin
     end;
 end;
 
-function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TGameObjectV2;
+function THouseHandler.CreateObject(offset: TPoint; size: vector3; eRoom: EHouseRoom): TRSObjectV2;
 var
   idx, coordinate: TPoint;
   room: THouseRoom;
@@ -225,7 +225,7 @@ begin
     if i mod divider = 0 then
       Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
-    if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * Translator.TileArea then Continue; //remove very small spaces
+    if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * RSTranslator.TileArea then Continue; //remove very small spaces
 
     bounds := atpa[i].Bounds();
     if Max(bounds.Width(), bounds.Height()) < GENERATED_GRAPH.NodeRadius then //mark spaces less than NodeRadius with a single node and continue
@@ -322,7 +322,7 @@ begin
   SetLength(Result.Names, Length(Result.Nodes));
 end;
 
-function THouseHandler.GetChunk(): TMapChunk;
+function THouseHandler.GetChunk(): TRSMapChunk;
 begin
   Result := Self.Loader.Location.GetChunk();
 end;
@@ -368,7 +368,7 @@ begin
   Self.Entrance.Finder.Colors += CTS2(6316135, 8, 0.28, 0.12);
   Self.Entrance.Finder.Colors += CTS2(9379961, 30, 0.16, 1.76);
 
-  Self.CapeTab := EGameTab.UNKNOWN;
+  Self.CapeTab := ERSGameTab.UNKNOWN;
 
   Self.IsSetup := True;
 end;
@@ -495,7 +495,7 @@ begin
 
   cleanMinimap.Free();
 
-  Result := Translator.Normalize(Result);
+  Result := RSTranslator.Normalize(Result);
 end;
 
 (*
@@ -545,7 +545,7 @@ begin
   cleanMinimap := Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 1);
 
   p := cleanMinimap.GetCenter();
-  if GameClient.Mode = EClientMode.FIXED then
+  if RSClient.Mode = ERSClientMode.FIXED then
     p := p.Offset(0, 8).Rotate(-Minimap.GetCompassAngle(False), p);
 
   cleanMinimap.DrawBoxFilled([p.X - 1, p.Y - 1, p.X + 1, p.Y + 1], False, $FFFFFF);
@@ -588,7 +588,7 @@ end;
 
 function THouseHandler.Enter(): Boolean;
 var
-  CAPES: TItemArray = ['Construct. cape', 'Construct. cape(t)', 'Max cape'];
+  CAPES: TRSItemArray = ['Construct. cape', 'Construct. cape(t)', 'Max cape'];
   slot: Int32;
   option: String;
   loading, outside: Boolean;
@@ -606,9 +606,9 @@ begin
       begin
         if not Magic.Open() then
           Exit;
-        if not Magic.ContainsSpell(ESpell.TELEPORT_TO_HOUSE) then
+        if not Magic.ContainsSpell(ERSSpell.TELEPORT_TO_HOUSE) then
           RaiseException('Can''t find teleport to house spell.');
-        if not Magic.CastSpell(ESpell.TELEPORT_TO_HOUSE, 'Cast') then
+        if not Magic.CastSpell(ERSSpell.TELEPORT_TO_HOUSE, 'Cast') then
           Exit;
       end;
     EHouseTeleportMode.TABLET:
@@ -624,7 +624,7 @@ begin
       end;
     EHouseTeleportMode.CAPE:
     begin
-      if Self.CapeTab <> EGameTab.UNKNOWN then GameTabs.Open(Self.CapeTab);
+      if Self.CapeTab <> ERSGameTab.UNKNOWN then GameTabs.Open(Self.CapeTab);
       if not CAPES.Interact(Self.HouseTeleportItem, 'Tele to POH') then Exit;
       Self.CapeTab := GameTabs.GetCurrentTab();
     end;
@@ -1024,7 +1024,7 @@ begin
       combobox.Create(panel, 'Larder:', 'Does this room have a larder?', [0,0],[166,50], True);
       combobox.AddItemArray(['None', 'Normal', 'Oak', 'Teak']);
       combobox.SetName('larder');
-
+      
       tmp := room.Objects - KITCHEN_RANGES;
       if SetCount(tmp) <> 1 then
         combobox.SetItemIndex(0)
@@ -1032,11 +1032,11 @@ begin
         combobox.SetItemIndex(SetFirst(tmp) - Ord(EHouseObject.LARDER) + 1);
 
       combobox.ComboBox.setOnChange(@Self.POHObjectUpdate);
-
+      
       combobox.Create(panel, 'Range:', 'Does this room have a range?', [0,50],[166,50], True);
       combobox.AddItemArray(['None', 'Fancy']);
       combobox.SetName('range');
-
+      
       tmp := room.Objects - KITCHEN_LARDERS;
       if SetCount(tmp) <> 1 then
         combobox.SetItemIndex(0)
@@ -1421,7 +1421,7 @@ var
   imgbox: TSimbaImageBox;
   topLeft, bottomRight, offset, center: TPoint;
 begin
-  if not GameInterface.IsOpen(EInterfaceType.CLASSIC) then
+  if not RSInterface.IsOpen(ERSInterfaceType.CLASSIC) then
   begin
     MessageDlg('LayoutFinder', 'You need to open the house viewer to read the layout!', mtWarning, [mbOk]);
     Exit;
@@ -1584,3 +1584,4 @@ begin
   room.SetItemIndex(Ord(House.Loader.ReadRoom(House.Loader.Selected.Matrix).Room));
   Self.RoomUpdate(room.ComboBox);
 end;
+

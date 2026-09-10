@@ -27,7 +27,7 @@ end;
 
 
 
-//This probably doesn't belong in TWalker lol....
+//This probably doesn't belong in TRSWalker lol....
 function PopulateTile(Tile: TPoint; Populate: record N, S, W, E: Int32; end): TPointArray;
 var
   Idx1, Idx2: Int32;
@@ -77,3 +77,6 @@ function PopulateTileArray(TileArray: TPointArray; Distance: Int32): TPointArray
 begin
   Result := PopulateTileArray(TileArray, [Distance, Distance, Distance, Distance]);
 end;
+
+
+

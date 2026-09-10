@@ -1,6 +1,6 @@
 {$DEFINE LAYOUT_FINDER}
 
-{$I WaspLib/main.simba}
+{$I WaspLib/osr.simba}
 {$IFNDEF WL_HOUSEMAP_INCLUDED}
   {$I WaspLib/optional/handlers/house/houseloader.simba}
 {$ENDIF}
@@ -107,7 +107,7 @@ begin
     roomImage.Init(Client.GetMBitmaps());
     roomImage.LoadFromFile(fileName);
     roomImage.SetName(ToStr(room));
-    roomImage.ReplaceColor(ITEM_SHADOW, 0);
+    roomImage.ReplaceColor(RS_ITEM_SHADOW, 0);
     Result += roomImage;
   end;
 
@@ -136,7 +136,7 @@ var
   matchedBox: TBox;
   match: TPoHLayoutFinderMatch;
 begin
-  clientImage.FromClient(GameClient.Bounds);
+  clientImage.FromClient(RSClient.Bounds);
   for i := 0 to High(rooms) do
     roomBitmaps += Self.GetRoomImages(rooms[i]);
 
@@ -174,7 +174,7 @@ var
   matches: TBoxArray;
   clientImage: TMufasaBitmap;
 begin
-  clientImage.FromClient(GameClient.Bounds);
+  clientImage.FromClient(RSClient.Bounds);
   SRL.FindAllTemplatesIn(self.GetRoomImages(r)[0], clientImage, 0.95, matches);
 end;
 

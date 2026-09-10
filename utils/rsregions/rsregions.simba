@@ -1,10 +1,10 @@
-{$DEFINE WL_REGIONS_INCLUDED}
+{$DEFINE WL_RSREGIONS_INCLUDED}
 {$IFNDEF WL_UTILS}
   {$I WaspLib/utils.simba}
 {$ENDIF}
 
 type
-  TRegions = record
+  TRSRegions = record
     ABYSS:                      TBox;
     ALTARS:                     TBox;
     AL_KHARID:                  TBox;
@@ -115,7 +115,7 @@ type
   end;
 
 var
-  RSRegions: TRegions;
+  RSRegions: TRSRegions;
 
 begin
   RSRegions.ABYSS                      := [9670, 4424, 10559, 5400];

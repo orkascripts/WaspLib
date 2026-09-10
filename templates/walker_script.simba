@@ -2,7 +2,7 @@
 {$UNDEF SCRIPT_REVISION}{$DEFINE SCRIPT_REVISION := '1'}
 {$IFDEF WINDOWS}{$DEFINE SCRIPT_GUI}{$ENDIF}
 {$I SRL-T/osr.simba}
-{$I WaspLib/main.simba}
+{$I WaspLib/osr.simba}
 
 type
   ETask = (
@@ -19,18 +19,18 @@ type
     END_SCRIPT
   );
 
-  TWalkECript = record(TBaseScript)
+  TWalkerScript = record(TBaseScript)
     State: EState;
   end;
 
-procedure TWalkECript.Init(maxActions: UInt32; maxTime: UInt64); override;
+procedure TWalkerScript.Init(maxActions: UInt32; maxTime: UInt64); override;
 begin
   inherited;
 
-  Map.SetupChunk(EChunk.VARROCK);
+  Map.SetupChunk(ERSChunk.VARROCK);
 end;
 
-function TWalkECript.GetState(): EState;
+function TWalkerScript.GetState(): EState;
 begin
   if Self.ShouldStop() then
     Exit(EState.END_SCRIPT);
@@ -41,7 +41,7 @@ begin
   Exit(EState.WAIT_STATE);
 end;
 
-procedure TWalkECript.Run(maxActions: UInt32; maxTime: UInt64);
+procedure TWalkerScript.Run(maxActions: UInt32; maxTime: UInt64);
 begin
   Self.Init(maxActions, maxTime);
 
@@ -59,11 +59,11 @@ begin
 end;
 
 var
-  WalkECript: TWalkECript;
+  WalkerScript: TWalkerScript;
 
 procedure TAntiban.Setup(); override;
 begin
-  Self.Skills := [ESkill.TOTAL];
+  Self.Skills := [ERSSkill.TOTAL];
   Self.MinZoom := 15;
   Self.MaxZoom := 40;
 
@@ -123,5 +123,5 @@ begin
   {$IFDEF SCRIPT_GUI}
   Config.Run();
   {$ENDIF}
-  WalkECript.Run(WLSettings.MaxActions(), WLSettings.MaxTime());
+  WalkerScript.Run(WLSettings.MaxActions(), WLSettings.MaxTime());
 end.
