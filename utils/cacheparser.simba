@@ -1,6 +1,6 @@
 (*
-# CacheParser
-CacheParser as the name implies is a record made to parse information from certain files that are part of the game cache.
+# RSCacheParser
+RSCacheParser as the name implies is a record made to parse information from certain files that are part of the OSRS cache.
 - preferences.dat is where most client settings are stored.
 - preferences2.dat I have no idea? some values in address 00000020 seem to change after some times has passed randomly. (related to 6h log maybe!?!?)
 - random.dat in the user home directory seems to be a random identifier generated the first time you open a client if it doesn't exist.
@@ -16,20 +16,20 @@ For more information check this file: https://github.com/open-osrs/runelite/blob
 {$ENDIF}
 
 (*
-## type TCacheParser
+## type TRSCacheParser
 ```pascal
 type
-  TCacheParser = record(TSRLBaseRecord)
+  TRSCacheParser = record(TSRLBaseRecord)
     Disabled: Boolean;
     Directory: String;
     Preferences: String;
     Preferences2: String;
   end;
 ```
-Type responsible for handling cache parsing.
+Type responsible for handling osrs cache parsing.
 *)
 type
-  TCacheParser = record(TSRLBaseRecord)
+  TRSCacheParser = record(TSRLBaseRecord)
     Disabled: Boolean;
     Directory: String;
     Preferences: String;
@@ -37,13 +37,13 @@ type
   end;
 
 (*
-## CacheParser.Setup
+## RSCacheParser.Setup
 ```pascal
-procedure TCacheParser.Setup();
+procedure TRSCacheParser.Setup();
 ```
 Internal method called automatically simply by including WaspLib.
 *)
-procedure TCacheParser.Setup();
+procedure TRSCacheParser.Setup();
 var
   dir, base: String;
   {$IFDEF WINDOWS}
@@ -52,8 +52,8 @@ var
 begin
   base := 'jagexcache' + DirectorySeparator + 'oldschool' + DirectorySeparator + 'LIVE' + DirectorySeparator;
 
-  case GameClient.GetCurrentClient() of
-    EClient.LEGACY:
+  case RSClient.GetCurrentClient() of
+    ERSClient.LEGACY:
     begin
       {$IFDEF WINDOWS}
       winDirs := [
@@ -77,7 +77,7 @@ begin
         Self.Disabled := True;
     end;
 
-    EClient.RUNELITE:
+    ERSClient.RUNELITE:
     begin
 
       dir :=
@@ -99,13 +99,13 @@ begin
 end;
 
 (*
-## CacheParser.GetPreference
+## RSCacheParser.GetPreference
 ```pascal
-function TCacheParser.GetPreference(prefNumber: Int32 = 1): String;
+function TRSCacheParser.GetPreference(prefNumber: Int32 = 1): String;
 ```
 Read the preference file specified.
 *)
-function TCacheParser.GetPreference(prefNumber: Int32 = 1): String;
+function TRSCacheParser.GetPreference(prefNumber: Int32 = 1): String;
 begin
   case prefNumber of
     1: Result := ReadFileContents(Self.Directory + 'preferences.dat');
@@ -117,13 +117,13 @@ begin
 end;
 
 (*
-## CacheParser.Update
+## RSCacheParser.Update
 ```pascal
-function TCacheParser.Update(): Boolean;
+function TRSCacheParser.Update(): Boolean;
 ```
 Method to check if the cache files were updated.
 *)
-function TCacheParser.Update(prefNumber: Int32 = 0): Boolean;
+function TRSCacheParser.Update(prefNumber: Int32 = 0): Boolean;
 var
   tmp1, tmp2: String;
 begin
@@ -161,18 +161,18 @@ begin
 end;
 
 (*
-## CacheParser.GetHexString
+## RSCacheParser.GetHexString
 ```pascal
-function TCacheParser.GetHexString(prefNumber: Int32 = 1): String;
+function TRSCacheParser.GetHexString(prefNumber: Int32 = 1): String;
 ```
 Print the cache files as a hex string.
 
 Example:
 ```pascal
-WriteLn CacheParser.GetHexString(1);
+WriteLn RSCacheParser.GetHexString(1);
 ```
 *)
-function TCacheParser.GetHexString(prefNumber: Int32 = 1): String;
+function TRSCacheParser.GetHexString(prefNumber: Int32 = 1): String;
 var
   pref, final, tmp: String;
   i: Int32;
@@ -199,18 +199,18 @@ begin
 end;
 
 (*
-## CacheParser.Print
+## RSCacheParser.Print
 ```pascal
-procedure TCacheParser.Print(prefNumber: Int32 = 0);
+procedure TRSCacheParser.Print(prefNumber: Int32 = 0);
 ```
 Print the cache files as strings. This is only useful for debugging purposes.
 
 Example:
 ```pascal
-CacheParser.Print();
+RSCacheParser.Print();
 ```
 *)
-procedure TCacheParser.Print(prefNumber: Int32 = 0);
+procedure TRSCacheParser.Print(prefNumber: Int32 = 0);
 begin
   Self.Update();
 
@@ -224,19 +224,19 @@ begin
 end;
 
 (*
-## CacheParser.GetOptionsAmount
+## RSCacheParser.GetOptionsAmount
 ```pascal
-function TCacheParser.GetOptionsAmount(): Int32;
+function TRSCacheParser.GetOptionsAmount(): Int32;
 ```
 Returns the number of options saved in the cache. This is not very useful, AFAIK there's only 2 possible values for this: 0 and 10.
 0 is only if you haven't accepted the EULA in the client.
 
 Example:
 ```pascal
-WriteLn CacheParser.GetOptionsAmount();
+WriteLn RSCacheParser.GetOptionsAmount();
 ```
 *)
-function TCacheParser.GetOptionsAmount(): Int32;
+function TRSCacheParser.GetOptionsAmount(): Int32;
 begin
   Self.Update();
 
@@ -245,18 +245,18 @@ begin
 end;
 
 (*
-## CacheParser.RoofsHidden
+## RSCacheParser.RoofsHidden
 ```pascal
-function TCacheParser.RoofsHidden(): Boolean;
+function TRSCacheParser.RoofsHidden(): Boolean;
 ```
 Checks if the roofs are hidden.
 
 Example:
 ```pascal
-WriteLn CacheParser.RoofsHidden();
+WriteLn RSCacheParser.RoofsHidden();
 ```
 *)
-function TCacheParser.RoofsHidden(): Boolean;
+function TRSCacheParser.RoofsHidden(): Boolean;
 begin
   Self.Update();
   if Length(Self.Preferences) >= 2 then
@@ -264,18 +264,18 @@ begin
 end;
 
 (*
-## CacheParser.TitleMusicDisabled
+## RSCacheParser.TitleMusicDisabled
 ```pascal
-function TCacheParser.TitleMusicDisabled(): Boolean;
+function TRSCacheParser.TitleMusicDisabled(): Boolean;
 ```
 Checks if the music is enabled in the login screen.
 
 Example:
 ```pascal
-WriteLn CacheParser.TitleMusicDisabled();
+WriteLn RSCacheParser.TitleMusicDisabled();
 ```
 *)
-function TCacheParser.TitleMusicDisabled(): Boolean;
+function TRSCacheParser.TitleMusicDisabled(): Boolean;
 begin
   Self.Update();
   if Length(Self.Preferences) >= 3 then
@@ -283,18 +283,18 @@ begin
 end;
 
 (*
-## CacheParser.WindowMode
+## RSCacheParser.WindowMode
 ```pascal
-function TCacheParser.WindowMode(): Int32;
+function TRSCacheParser.WindowMode(): Int32;
 ```
 Returns 1 for fixed mode and 2 for resizable mode. Resizable modern and resizable classic make no difference here.
 
 Example:
 ```pascal
-WriteLn CacheParser.WindowMode();
+WriteLn RSCacheParser.WindowMode();
 ```
 *)
-function TCacheParser.WindowMode(): Int32;
+function TRSCacheParser.WindowMode(): Int32;
 begin
   Self.Update();
   if Length(Self.Preferences) >= 4 then
@@ -302,19 +302,19 @@ begin
 end;
 
 (*
-## CacheParser.GetAuthenticatorAmount
+## RSCacheParser.GetAuthenticatorAmount
 ```pascal
-function TCacheParser.GetAuthenticatorAmount(): Int32;
+function TRSCacheParser.GetAuthenticatorAmount(): Int32;
 ```
 Returns the number of authenticators saved for the next 30 days. If this is more than 0, you will have 8 bytes for each of the saved authenticators.
 This is important to know so we know where the saved username starts if we have saved authenticators.
 
 Example:
 ```pascal
-WriteLn CacheParser.GetAuthenticatorAmount();
+WriteLn RSCacheParser.GetAuthenticatorAmount();
 ```
 *)
-function TCacheParser.GetAuthenticatorAmount(): Int32;
+function TRSCacheParser.GetAuthenticatorAmount(): Int32;
 begin
   Self.Update();
   if Length(Self.Preferences) >= 5 then
@@ -322,18 +322,18 @@ begin
 end;
 
 (*
-## CacheParser.GetAuthenticators
+## RSCacheParser.GetAuthenticators
 ```pascal
-function TCacheParser.GetAuthenticators(): TStringArray;
+function TRSCacheParser.GetAuthenticators(): TStringArray;
 ```
-Returns each authenticator saved in a TStringArray. Each string is 8 bytes like mentioned in CacheParser.GetAuthenticatorAmount() documentation.
+Returns each authenticator saved in a TStringArray. Each string is 8 bytes like mentioned in RSCacheParser.GetAuthenticatorAmount() documentation.
 
 Example:
 ```pascal
-WriteLn CacheParser.GetAuthenticators();
+WriteLn RSCacheParser.GetAuthenticators();
 ```
 *)
-function TCacheParser.GetAuthenticators(): TStringArray;
+function TRSCacheParser.GetAuthenticators(): TStringArray;
 var
   i, j, savedAuths: Int32;
   str: String;
@@ -356,31 +356,31 @@ begin
 end;
 
 (*
-## CacheParser.GetUsernameIndex
+## RSCacheParser.GetUsernameIndex
 ```pascal
-function TCacheParser.GetUsernameIndex(): Int32;
+function TRSCacheParser.GetUsernameIndex(): Int32;
 ```
 Internal function that returns byte index where the username starts.
 This is required because depending on wether we have authenticators saved or not, the bytes shift.
 *)
-function TCacheParser.GetUsernameIndex(): Int32;
+function TRSCacheParser.GetUsernameIndex(): Int32;
 begin
   Result := 6 + Self.GetAuthenticatorAmount() * 8;
 end;
 
 (*
-## CacheParser.GetUsername
+## RSCacheParser.GetUsername
 ```pascal
-function TCacheParser.GetUsername(): String;
+function TRSCacheParser.GetUsername(): String;
 ```
-Returns the saved username in the game cache. This is the username you clicked to save on the client when logging in.
+Returns the saved username in the osrs cache. This is the username you clicked to save on the client when logging in.
 
 Example:
 ```pascal
-WriteLn CacheParser.GetUsername();
+WriteLn RSCacheParser.GetUsername();
 ```
 *)
-function TCacheParser.GetUsername(): String;
+function TRSCacheParser.GetUsername(): String;
 var
   i: Int32;
 begin
@@ -393,13 +393,13 @@ begin
 end;
 
 (*
-## CacheParser.UsernameEndIndex
+## RSCacheParser.UsernameEndIndex
 ```pascal
-function TCacheParser.UsernameEndIndex(): Int32;
+function TRSCacheParser.UsernameEndIndex(): Int32;
 ```
 Internal function used to get the index of the byte of where the username ends.
 *)
-function TCacheParser.UsernameEndIndex(): Int32;
+function TRSCacheParser.UsernameEndIndex(): Int32;
 var
   i: Int32;
 begin
@@ -412,35 +412,35 @@ begin
 end;
 
 (*
-## CacheParser.HideUsername
+## RSCacheParser.HideUsername
 ```pascal
-function TCacheParser.HideUsername(): Boolean;
+function TRSCacheParser.HideUsername(): Boolean;
 ```
 Returns true or false if we have the username hidden.
 
 Example:
 ```pascal
-WriteLn CacheParser.HideUsername();
+WriteLn RSCacheParser.HideUsername();
 ```
 *)
-function TCacheParser.HideUsername(): Boolean;
+function TRSCacheParser.HideUsername(): Boolean;
 begin
   Result := Boolean(Self.Preferences[Self.UsernameEndIndex()]);
 end;
 
 (*
-## CacheParser.Brightness
+## RSCacheParser.Brightness
 ```pascal
-function TCacheParser.Brightness(): Int32;
+function TRSCacheParser.Brightness(): Int32;
 ```
 Returns the brightness value converted to a 0-100 value.
 
 Example:
 ```pascal
-WriteLn CacheParser.Brightness();
+WriteLn RSCacheParser.Brightness();
 ```
 *)
-function TCacheParser.Brightness(): Int32;
+function TRSCacheParser.Brightness(): Int32;
 var
   i: Int32;
 begin
@@ -450,18 +450,18 @@ begin
 end;
 
 (*
-## CacheParser.MusicVolume
+## RSCacheParser.MusicVolume
 ```pascal
-function TCacheParser.MusicVolume(): Int32;
+function TRSCacheParser.MusicVolume(): Int32;
 ```
 Returns the music volume value converted to a 0-100 value.
 
 Example:
 ```pascal
-WriteLn CacheParser.MusicVolume();
+WriteLn RSCacheParser.MusicVolume();
 ```
 *)
-function TCacheParser.MusicVolume(): Int32;
+function TRSCacheParser.MusicVolume(): Int32;
 var
   i: Int32;
 begin
@@ -471,18 +471,18 @@ begin
 end;
 
 (*
-## CacheParser.SoundEffectsVolume
+## RSCacheParser.SoundEffectsVolume
 ```pascal
-function TCacheParser.SoundEffectsVolume(): Int32;
+function TRSCacheParser.SoundEffectsVolume(): Int32;
 ```
 Returns the sound effects volume value converted to a 0-100 value.
 
 Example:
 ```pascal
-WriteLn CacheParser.SoundEffectsVolume();
+WriteLn RSCacheParser.SoundEffectsVolume();
 ```
 *)
-function TCacheParser.SoundEffectsVolume(): Int32;
+function TRSCacheParser.SoundEffectsVolume(): Int32;
 var
   i: Int32;
 begin
@@ -492,18 +492,18 @@ begin
 end;
 
 (*
-## CacheParser.AreaSoundVolume
+## RSCacheParser.AreaSoundVolume
 ```pascal
-function TCacheParser.AreaSoundVolume(): Int32;
+function TRSCacheParser.AreaSoundVolume(): Int32;
 ```
 Returns the area sound volume value converted to a 0-100 value.
 
 Example:
 ```pascal
-WriteLn CacheParser.AreaSoundVolume();
+WriteLn RSCacheParser.AreaSoundVolume();
 ```
 *)
-function TCacheParser.AreaSoundVolume(): Int32;
+function TRSCacheParser.AreaSoundVolume(): Int32;
 var
   i: Int32;
 begin
@@ -513,18 +513,18 @@ begin
 end;
 
 (*
-## CacheParser.Field1247
+## RSCacheParser.Field1247
 ```pascal
-function TCacheParser.Field1247(): Int32;
+function TRSCacheParser.Field1247(): Int32;
 ```
 I have absolutely no idea what this is. It's supposedly something, but AFAIK it's always 0.
 
 Example:
 ```pascal
-WriteLn CacheParser.Field1247();
+WriteLn RSCacheParser.Field1247();
 ```
 *)
-function TCacheParser.Field1247(): Int32;
+function TRSCacheParser.Field1247(): Int32;
 var
   i: Int32;
 begin
@@ -534,19 +534,19 @@ begin
 end;
 
 (*
-## CacheParser.DisplayFPS
+## RSCacheParser.DisplayFPS
 ```pascal
-function TCacheParser.DisplayFPS(): Boolean;
+function TRSCacheParser.DisplayFPS(): Boolean;
 ```
 Returns true/false if we have Display FPS enabled.
 Display FPS can be enabled by typing ::displayfps in game.
 
 Example:
 ```pascal
-WriteLn CacheParser.DisplayFPS();
+WriteLn RSCacheParser.DisplayFPS();
 ```
 *)
-function TCacheParser.DisplayFPS(): Boolean;
+function TRSCacheParser.DisplayFPS(): Boolean;
 var
   i: Int32;
 begin
@@ -556,18 +556,18 @@ begin
 end;
 
 (*
-## CacheParser.Field1238
+## RSCacheParser.Field1238
 ```pascal
-function TCacheParser.Field1238(): Int32;
+function TRSCacheParser.Field1238(): Int32;
 ```
 I have absolutely no idea what this is. It's supposedly something, but AFAIK it's always 0.
 
 Example:
 ```pascal
-WriteLn CacheParser.Field1238();
+WriteLn RSCacheParser.Field1238();
 ```
 *)
-function TCacheParser.Field1238(): Int32;
+function TRSCacheParser.Field1238(): Int32;
 var
   i: Int32;
 begin
@@ -577,11 +577,11 @@ begin
 end;
 
 var
-  CacheParser: TCacheParser;
+  RSCacheParser: TRSCacheParser;
 
 procedure TSRL.Setup(); override;
 begin
   inherited;
 
-  CacheParser.Setup();
+  RSCacheParser.Setup();
 end;

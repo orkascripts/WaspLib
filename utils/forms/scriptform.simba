@@ -82,7 +82,7 @@ end;
 ```
 *)
 procedure RewriteCredentials();
-  function _FilterDuplicatePlayers(players: array of TLoginPlayer): array of TLoginPlayer;
+  function _FilterDuplicatePlayers(players: array of TRSLoginPlayer): array of TRSLoginPlayer;
   var
     i, j: Int32;
     match: Boolean;
@@ -106,7 +106,7 @@ procedure RewriteCredentials();
 
   function _BuildCredentials(): String;
   var
-    player: TLoginPlayer;
+    player: TRSLoginPlayer;
     world: Int32;
   begin
     Result := 'begin'#13#10'';
@@ -334,8 +334,8 @@ function TScriptForm.CreateAPISettings(): TTabSheet;
 function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
 function TScriptForm.CreateAccountManager(): TTabSheet; overload;
 function TScriptForm.CreateAntibanManager(): TTabSheet;
-function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: EConsumable; addInfo: Boolean = True): TPanel;
-function TScriptForm.CreateConsumableSettings(consumableType: EConsumable): TTabSheet; overload;
+function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: ERSConsumable; addInfo: Boolean = True): TPanel;
+function TScriptForm.CreateConsumableSettings(consumableType: ERSConsumable): TTabSheet; overload;
 function TScriptForm.CreateBankSettings(): TTabSheet;
 function TScriptForm.CreateLimitSettings(owner: TControl): TPanel;
 function TScriptForm.CreateLimitSettings(owner: TControl): TPanel;
@@ -355,7 +355,7 @@ Very basic example of a full TScriptForm setup:
 Example:
 ```pascal
 {$I SRL-T/osr.simba}
-{$I WaspLib/main.simba}
+{$I WaspLib/osr.simba}
 
 type
   TMyScriptForm = record(TScriptForm)
@@ -726,7 +726,7 @@ function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
     selector: TComboBox;
     hasPlayers: Boolean;
     save, delete: TButton;
-    player: TLoginPlayer;
+    player: TRSLoginPlayer;
   begin
     selector := Self.Form.GetChild('am_selector_combobox');
     selector.Clear();
@@ -811,7 +811,7 @@ function TScriptForm.CreateAccountManager(owner: TControl): TPanel;
     worlds: TMemo;
     worldsArray: TIntegerArray;
     i: Int32;
-    player: TLoginPlayer;
+    player: TRSLoginPlayer;
   begin
     selector := Self.Form.GetChild('am_selector_combobox');
     user := Self.Form.GetChild('am_user_edit');
@@ -1387,10 +1387,10 @@ begin
   Self._SleepOnUseBioChange(useBio.CheckBox);
 end;
 
-function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: EConsumable; addInfo: Boolean = True): TPanel;
+function TScriptForm.CreateConsumableSettings(owner: TControl; consumableType: ERSConsumable; addInfo: Boolean = True): TPanel;
 var
   typeStr: String;
-  itemArray: TItemArray;
+  itemArray: TRSItemArray;
   info: TLabel;
   minPoints, consumableAmount: TLabeledEdit;
   consumableSelector: TLabeledCombobox;
@@ -1405,25 +1405,25 @@ begin
     y := TControl.AdjustToDPI(15);
 
   case consumableType of
-    EConsumable.FOOD:
+    ERSConsumable.FOOD:
       begin
         typeStr := 'Food';
         itemArray := FOOD_ARRAY;
       end;
 
-    EConsumable.PRAYER:
+    ERSConsumable.PRAYER:
       begin
         typeStr := 'Prayer';
         itemArray := PRAYER_ARRAY;
       end;
 
-    EConsumable.ENERGY:
+    ERSConsumable.ENERGY:
       begin
         typeStr := 'Energy';
         itemArray := ENERGY_ARRAY;
       end;
 
-    EConsumable.BOOST:
+    ERSConsumable.BOOST:
       begin
         typeStr := 'Boost';
         itemArray := BOOST_ARRAY;
@@ -1482,7 +1482,7 @@ begin
   with minPoints do
   begin
     Create(Result);
-    if consumableType = EConsumable.BOOST then
+    if consumableType = ERSConsumable.BOOST then
       SetCaption('Drink/Eat every (in minutes):')
     else
       SetCaption('Drink/Eat at:');
@@ -1490,7 +1490,7 @@ begin
     SetLeft(fullWidth + space);
     SetTop(y);
     SetWidth(w);
-    if consumableType = EConsumable.BOOST then
+    if consumableType = ERSConsumable.BOOST then
       SetText('5')
     else
       SetText('50');
@@ -1511,15 +1511,15 @@ begin
     end;
 end;
 
-function TScriptForm.CreateConsumableSettings(consumableType: EConsumable): TTabSheet; overload;
+function TScriptForm.CreateConsumableSettings(consumableType: ERSConsumable): TTabSheet; overload;
 var
   typeStr: String;
 begin
   case consumableType of
-    EConsumable.FOOD:   typeStr := 'Food';
-    EConsumable.PRAYER: typeStr := 'Prayer';
-    EConsumable.ENERGY: typeStr := 'Energy';
-    EConsumable.BOOST:  typeStr := 'Boost';
+    ERSConsumable.FOOD:   typeStr := 'Food';
+    ERSConsumable.PRAYER: typeStr := 'Prayer';
+    ERSConsumable.ENERGY: typeStr := 'Energy';
+    ERSConsumable.BOOST:  typeStr := 'Boost';
   end;
 
   Self.AddTab(typeStr + ' Settings');
@@ -1619,7 +1619,7 @@ begin
     bmp.LoadFromFile(path + fileName)
   else
   begin
-    tmp := TWalkerMap.InternalLoadMap(WALKER_DIR + 'map.png');
+    tmp := TRSWalkerMap.InternalLoadMap(WALKER_DIR + 'map.png');
     tmp.Downsample(4, bmp);
     tmp.Free();
     if ForceDirectories(path) then bmp.SaveToFile(path + fileName);
@@ -1858,7 +1858,7 @@ begin
     Create(Result);
     SetTop(TControl.AdjustToDPI(20));
     SetLeft(fullWidth + space);
-    SetCaption('Remote input is the tool used to allow simba to do virtual input in game.' +
+    SetCaption('Remote input is the tool used to allow simba to do virtual input on osrs.' +
     LINEENDING + 'This uses reflection to achieve input.');
     SetName('ri_info');
   end;
@@ -2208,8 +2208,8 @@ begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if WLSettings.GetObject('remote_input').getBoolean('enabled') then
   begin
-    if not GameClient.RemoteInput.IsSetup() then GameClient.RemoteInput.Setup();
+    if not RSClient.RemoteInput.IsSetup() then RSClient.RemoteInput.Setup();
   end
-  else if GameClient.RemoteInput.IsSetup() then GameClient.RemoteInput.Free();
+  else if RSClient.RemoteInput.IsSetup() then RSClient.RemoteInput.Free();
   {$ENDIF}
 end;

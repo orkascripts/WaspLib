@@ -24,7 +24,7 @@ jobs:
           git clone --depth 1 ${{ env.srl-download }}
           mv ./SRL-T/ ./Includes/SRL-T/
           cp -r ./WaspLib/ ./Includes/WaspLib/
-          echo '{$I SRL-T/main.simba}{$I WaspLib/optional.simba}' > test.simba
+          echo '{$I SRL-T/osr.simba}{$I WaspLib/optional.simba}' > test.simba
 
       - name: Test Compile Includes
         shell: bash

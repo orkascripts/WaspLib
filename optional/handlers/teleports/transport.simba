@@ -1,6 +1,6 @@
 {$DEFINE SKUNK_UNIVERSAL_TRANSPORT}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$SCOPEDENUMS ON}
@@ -8,7 +8,7 @@
   {$I WaspLib/optional/interfaces/mainscreen/fairyring.simba}
 {$ENDIF}
 {$IFNDEF SKUNK_TELEPORTS}
-  {$I WaspLib/optional/handlers/teleports/teleports.simba}
+  {$I WaspLib/optional/handlers/teleports/rsteleports.simba}
 {$ENDIF}
 {$IFNDEF WL_GROUPING_INCLUDED}
   {$I WaspLib/optional/interfaces/gametabs/grouping.simba}
@@ -18,7 +18,7 @@
 {$ENDIF}
 type
   TUniversalTransport = record(TSRLBaseRecord)
-    ardougneCape: TItem;
+    ardougneCape: TRSItem;
     fairyTeleportItem: EFairyTeleportItem;
     PohSetup : Boolean;
     IsSetup: Boolean;
@@ -191,7 +191,7 @@ begin
   for textBox in clusteredText.ToTBA() do
   begin
     textBox := textBox.Expand(5);
-    OCR.LocateText(textBox, teleportLocation.destination, FONT_PLAIN_12, TOCRColorFilter.Create([textColor]), foundTextBox);
+    OCR.LocateText(textBox, teleportLocation.destination, RS_FONT_PLAIN_12, TOCRColorFilter.Create([textColor]), foundTextBox);
     if foundTextBox.Area > 1 then
       begin
         Mouse.Move(foundTextBox.Center());
@@ -207,8 +207,8 @@ end;
 function TUniversalTransport.handleJewelleryTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
   startPosition: TPoint := ScriptWalker^.GetMyPos();
-  chargedJewellery: TItem;
-  chargedVariants: TItemArray := getChargedJewelleryNames(teleportLocation.item);
+  chargedJewellery: TRSItem;
+  chargedVariants: TRSItemArray := getChargedJewelleryNames(teleportLocation.item);
   didTeleport: Boolean;
   middleScreenJewellery: TStringArray := ['skills necklace'];
 begin
@@ -251,8 +251,8 @@ end;
 function TUniversalTransport.handleOtherTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
   didTeleport: Boolean;
-  teleportItem: TItem;
-  teleportItems: TItemArray := teleportLocation.items;
+  teleportItem: TRSItem;
+  teleportItems: TRSItemArray := teleportLocation.items;
   teleportDestination: String := teleportLocation.destination;
   startPosition: TPoint := ScriptWalker^.GetMyPos();
 begin
@@ -282,8 +282,8 @@ end;
 
 function TUniversalTransport.handleDiaryTeleport(constref teleportLocation: TTeleportLocation): Boolean;
 var
-  numberedItems: TItemArray := getNumberedDiaryItems(teleportLocation.item);
-  numberedDiaryItem: TItem;
+  numberedItems: TRSItemArray := getNumberedDiaryItems(teleportLocation.item);
+  numberedDiaryItem: TRSItem;
   didTeleport: Boolean;
   startPosition: TPoint := ScriptWalker^.GetMyPos();
 begin
@@ -325,9 +325,9 @@ end;
 
 function TUniversalTransport.withdrawTeleportItem(constref teleportLocation: TTeleportLocation): Boolean;
 var
-  bankItem: TBankItem;
-  chargedJewellery: TItem;
-  chargedVariants: TItemArray;
+  bankItem: TRSBankItem;
+  chargedJewellery: TRSItem;
+  chargedVariants: TRSItemArray;
   teleportTabName: String;
 begin
   Self.DebugLn('Trying to withdraw');
@@ -368,8 +368,8 @@ var
   startPosition: TPoint := ScriptWalker^.GetMyPos();
   teleportTabName: String := teleportLocation.destination.Lower() + " teleport";
   teleportTabOption: String := 'Break';
-  spellBook : ESpellBook;
-  spell     : ESpell;
+  spellBook : ERSSpellBook;
+  spell     : ERSSpell;
 begin
   Self.DebugLn('Looking for ' + teleportTabName);
   if not useMagic then
@@ -404,26 +404,26 @@ begin
     Exit(False);
   end;
 
-  if Stats.GetLevel(ESkill.MAGIC) < teleportLocation.magicLevel then
+  if Stats.GetLevel(ERSSkill.MAGIC) < teleportLocation.magicLevel then
   begin
     Self.DebugLn('Magic level not high enough');
     Exit();
   end;
 
   case teleportLocation.teleportType of
-    ETeleportType.ANCIENT_MAGICKS: spellBook := ESpellBook.ANCIENT;
-    ETeleportType.ARCEUUS_MAGIC: spellBook := ESpellBook.ARCEUUS;
-    ETeleportType.LUNAR_MAGIC: spellBook := ESpellBook.LUNAR;
-    ETeleportType.NORMAL_MAGIC: spellBook := ESpellBook.STANDARD;
+    ETeleportType.ANCIENT_MAGICKS: spellBook := ERSSpellBook.ANCIENT;
+    ETeleportType.ARCEUUS_MAGIC: spellBook := ERSSpellBook.ARCEUUS;
+    ETeleportType.LUNAR_MAGIC: spellBook := ERSSpellBook.LUNAR;
+    ETeleportType.NORMAL_MAGIC: spellBook := ERSSpellBook.STANDARD;
   end;
 
   if Magic.GetSpellBook <> spellBook then begin
     Self.DebugLn('Not on the correct spellbook we need ' + ToStr(spellbook));
 
-    if (Stats.GetLevel(ESkill.MAGIC) >= 96) and (Magic.GetSpellBook = ESpellBook.LUNAR) then
+    if (Stats.GetLevel(ERSSkill.MAGIC) >= 96) and (Magic.GetSpellBook = ERSSpellBook.LUNAR) then
     begin
       Self.DebugLn('Attempting to cast spellbook swap');
-      Magic.ClickSpell(ESpell.SPELLBOOK_SWAP);
+      Magic.ClickSpell(ERSSpell.SPELLBOOK_SWAP);
       if not WaitUntil(('spell' in Chat.GetChatTitle), 100, 3000) then begin
         Self.DebugLn('Timed out casting spellbook swap');
         Exit(False);
@@ -443,11 +443,11 @@ begin
   end;
 
   case teleportLocation.destination of
-    'Watchtower Yanille': Exit(Magic.CastSpell(ESpell.WATCHTOWER_TELEPORT, 'Yanille'));
-    'Camelot Bank': Exit(Magic.CastSpell(ESpell.CAMELOT_TELEPORT, 'Seers'''));
-    //'Grand Exchange': Exit(Magic.CastSpell(ESpell.VARROCK_TELEPORT, 'Grand Exchange'));
+    'Watchtower Yanille': Exit(Magic.CastSpell(ERSSpell.WATCHTOWER_TELEPORT, 'Yanille'));
+    'Camelot Bank': Exit(Magic.CastSpell(ERSSpell.CAMELOT_TELEPORT, 'Seers'''));
+    //'Grand Exchange': Exit(Magic.CastSpell(ERSSpell.VARROCK_TELEPORT, 'Grand Exchange'));
     else
-      for spell in ESpell do
+      for spell in ERSSPELL do
         if teleportLocation.destination.Upper.Replace(' ', '').Replace('''', '') in ToStr(spell).Replace('_', '').Replace('''', '') then
           Break;
   end;
@@ -486,7 +486,7 @@ begin
   if not WaitUntil(Minimap.InPOH(), 100, 10000) then
   begin
     WriteLn('Couldnt get to POH');
-    Exit;
+    Exit; 
   end;
   WaitUntil(Minimap.InPOH(), 100, 10000);
   if not Self.PohSetup then begin
@@ -502,14 +502,14 @@ begin
     Exit;
   end;
 
-  if not WaitUntil(GameInterface.IsOpen(), 200, 5000) then
+  if not WaitUntil(RSInterface.IsOpen(), 200, 5000) then
   begin
     WriteLn('Could not open jewellery box interface');
     Exit;
   end;
 
   Keyboard.send(teleportLocation.interfaceHotkey);
-  Result := WaitUntil((not GameInterface.IsOpen()) and (not Minimap.InPOH), 200, 5000);
+  Result := WaitUntil((not RSInterface.IsOpen()) and (not Minimap.InPOH), 200, 5000);
 end;
 
 function TUniversalTransport.handleFairyRingTeleport(constref teleportLocation: TTeleportLocation; usePOH: Boolean = false): Boolean;
@@ -549,10 +549,10 @@ begin
 end;
 
 
-function TUniversalTransport.getConnectingBank(position: TPoint): PGameObject;
+function TUniversalTransport.getConnectingBank(position: TPoint): PRSObject;
 var
   currentMinimumDistance: Int32 := 100000;
-  currentBank: PGameObject;
+  currentBank: PRSObject;
   pathDistance: Int32;
 begin
   for currentBank in WalkerObjects.Banks do
@@ -568,11 +568,11 @@ end;
 function TUniversalTransport.desperateBankOpen(): Boolean;
 var
   maxDistance: Int32 := 1000;
-  closestBanker: PWalkerObject := WalkerObjects.Banks.GetClosest();
+  closestBanker: PRSWalkerObject := WalkerObjects.Banks.GetClosest();
   closestBankPoint: TPoint := closestBanker^.Coordinates.First();
   myPos: TPoint := ScriptWalker^.GetMyPos();
   pathDistance: Int32 := self.pathLength(closestBankPoint, myPos);
-  walkableBank: PWalkerObject;
+  walkableBank: PRSWalkerObject;
 begin
   Self.DebugLn('desperately opening bank');
   Self.DebugLn(ToString(closestBankPoint));
@@ -585,17 +585,17 @@ begin
   end;
 
   // to do: add more ways to get to bank
-  if Magic.CastSpell(ESpell.LUMBRIDGE_HOME_TELEPORT) then
+  if Magic.CastSpell(ERSSpell.LUMBRIDGE_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.LUMBRIDGE.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ESpell.EDGEVILLE_HOME_TELEPORT) then
+  else if Magic.CastSpell(ERSSpell.EDGEVILLE_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.EDGEVILLE.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ESpell.MOONCLAN_TELEPORT) then
+  else if Magic.CastSpell(ERSSpell.MOONCLAN_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.MOONCLAN.worldPoint, 200, 200)), 200, 15000)
-  else if Magic.CastSpell(ESpell.ARCEUUS_HOME_TELEPORT) then
+  else if Magic.CastSpell(ERSSpell.ARCEUUS_HOME_TELEPORT) then
     WaitUntil(ScriptWalker^.GetMyPos().InBox(Box(RSTeleports.CIS_NORTH_OF_THE_ARCEUUS_LIBRARY.worldPoint, 500, 500)), 200, 15000)
   else raise "Couldn't go home!";
 
-  walkableBank := PWalkerObject(self.getConnectingBank(ScriptWalker^.GetMyPos()));
+  walkableBank := PRSWalkerObject(self.getConnectingBank(ScriptWalker^.GetMyPos()));
   Bank.WalkOpen(walkableBank);
 end;
 
@@ -670,7 +670,7 @@ end;
 // example usage/test
 //
 // var
-//   rsw: TWalker;
+//   rsw: TRSWalker;
 //   Transport: TUniversalTransport;
 //   teleportLocation: TTeleportLocation := RSTeleports.MINIGAME_NIGHTMARE_ZONE;
 // begin

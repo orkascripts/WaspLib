@@ -1,11 +1,11 @@
 (*
 # Tool Polygon Maker
-Simple tool to make polygons for TWalker.
+Simple tool to make polygons for TRSWalker.
 *)
 
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
 {$I SRL-T/osr.simba}
-{$I WaspLib/main.simba}
+{$I WaspLib/osr.simba}
 {$H-}
 
 const
@@ -17,12 +17,12 @@ const
   MAP_NAME: String := WALKER_MAP;
 
 type
-  TNamedPolygon = record
+  TRSNamedPolygon = record
     Name: String;
     Polygon: TPointArray;
   end;
 
-  TPolygonMaker = record
+  TRSPolygonMaker = record
     Form: TForm;
     Panel: TPanel;
     ButtonNewPolygon, ButtonDeletePolygon, ButtonReset, ButtonPrintSelected, ButtonPrintAll, ButtonPrintATPA: TButton;
@@ -34,17 +34,17 @@ type
     VisibleArea: TBox;
 
     Index: Int32;
-    PolygonArray: array of TNamedPolygon;
+    PolygonArray: array of TRSNamedPolygon;
 
     SelectedPoint: TPoint;
     MovingPoint, Dragging: Boolean;
   end;
 
 var
-  MapMaker: TPolygonMaker;
+  MapMaker: TRSPolygonMaker;
 
 //Mouse
-procedure TPolygonMaker.OnMouseMove(sender: TObject; Shift: TShiftState; X, Y: Int32);
+procedure TRSPolygonMaker.OnMouseMove(sender: TObject; Shift: TShiftState; X, Y: Int32);
 var
   diff: TPoint;
   tpa: TPointArray;
@@ -79,7 +79,7 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TPolygonMaker.OnMouseDown(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
+procedure TRSPolygonMaker.OnMouseDown(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
   function checkCorners(tpa: TPointArray): Boolean;
   var
     i: Int32;
@@ -189,7 +189,7 @@ begin
   Self.Dragging := True;
 end;
 
-procedure TPolygonMaker.OnMouseUp(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
+procedure TRSPolygonMaker.OnMouseUp(sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Int32);
 begin
   if Button <> mbLeft then
     Exit;
@@ -199,7 +199,7 @@ begin
 end;
 
 
-procedure TPolygonMaker.DrawPolygon(area: TBox);
+procedure TRSPolygonMaker.DrawPolygon(area: TBox);
 var
   canvas: TCanvas;
   tpa: TPointArray;
@@ -252,14 +252,14 @@ begin
   end;
 end;
 
-procedure TPolygonMaker.PaintArea(sender: TObject; canvas: TCanvas; r: TRect);
+procedure TRSPolygonMaker.PaintArea(sender: TObject; canvas: TCanvas; r: TRect);
 begin
   Self.VisibleArea := [r.Left, r.Top, r.Right, r.Bottom];
   Self.DrawPolygon(Self.VisibleArea);
 end;
 
 
-procedure TPolygonMaker.MoveToPolygon();
+procedure TRSPolygonMaker.MoveToPolygon();
 var
   p: TPoint;
 begin
@@ -272,7 +272,7 @@ begin
   Self.ImageBox.Update();
 end;
 
-procedure TPolygonMaker.DeletePolygons(all: Boolean = False);
+procedure TRSPolygonMaker.DeletePolygons(all: Boolean = False);
 begin
   if all then
   begin
@@ -297,20 +297,20 @@ begin
     Self.RenameEdit.Clear();
 end;
 
-procedure TPolygonMaker.ListBoxOnClick(sender: TObject);
+procedure TRSPolygonMaker.ListBoxOnClick(sender: TObject);
 begin
   Self.Index := Self.ListPolygons.getItemIndex();
   Self.RenameEdit.setText(Self.PolygonArray[Self.Index].Name);
   Self.MoveToPolygon();
 end;
 
-procedure TPolygonMaker.OnUnSelectNode(sender: TObject);
+procedure TRSPolygonMaker.OnUnSelectNode(sender: TObject);
 begin
   Self.ImageBox.Update();
 end;
 
 
-procedure TPolygonMaker.OnRename(sender: TObject);
+procedure TRSPolygonMaker.OnRename(sender: TObject);
 var
   str: String;
 begin
@@ -325,7 +325,7 @@ end;
 
 
 
-procedure TPolygonMaker.OnDelete(sender: TObject);
+procedure TRSPolygonMaker.OnDelete(sender: TObject);
 begin
   if Self.Index < 0 then
     Exit;
@@ -334,15 +334,15 @@ begin
   Self.MoveToPolygon();
 end;
 
-procedure TPolygonMaker.OnReset(sender: TObject);
+procedure TRSPolygonMaker.OnReset(sender: TObject);
 begin
   Self.DeletePolygons(True);
   Self.ImageBox.Update();
 end;
 
-procedure TPolygonMaker.OnNewPolygon(sender: TObject);
+procedure TRSPolygonMaker.OnNewPolygon(sender: TObject);
 var
-  polygon: TNamedPolygon;
+  polygon: TRSNamedPolygon;
 begin
   with polygon do
   begin
@@ -359,7 +359,7 @@ begin
 end;
 
 
-procedure TPolygonMaker.OnPrintSelected(sender: TObject);
+procedure TRSPolygonMaker.OnPrintSelected(sender: TObject);
 var
   str: String;
   tpa: TPointArray;
@@ -380,7 +380,7 @@ begin
   WriteLn(LineEnding, LineEnding);
 end;
 
-procedure TPolygonMaker.OnPrint(sender: TObject);
+procedure TRSPolygonMaker.OnPrint(sender: TObject);
 var
   i: Int32;
   str: String;
@@ -401,7 +401,7 @@ begin
   end;
 end;
 
-procedure TPolygonMaker.OnPrintATPA(sender: TObject);
+procedure TRSPolygonMaker.OnPrintATPA(sender: TObject);
 var
   i: Int32;
   str: String;
@@ -428,7 +428,7 @@ begin
 end;
 
 
-procedure TPolygonMaker.OnKeyDown(sender: TObject; var Key: Word; Shift: TShiftState);
+procedure TRSPolygonMaker.OnKeyDown(sender: TObject; var Key: Word; Shift: TShiftState);
 var
   tmp: TPointArray;
 begin
@@ -468,21 +468,21 @@ end;
 
 
 //Form stuff.
-procedure TPolygonMaker.OnFormShow(sender: TObject);
+procedure TRSPolygonMaker.OnFormShow(sender: TObject);
 begin
   Self.ImageBox.Update();
 end;
 
-procedure TPolygonMaker.OnFormClose(sender: TObject; var CloseAction: TCloseAction);
+procedure TRSPolygonMaker.OnFormClose(sender: TObject; var CloseAction: TCloseAction);
 begin
   Self.OnPrint(nil);
 end;
 
 
-procedure TPolygonMaker.Init();
+procedure TRSPolygonMaker.Init();
 var
   i: Int32;
-  polygon: TNamedPolygon;
+  polygon: TRSNamedPolygon;
 begin
   Self.Index := -1;
   Self.RenameEdit.Clear();
@@ -504,7 +504,7 @@ begin
 end;
 
 
-procedure TPolygonMaker.Run();
+procedure TRSPolygonMaker.Run();
 var
   mapImg: TMufasaBitmap;
 begin
@@ -620,7 +620,7 @@ begin
       setAlign(alBottom);
     end;
 
-    mapImg := TWalkerMap.InternalLoadMap(MAP_NAME);
+    mapImg := TRSWalkerMap.InternalLoadMap(MAP_NAME);
     with Self.ImageBox do
     begin
       Init(Self.Form);
@@ -654,3 +654,4 @@ end;
 begin
   Sync(@MapMaker.Run);
 end.
+

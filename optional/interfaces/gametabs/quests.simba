@@ -1,6 +1,6 @@
 {$DEFINE WL_QUESTS_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 //Made by Bootie
@@ -8,14 +8,14 @@ type
   ERSQuestTab = (CHARACTER_SUMMARY, QUEST_LIST, ACHIEVEMENT_DIARIES, PATH);
   ERSQuestStatus = (NOT_STARTED, IN_PROGRESS, COMPLETED);
 
-  TQuests = record(TInterface)
+  TRSQuests = record(TRSInterface)
     Tabs: array [ERSQuestTab] of TBox;
     QuestStatus: TJSONObject;
     Cached, isPostSetup: Boolean;
     QuestNames: TStringArray;
   end;
 
-function TQuests.QuestsList(): TStringArray;
+function TRSQuests.QuestsList(): TStringArray;
 var
   http: Int32;
   page, f2p, p2p, mini, str: String;
@@ -64,16 +64,16 @@ begin
   FreeHTTPClient(http);
 end;
 
-procedure TQuests.Setup(); override;
+procedure TRSQuests.Setup(); override;
 begin
   inherited;
   Self.Name := 'Quests';
   Self.ButtonColors += CTS1(2700606, 1);
 end;
 
-procedure TQuests.SetupAlignment(); overload;
+procedure TRSQuests.SetupAlignment(); overload;
 var
-  alignment: TInterfaceAlignment;
+  alignment: TRSInterfaceAlignment;
   boxes: TBoxArray;
   i: Int32;
 begin
@@ -95,7 +95,7 @@ begin
     Self.Tabs[ERSQuestTab(i)] := boxes[i];
 end;
 
-procedure TQuests.ResetAlignment();
+procedure TRSQuests.ResetAlignment();
 var
   boxes: TBoxArray;
   i: Int32;
@@ -106,7 +106,7 @@ begin
   Self.Tabs[ERSQuestTab(3)] := [0,0,0,0];
 end;
 
-procedure TQuests.PostSetup();
+procedure TRSQuests.PostSetup();
 var
   boxes: TBoxArray;
 begin
@@ -116,17 +116,17 @@ begin
   Self.isPostSetup := True;
 end;
 
-function TQuests.IsOpen(): Boolean;
+function TRSQuests.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab = EGameTab.QUESTS);
+  Result := (GameTabs.GetCurrentTab = ERSGameTab.QUESTS);
 end;
 
-function TQuests.Open(): Boolean;
+function TRSQuests.Open(): Boolean;
 begin
-  Result := GameTabs.Open(EGameTab.QUESTS);
+  Result := GameTabs.Open(ERSGameTab.QUESTS);
 end;
 
-function TQuests.GetCurrentTab(): ERSQuestTab;
+function TRSQuests.GetCurrentTab(): ERSQuestTab;
 const
   COLORS: array of TCTS2Color = [
     [4418165, 11, 0.18, 0.78],
@@ -138,11 +138,11 @@ var
   i: Int32;
 begin
   for i := 0 to High(COLORS) do
-    if SRL.CountColor(COLORS[i], GameTabs.Boxes[EGameTab.QUESTS]) > 0 then
+    if SRL.CountColor(COLORS[i], GameTabs.Boxes[ERSGameTab.QUESTS]) > 0 then
       Exit(ERSQuestTab(i));
 end;
 
-function TQuests.OpenTab(tab: ERSQuestTab): Boolean;
+function TRSQuests.OpenTab(tab: ERSQuestTab): Boolean;
 begin
   if not Self.IsOpen then Self.Open();
   if not Self.isPostSetup then
@@ -153,9 +153,9 @@ begin
   Wait(600);
 end;
 
-procedure TQuests.Scroll(down: Boolean);
+procedure TRSQuests.Scroll(down: Boolean);
 var
-  scrollBar: TGameScrollBar;
+  scrollBar: TRSScrollBar;
 begin
   scrollBar := Self.GetScrollBar();
   if not scrollBar.IsVisible() or not Self.CanScroll() then
@@ -193,7 +193,7 @@ begin
 end;
 
 //Detects fontsize in the quest window
-function TQuests.DetectFont(): TFontSet;
+function TRSQuests.DetectFont(): TFontSet;
 var
   i, badCount: Integer;
   boxes: TBoxArray;
@@ -207,16 +207,16 @@ begin
     for i := 0 to High(boxes) do
     begin
       if boxes[i].Area < 50 then Continue;
-      Str := OCR.Recognize([boxes[i].X1-5, boxes[i].Y1-3, boxes[i].X2+5, boxes[i].Y2+3], TOCRColorFilter.Create([255,65535,901389]), FONT_PLAIN_12);
+      Str := OCR.Recognize([boxes[i].X1-5, boxes[i].Y1-3, boxes[i].X2+5, boxes[i].Y2+3], TOCRColorFilter.Create([255,65535,901389]), RS_FONT_PLAIN_12);
       if Str.Count('.') > 10 then
         badCount += 1;
     end;
   end;
-  if badCount > 3 then Exit(FONT_PLAIN_11) else Exit(FONT_PLAIN_12);
+  if badCount > 3 then Exit(RS_FONT_PLAIN_11) else Exit(RS_FONT_PLAIN_12);
 end;
 
 //Outputs and caches and saves a json with keys the quests and values 0 for not started, 1 for in progress and 2 for completed
-function TQuests.ScanAllQuests(Cache: Boolean = True): TJSONObject;
+function TRSQuests.ScanAllQuests(Cache: Boolean = True): TJSONObject;
 var
   tpa: TPointArray;
   boxes: TBoxArray;
@@ -279,7 +279,7 @@ begin
 end;
 
 // Returns quest status of the quest with name that is the most similar to argument 'name'
-function TQuests.GetQuestStatus(name: String; useJSON: Boolean = True): ERSQuestStatus;
+function TRSQuests.GetQuestStatus(name: String; useJSON: Boolean = True): ERSQuestStatus;
 var
   ConfigJSON: TConfigJSON;
   bestMatch: String;
@@ -311,7 +311,7 @@ begin
   end;
 end;
 
-procedure TQuests.Draw(bitmap: TMufasaBitmap); override;
+procedure TRSQuests.Draw(bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then Exit;
 
@@ -321,9 +321,9 @@ begin
 end;
 
 var
-  Quests: TQuests;
+  Quests: TRSQuests;
 
-procedure TGameClient.ClientModeChanged(); override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
   Quests.SetupAlignment();

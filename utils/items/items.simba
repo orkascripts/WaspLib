@@ -1,21 +1,21 @@
 (*
 # Items Extensions
-This file contains useful methods to extend the **TItem** and allow things like 'Prayer potion(1..4)' to be used.
+This file contains useful methods to extend the **TRSItem** and allow things like 'Prayer potion(1..4)' to be used.
 *)
 {$DEFINE WL_ITEMS_EX_INCLUDED}
 {$IFNDEF WL_UTILS}
   {$I WaspLib/utils.simba}
 {$ENDIF}
 
-function TItem.IsNull(): Boolean;
+function TRSItem.IsNull(): Boolean;
 begin
   Result := VarIsClear(Self) or (Self = '') or (LowerCase(Self) = 'null');
 end;
 
 (*
-## TItem.Reorder
+## TRSItem.Reorder
 ```pascal
-function TItem.Reorder(LowToHi: Boolean = True): TItem;
+function TRSItem.Reorder(LowToHi: Boolean = True): TRSItem;
 ```
 Used to retrieve reordered items.
 Items that have several "doses" or "portions" like a Saradomin brew (1..4) might need to be reordered sometimes.
@@ -25,7 +25,7 @@ However when we are withdrawing it from the bank, we want to prioritize the high
 
 This function reorders depending on what you set in **LowToHi**. By default it reorders items from low to high.
 *)
-function TItem.Reorder(LowToHi: Boolean = True): TItem;
+function TRSItem.Reorder(LowToHi: Boolean = True): TRSItem;
 var
   str, first, last: String;
   i, j: Int32;
@@ -53,13 +53,13 @@ begin
 end;
 
 (*
-## TItem.GetPortions
+## TRSItem.GetPortions
 ```pascal
-function TItem.GetPortions(): Int32;
+function TRSItem.GetPortions(): Int32;
 ```
 Get the amount of portions in the multi dose item (an item with "(x..z)").
 *)
-function TItem.GetPortions(): Int32;
+function TRSItem.GetPortions(): Int32;
 var
   str: String;
   i, j: Int32;
@@ -79,9 +79,9 @@ begin
 end;
 
 (*
-## TItem.GetPortion
+## TRSItem.GetPortion
 ```pascal
-function TItem.GetPortion(): Int32;
+function TRSItem.GetPortion(): Int32;
 ```
 Get the portion number of one specific Item.
 
@@ -92,7 +92,7 @@ Item := 'Saradomin brew(4)';
 WriteLn Item.GetPortion; //This will print 4.
 ```
 *)
-function TItem.GetPortion(): Int32;
+function TRSItem.GetPortion(): Int32;
 var
   Str: String;
 begin
@@ -107,14 +107,14 @@ end;
 (*
 ## Item.GetArray
 ```pascal
-function TItem.GetArray(): TItemArray;
+function TRSItem.GetArray(): TRSItemArray;
 ```
 Used to retrieve an item array of our multi dose/portion item.
 
 Example:
 ```pascal
 var
-  Item: TItem;
+  Item: TRSItem;
 begin
   Item := 'Saradomin brew(1..4)';
 
@@ -123,7 +123,7 @@ begin
 end;
 ```
 *)
-function TItem.GetArray(): TItemArray;
+function TRSItem.GetArray(): TRSItemArray;
 var
   str: String;
   i, first, last: Int32;
@@ -150,14 +150,14 @@ end;
 (*
 ## Item.GetSingle
 ```pascal
-function TItem.GetSingle(Lo: Boolean = True): TItem;
+function TRSItem.GetSingle(Lo: Boolean = True): TRSItem;
 ```
 Used to retrieve the lowest or highest dose of our multi dose/portion item.
 
 Example:
 ```pascal
 var
-  Item: TItem;
+  Item: TRSItem;
 begin
   Item := 'Saradomin brew(1..4)';
 
@@ -165,7 +165,7 @@ begin
 end;
 ```
 *)
-function TItem.GetSingle(lo: Boolean = True): TItem;
+function TRSItem.GetSingle(lo: Boolean = True): TRSItem;
 var
   str: String;
   i, j: Int32;
@@ -183,3 +183,5 @@ begin
   else
     Result := str.Replace(ToStr(i) + '..' + ToStr(j), ToStr(i));
 end;
+
+

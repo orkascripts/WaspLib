@@ -7,7 +7,7 @@ On `RSTeleports` you can find many `TTeleportLocation`s for example `RSTeleports
 If you `WriteLn` this, it looks like:
 `{WORLDPOINT = {X = 8040, Y = 2524}, TELEPORTTYPE = JEWELLERY, MAGICLEVEL = 0, ITEM = Ring of Wealth, DESTINATION = Grand Exchange, DISPATCHERRING = False}`
 
-Just ignore `DISPATCHERRING`, but this is the core of `TUniversalTransport`. Each teleport location has a `WorldPoint: TPoint` which maps to `TWalker`'s coordinates. You can pass these locations into an initialized `TUniversalTransport` via its `run` method like this:
+Just ignore `DISPATCHERRING`, but this is the core of `TUniversalTransport`. Each teleport location has a `WorldPoint: TPoint` which maps to `TRSWalker`'s coordinates. You can pass these locations into an initialized `TUniversalTransport` via its `run` method like this:
 ```pascal
 var
     Transport: TUniversalTransport;

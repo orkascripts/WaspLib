@@ -1,1 +1,20 @@
+// Overrides that persist across WaspLib updates.
 
+// Skip star-rating on logout — just click logout directly.
+function TRSLogout.ClickLogout(attempts: Int32 = 5; tryTime: Int32 = 20000): Boolean; override;
+var
+  interval: UInt64;
+  i: Int32;
+begin
+  if (not Self.Open()) or (not Self.CloseWorldSwitcher()) then
+    Exit;
+
+  interval := tryTime div attempts;
+
+  for i := 1 to attempts do
+  begin
+    Self.ClearEnter();
+    if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not RSClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then
+      Exit(True);
+  end;
+end;

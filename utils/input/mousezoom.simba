@@ -11,17 +11,17 @@ This file was developed with help from data available through the RuneLite camer
 {$ENDIF}
 
 (*
-(TMouseZoom)=
-## type TMouseZoom
+(TRSMouseZoom)=
+## type TRSMouseZoom
 Record responsible to handle zooming with the mouse wheel and keep MM2MS.ZoomLevel in sync with the zoom slider.
 *)
 type
-  TMouseZoom = record(TSRLBaseRecord)
+  TRSMouseZoom = record(TSRLBaseRecord)
     ZoomLevel: Int32;
     MAX_ZOOM: Int32;
   end;
 
-procedure TMouseZoom.Setup();
+procedure TRSMouseZoom.Setup();
 begin
   Self.Name := 'RSMouseZoom';
   Self.ZoomLevel := -1;
@@ -32,10 +32,10 @@ end;
 (*
 ## RSMouseZoom.GetNext
 ```pascal
-function TMouseZoom.GetNext(value: Int32; down: Boolean): Int32;
+function TRSMouseZoom.GetNext(value: Int32; down: Boolean): Int32;
 ```
 ```pascal
-function TMouseZoom.GetNext(value: Int32; amount: Int32 = 1; down: Boolean = True): Int32; overload;
+function TRSMouseZoom.GetNext(value: Int32; amount: Int32 = 1; down: Boolean = True): Int32; overload;
 ```
 
 Returns the next zoom level given your current one (value) and the direction you will be spinning the mouse wheel.
@@ -48,7 +48,7 @@ WriteLn('Next value on scroll up: ', RSMouseZoom.GetNext(value, False));
 WriteLn('Next value on scroll down: ', RSMouseZoom.GetNext(value, True));
 ```
 *)
-function TMouseZoom.GetNext(value: Int32; down: Boolean): Int32;
+function TRSMouseZoom.GetNext(value: Int32; down: Boolean): Int32;
 begin
   if down then
     Result := value-26
@@ -58,7 +58,7 @@ begin
   Result := EnsureRange(Result, 0, Self.MAX_ZOOM);
 end;
 
-function TMouseZoom.GetNext(value: Int32; amount: Int32 = 1; down: Boolean = True): Int32; overload;
+function TRSMouseZoom.GetNext(value: Int32; amount: Int32 = 1; down: Boolean = True): Int32; overload;
 var
   i: Int32;
 begin
@@ -67,12 +67,12 @@ begin
     Result := Self.GetNext(Result, down);
 end;
 
-function TMouseZoom.GetZoomLevel(): Int32; forward;
+function TRSMouseZoom.GetZoomLevel(): Int32; forward;
 
 (*
 ## RSMouseZoom.Level2Slider
 ```pascal
-function TMouseZoom.Level2Slider(value: Int32 = -1): Int32;
+function TRSMouseZoom.Level2Slider(value: Int32 = -1): Int32;
 ```
 
 As the name implies, this method is used to convert RSMouseZoom.ZoomLevel to MM2MS zoom slider levels (0..768 to 0..100).
@@ -82,7 +82,7 @@ Example:
 WriteLn RSMouseZoom.Level2Slider(384); //should print 50.
 ```
 *)
-function TMouseZoom.Level2Slider(value: Int32 = -1): Int32;
+function TRSMouseZoom.Level2Slider(value: Int32 = -1): Int32;
 begin
   if value < 0 then
     value := Self.GetZoomLevel();
@@ -109,7 +109,7 @@ end;
 (*
 ## RSMouseZoom.Slider2Level
 ```pascal
-function TMouseZoom.Slider2Level(value: Int32 = -1): Int32;
+function TRSMouseZoom.Slider2Level(value: Int32 = -1): Int32;
 ```
 As the name implies, this method is used to convert MM2MS.ZoomLevel to RSMouseZoom.ZoomLevel levels (0..100 to 0..768).
 Unlike the previous method though, this one is not 100% accurate but good enough.
@@ -118,7 +118,7 @@ To understand why first you need to understand a few concepts:
  - Even though we use the range 0..100 for slider levels, it's a made up range.
  - Because of this, the slider actually has only 96 positions and 4 dead levels: 13, 37, 63 and 87.
  - You can confirm this by trying to use `Options.SetZoomLevel(13)` or any other of those levels and then using `Options.GetZoomLevel()`.
- - Each slider position actually has 8 RSmouseZoom zoom levels in it. TMouseZoom.MAX_ZOOM = 96*8 .
+ - Each slider position actually has 8 RSmouseZoom zoom levels in it. TRSMouseZoom.MAX_ZOOM = 96*8 .
 
 Having understood that, you can now understand why it is not 100% accurate. If each slider level has 8 rsmousezoom levels in it, it's impossible to make it 100% accurate.
 
@@ -127,7 +127,7 @@ Example:
 WriteLn RSMouseZoom.Slider2Level(50); //should print 384.
 ```
 *)
-function TMouseZoom.Slider2Level(value: Int32 = -1): Int32;
+function TRSMouseZoom.Slider2Level(value: Int32 = -1): Int32;
 begin
   if value < 0 then value := MM2MS.ZoomLevel;
 
@@ -147,10 +147,10 @@ end;
 (*
 ## RSMouseZoom.Scroll
 ```pascal
-procedure TMouseZoom.Scroll(amount: Int32 = 1; down: Boolean; forceMove: Boolean = True);
+procedure TRSMouseZoom.Scroll(amount: Int32 = 1; down: Boolean; forceMove: Boolean = True);
 ```
 ```pascal
-procedure TMouseZoom.Scroll(amount: Int32 = 1; forceMove: Boolean = True); overload;
+procedure TRSMouseZoom.Scroll(amount: Int32 = 1; forceMove: Boolean = True); overload;
 ```
 Performs a mouse scroll in the direction specified and updates RSMouseZoom.ZoomLevel and MM2MS.ZoomLevel accordingly.
 The scroll direction can be specified either with a boolean or with a positive/negative amount of scrolls, scroll up being positive.
@@ -161,36 +161,36 @@ Example:
 RSMouseZoom.Scroll(5, True);
 ```
 *)
-procedure TMouseZoom.Scroll(amount: Int32 = 1; down: Boolean; forceMove: Boolean = True);
+procedure TRSMouseZoom.Scroll(amount: Int32 = 1; down: Boolean; forceMove: Boolean = True);
 begin
   Self.ZoomLevel := Self.GetNext(Self.ZoomLevel, amount, down);
   MM2MS.ZoomLevel := Self.Level2Slider(Self.ZoomLevel);
 
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    GameClient.RemoteInput.DisableRealInput();
+    RSClient.RemoteInput.DisableRealInput();
   {$ENDIF}
 
-  Mouse.Scroll(GameInterface.Bounds, amount, down, forceMove);
+  Mouse.Scroll(RSInterface.Bounds, amount, down, forceMove);
 
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    GameClient.RemoteInput.EnableRealInput();
+    RSClient.RemoteInput.EnableRealInput();
   {$ENDIF}
 end;
 
-procedure TMouseZoom.Scroll(amount: Int32 = 1; forceMove: Boolean = True); overload;
+procedure TRSMouseZoom.Scroll(amount: Int32 = 1; forceMove: Boolean = True); overload;
 begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    GameClient.RemoteInput.DisableRealInput();
+    RSClient.RemoteInput.DisableRealInput();
   {$ENDIF}
 
   Self.Scroll(Floor(Sqrt(Power(amount,2))), amount < 0, forceMove);
 
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if not WLSettings.GetObject('remote_input').getBoolean('block_real_input') then
-    GameClient.RemoteInput.EnableRealInput();
+    RSClient.RemoteInput.EnableRealInput();
   {$ENDIF}
 end;
 
@@ -198,7 +198,7 @@ end;
 (*
 ## RSMouseZoom.MaxZoom
 ```pascal
-procedure TMouseZoom.MaxZoom(down: Boolean = True);
+procedure TRSMouseZoom.MaxZoom(down: Boolean = True);
 ```
 
 Maxes the zoom limit in the direction you specified.
@@ -208,7 +208,7 @@ Example:
 RSMouseZoom.MaxZoom(True); //will zoom out to the limit.
 ```
 *)
-procedure TMouseZoom.MaxZoom(down: Boolean = True);
+procedure TRSMouseZoom.MaxZoom(down: Boolean = True);
 var
   scrolls: Int32;
 begin
@@ -222,7 +222,7 @@ end;
 (*
 ## RSMouseZoom.MaxZoomBlind
 ```pascal
-procedure TMouseZoom.MaxZoomBlind(down: Boolean = True);
+procedure TRSMouseZoom.MaxZoomBlind(down: Boolean = True);
 ```
 
 Maxes the zoom limit without knowing the current zoom level.
@@ -233,7 +233,7 @@ Example:
 RSMouseZoom.MaxZoomBlind(True); //will zoom out to the limit.
 ```
 *)
-procedure TMouseZoom.MaxZoomBlind(down: Boolean = True);
+procedure TRSMouseZoom.MaxZoomBlind(down: Boolean = True);
 var
   scrolls: Int32;
 begin
@@ -248,7 +248,7 @@ end;
 (*
 ## RSMouseZoom.GetZoomLevel
 ```pascal
-function TMouseZoom.GetZoomLevel(): Int32;
+function TRSMouseZoom.GetZoomLevel(): Int32;
 ```
 This simply returns RSMouseZoom.ZoomLevel if it is already set, if it's not set, it will attempt to set it up.
 
@@ -257,7 +257,7 @@ Example:
 WriteLn RSMouseZoom.GetZoomLevel();
 ```
 *)
-function TMouseZoom.GetZoomLevel(): Int32;
+function TRSMouseZoom.GetZoomLevel(): Int32;
 begin
   if (Self.ZoomLevel > -1) then
     Exit(Self.ZoomLevel);
@@ -286,7 +286,7 @@ end;
 (*
 ## RSMouseZoom.SetZoomLevel
 ```pascal
-function TMouseZoom.SetZoomLevel(level: Int32): Boolean;
+function TRSMouseZoom.SetZoomLevel(level: Int32): Boolean;
 ```
 Set the specified zoom level. This assumes slider levels (so 0..100 range).
 This will often miss the target by a couple of zoom levels due to how zooming with the mouse wheel works.
@@ -297,7 +297,7 @@ Example:
 RSMouseZoom.SetZoomLevel(75); //will attempt to zoom in/out until you are within 4 levels of 75.
 ```
 *)
-function TMouseZoom.SetZoomLevel(level: Int32): Boolean;
+function TRSMouseZoom.SetZoomLevel(level: Int32): Boolean;
 var
   trueLevel, amount: Int32;
 begin
@@ -332,7 +332,7 @@ end;
 (*
 ## RSMouseZoom.RunStressTest
 ```pascal
-procedure TMouseZoom.RunStressTest(iterations: Int32 = 19999);
+procedure TRSMouseZoom.RunStressTest(iterations: Int32 = 19999);
 ```
 A simple stress test of RSMouseZoom. This will zoom in/out continuously for whatever many times you specified and keep
 track of `RSMouseZoom.ZoomLevel`, `MM2MS.ZoomLevel`, and the fail rate of `MM2MS.ZoomLevel` and `Options.GetZoomLevel()` which
@@ -347,7 +347,7 @@ Example:
 RSMouseZoom.RunStressTest(39999); //will perform 40000 zoom in/outs randomly.
 ```
 *)
-procedure TMouseZoom.RunStressTest(iterations: Int32 = 19999);
+procedure TRSMouseZoom.RunStressTest(iterations: Int32 = 19999);
   procedure AntiLogout(i, iterations: Int32);
   begin
     if Frac(i/1000) = 0 then
@@ -364,7 +364,7 @@ procedure TMouseZoom.RunStressTest(iterations: Int32 = 19999);
         False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.SkewedRand(30, 360, 3));
       end;
 
-    Mouse.Move(GameInterface.Bounds, True);
+    Mouse.Move(RSInterface.Bounds, True);
   end;
 var
   i, slider: Int32;
@@ -372,7 +372,7 @@ var
   down: Boolean;
 begin
   Options.SetZoomLevel(50);
-  Mouse.Move(GameInterface.Bounds, True);
+  Mouse.Move(RSInterface.Bounds, True);
 
   SetLength(fails, 5);
   try
@@ -422,7 +422,7 @@ end;
 (*
 ## RSMouseZoom.DrawGraph
 ```pascal
-procedure TMouseZoom.DrawGraph();
+procedure TRSMouseZoom.DrawGraph();
 ```
 Draw a simple graph of the RSMouseZoom data.
 
@@ -431,7 +431,7 @@ Example:
 RSMouseZoom.DrawGraph();
 ```
 *)
-procedure TMouseZoom.DrawGraph();
+procedure TRSMouseZoom.DrawGraph();
 var
   i: Int32;
   levelTPA, zInTPA, zOutTPA, zSlider: TPointArray;
@@ -457,7 +457,7 @@ end;
   Global RSMouseZoom variable.
 *)
 var
-  RSMouseZoom: TMouseZoom;
+  RSMouseZoom: TRSMouseZoom;
 
 procedure TSRL.Setup(); override;
 begin
@@ -466,7 +466,7 @@ begin
   RSMouseZoom.Setup();
 end;
 
-function TOptions.SetZoomLevel(level: Int32): Boolean; override;
+function TRSOptions.SetZoomLevel(level: Int32): Boolean; override;
 begin
   Result := inherited();
   if not Result then
@@ -475,13 +475,13 @@ begin
   RSMouseZoom.ZoomLevel := RSMouseZoom.Slider2Level(level);
 end;
 
-function TGameTabs.GetCurrentTab(): EGameTab; override;
+function TRSGameTabs.GetCurrentTab(): ERSGameTab; override;
 begin
   Result := inherited;
 
-  if Result <> EGameTab.OPTIONS then Exit;
+  if Result <> ERSGameTab.OPTIONS then Exit;
   if WL.GameSettings.MouseWheelConfirmed then Exit;
-  if Options.GetCurrentTab() <> EOptionsTab.DISPLAY then Exit;
+  if Options.GetCurrentTab() <> ERSOptionsTab.DISPLAY then Exit;
 
   WL.GameSettings.MouseWheel := SRL.CountColor(200, Self.Bounds) = 0;
   WL.GameSettings.MouseWheelConfirmed := True;

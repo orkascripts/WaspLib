@@ -1,10 +1,10 @@
 {$DEFINE WL_TANSCREEN_INCLUDED}
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 type
-  EHide = (
+  ERSHide = (
     SOFT,
     HARD,
     SWAMP_SNAKE,
@@ -15,19 +15,19 @@ type
     BLACK_DRAGON
   );
 
-  TTanScreen = record(TTitledInterface)
+  TRSTanScreen = record(TRSTitledInterface)
     HideSlots: TBoxArray;
   end;
 
-procedure TTanScreen.Setup(); override;
+procedure TRSTanScreen.Setup(); override;
 begin
   inherited;
   Self.Name := 'TanScreen';
 end;
 
-procedure TTanScreen.SetupAlignment(); overload;
+procedure TRSTanScreen.SetupAlignment(); overload;
 var
-  alignment: TInterfaceAlignment;
+  alignment: TRSInterfaceAlignment;
 begin
   alignment.Left := InterfaceArea.Bounds.X1;
   alignment.Right := InterfaceArea.Bounds.X2;
@@ -41,16 +41,16 @@ begin
   Self.HideSlots := Grid(4, 2, 95, 111, [17, 17], [Self.Bounds.X1 + 28, Self.Bounds.Y1 + 37]);
 end;
 
-function TTanScreen.GetHideBox(hide: EHide): TBox;
+function TRSTanScreen.GetHideBox(hide: ERSHide): TBox;
 begin
   Result := Self.HideSlots[Ord(hide)];
 end;
 
 
-function TTanScreen.IsOpen(waitTime: Int32 = -1; interval: Int32 = -1): Boolean;
+function TRSTanScreen.IsOpen(waitTime: Int32 = -1; interval: Int32 = -1): Boolean;
   function IsOpen(): Boolean;
   begin
-    Result := GameInterface.IsOpen(EInterfaceType.CLASSIC) and
+    Result := RSInterface.IsOpen(ERSInterfaceType.CLASSIC) and
              (SRL.CountColor(CTS0(2070783), Self.Bounds) = 755);
   end;
 begin
@@ -64,7 +64,7 @@ begin
 end;
 
 
-function TTanScreen.Close(pressEscape: Boolean = False): Boolean;
+function TRSTanScreen.Close(pressEscape: Boolean = False): Boolean;
 begin
   if not Self.IsOpen() then
     Exit(True);
@@ -73,18 +73,18 @@ begin
 end;
 
 
-function TTanScreen.CanTan(hide: EHide): Boolean;
+function TRSTanScreen.CanTan(hide: ERSHide): Boolean;
 begin
   Result := SRL.CountColor($F8C800, Self.GetHideBox(hide)) > 0;
 end;
 
-function TTanScreen.HoverHide(hide: EHide): Boolean;
+function TRSTanScreen.HoverHide(hide: ERSHide): Boolean;
 begin
   if Result := Self.IsOpen() then
     Mouse.Move(Self.GetHideBox(hide));
 end;
 
-function TTanScreen.ClickHide(hide: EHide; option: String = 'Tan All'; waitTime: Int32 = -1): Boolean;
+function TRSTanScreen.ClickHide(hide: ERSHide; option: String = 'Tan All'; waitTime: Int32 = -1): Boolean;
 begin
   Result := Self.HoverHide(hide);
   if not Result then Exit;
@@ -99,7 +99,7 @@ begin
 end;
 
 
-procedure TTanScreen.Draw(Bitmap: TMufasaBitmap); override;
+procedure TRSTanScreen.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -110,9 +110,9 @@ begin
 end;
 
 var
-  TanScreen: TTanScreen;
+  TanScreen: TRSTanScreen;
 
-procedure TGameClient.ClientModeChanged(); override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
   TanScreen.SetupAlignment();

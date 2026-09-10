@@ -10,8 +10,8 @@ However, this is not really recommended. You should include only the files you r
 :::
 *)
 
-{$IFNDEF WL_MAIN}
-  {$I WaspLib/main.simba}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
 {$SCOPEDENUMS ON}
@@ -32,7 +32,7 @@ However, this is not really recommended. You should include only the files you r
 {$IFNDEF ANDREW_MUSHTREE_INCLUDED}      {$I optional/interfaces/mainscreen/mushtree.simba}
 {$IFNDEF WL_FAIRYRING_INCLUDED}         {$I optional/interfaces/mainscreen/fairyring.simba}
 
-{$IFNDEF WL_FISHING_HANDLER_INCLUDED}   {$I optional/handlers/fishinghandler.simba}
+{$IFNDEF WL_FISHING_HANDLER_INCLUDED}   {$I optional/handlers/rsfishinghandler.simba}
 {$IFNDEF WL_ALCH_HANDLER_INCLUDED}      {$I optional/handlers/alchhandler.simba}
 {$IFNDEF WL_LOOT_HANDLER_INCLUDED}      {$I optional/handlers/loothandler.simba}
 {$IFNDEF WL_COMBAT_HANDLER_INCLUDED}    {$I optional/handlers/combathandler.simba}
@@ -42,13 +42,13 @@ However, this is not really recommended. You should include only the files you r
 {$IFNDEF RELD_ANNETTESNETS_INCLUDED}    {$I optional/interfaces/mainscreen/annettesnets.simba}
 {$IFNDEF RELD_DRIFTNET_INCLUDED}        {$I optional/interfaces/mainscreen/driftnet.simba}
 
-{$IFNDEF SKUNK_TELEPORT_UTILS}          {$I optional/handlers/teleports/teleportutils.simba}
-{$IFNDEF SKUNK_TELEPORTS}               {$I optional/handlers/teleports/teleports.simba}
+{$IFNDEF SKUNK_TELEPORT_UTILS}          {$I optional/handlers/teleports/rsteleportutils.simba}
+{$IFNDEF SKUNK_TELEPORTS}               {$I optional/handlers/teleports/rsteleports.simba}
 {$IFNDEF SKUNK_UNIVERSAL_TRANSPORT}     {$I optional/handlers/teleports/transport.simba}
 {$IFNDEF WL_GEAR_HANDLER_INCLUDED}      {$I optional/handlers/gearhandler.simba}
 {$IFNDEF XJ_RUNEPOUCH_INCLUDED}         {$I optional/interfaces/mainscreen/runepouch.simba}
 {$IFNDEF WL_REWARDSCHEST_INCLUDED}      {$I optional/interfaces/mainscreen/rewardschest.simba}
-{$IFNDEF SKUNK_TELEPORTSV2}             {$I optional/handlers/teleports/teleportsv2.simba}
+{$IFNDEF SKUNK_TELEPORTSV2}             {$I optional/handlers/teleports/rsteleportsv2.simba}
 {$IFNDEF SKUNK_UNIVERSAL_TRANSPORTV2}   {$I optional/handlers/teleports/transportv2.simba}
 {$IFNDEF XJ_STUDENT_FARM_RUNNER}        {$I optional/handlers/farmrunnerupdate.simba}
 {$IFNDEF CJ_BIRDHOUSE_RUNNER}           {$I optional/handlers/birdhouserunner.simba}

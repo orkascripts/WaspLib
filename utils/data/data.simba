@@ -1,6 +1,6 @@
 (*
 # Data
-Methods to fetch game data.
+Methods to fetch osrs data.
 This file has methods to fetch information about items, monsters and weapons.
 *)
 
@@ -158,14 +158,14 @@ end;
 (*
 ## ItemData.GetTradeableID
 ```pascal
-function ItemData.GetTradeableID(Item: TItem): String;
+function ItemData.GetTradeableID(Item: TRSItem): String;
 ```
 
 Internal method used to retrieve only the tradeable version of an item if it exists.
 Some items have versions of themselves that are not tradeable and can't be used to fetch item prices,
 such as degraded items, ornamented items, etc.
 *)
-function TItemData.GetTradeableID(item: TItem): Int32;
+function TItemData.GetTradeableID(item: TRSItem): Int32;
 var
   id: Int32;
   json: TJSONObject;
@@ -184,12 +184,12 @@ end;
 (*
 ## ItemData.GetPrice
 ```pascal
-function ItemData.GetPrice(Item: TItem): TJSONObject;
+function ItemData.GetPrice(Item: TRSItem): TJSONObject;
 ```
 
 Internal method used to fetch a price data TJSONObject of a certain item.
 *)
-function TItemData.GetPrice(item: TItem): TJSONObject;
+function TItemData.GetPrice(item: TRSItem): TJSONObject;
 var
   id: Integer;
   json: TJSONObject;
@@ -216,7 +216,7 @@ end;
 (*
 ## ItemData.GetPriceInt
 ```pascal
-function ItemData.GetPriceInt(Item: TItem; Key: String): Int32;
+function ItemData.GetPriceInt(Item: TRSItem; Key: String): Int32;
 ```
 Wrapper method used to fetch ints from ItemData.GetPrice().
 To use this you should be familar with the structure of the JSONObject ItemData.GetPrice() returns.
@@ -227,7 +227,7 @@ WriteLn ItemData.GetPriceInt('Abyssal whip', 'low'); // will print the low price
 WriteLn ItemData.GetPriceInt('Abyssal whip', 'high'); // will print the high price of abyssal whip.
 ```
 *)
-function TItemData.GetPriceInt(item: TItem; key: String): Int32;
+function TItemData.GetPriceInt(item: TRSItem; key: String): Int32;
 var
   json: TJSONObject;
 begin
@@ -239,7 +239,7 @@ end;
 (*
 ## ItemData.GetAverage
 ```pascal
-function ItemData.GetAverage(Item: TItem): Int32;
+function ItemData.GetAverage(Item: TRSItem): Int32;
 ```
 
 Method used to get the average price of **Item**.
@@ -249,7 +249,7 @@ Example:
 WriteLn ItemData.GetAverage('Abyssal whip');
 ```
 *)
-function TItemData.GetAverage(item: TItem): Int32;
+function TItemData.GetAverage(item: TRSItem): Int32;
 var
   lo, hi: Int32;
 begin
@@ -273,7 +273,7 @@ end;
 (*
 ## ItemData.GetOSRSBoxInt()
 ```pascal
-function ItemData.GetOSRSBoxInt(Item: TItem; Key: String): Int32;
+function ItemData.GetOSRSBoxInt(Item: TRSItem; Key: String): Int32;
 ```
 
 Wrapper method used to get the integer values of the OSRSBox item json.
@@ -284,7 +284,7 @@ Example:
 WriteLn ItemData.GetOSRSBoxInt('Abyssal whip', 'highalch'); //will print high alch value for the abyssal whip.
 ```
 *)
-function TItemData.GetDefinitionInt(item: TItem; key: String): Int32;
+function TItemData.GetDefinitionInt(item: TRSItem; key: String): Int32;
 var
   id: Integer;
   json: TJSONObject;
@@ -311,7 +311,7 @@ end;
 (*
 ## ItemData.GetOSRSBoxBoolean()
 ```pascal
-function ItemData.GetOSRSBoxBoolean(Item: TItem; Key: String): Boolean;
+function ItemData.GetOSRSBoxBoolean(Item: TRSItem; Key: String): Boolean;
 ```
 
 Wrapper method used to get the boolean values of the OSRSBox item json.
@@ -322,7 +322,7 @@ Example:
 WriteLn ItemData.GetOSRSBoxBoolean('Abyssal whip', 'tradeable_on_ge');
 ```
 *)
-function TItemData.GetDefinitionBoolean(item: TItem; key: String): Boolean;
+function TItemData.GetDefinitionBoolean(item: TRSItem; key: String): Boolean;
 var
   id: Integer;
   json: TJSONObject;
@@ -346,7 +346,7 @@ end;
 (*
 ## ItemData.GetHighAlch()
 ```pascal
-function ItemData.GetHighAlch(Item: TItem): Int32;
+function ItemData.GetHighAlch(Item: TRSItem): Int32;
 ```
 
 Method used to get the the high alchemy value of an item.
@@ -356,12 +356,12 @@ Example:
 WriteLn ItemData.GetHighAlch('Magic longbow');
 ```
 *)
-function TItemData.GetLowAlch(item: TItem): Int32;
+function TItemData.GetLowAlch(item: TRSItem): Int32;
 begin
   Result := Floor(Self.GetDefinitionInt(item, 'cost') * 0.4);
 end;
 
-function TItemData.GetHighAlch(item: TItem): Int32;
+function TItemData.GetHighAlch(item: TRSItem): Int32;
 begin
   Result := Floor(Self.GetDefinitionInt(item, 'cost') * 0.6);
 end;
@@ -369,7 +369,7 @@ end;
 (*
 ## ItemData.GetHighAlchProfit()
 ```pascal
-function ItemData.GetHighAlchProfit(Item: TItem): Int32;
+function ItemData.GetHighAlchProfit(Item: TRSItem): Int32;
 ```
 
 Method used to get the the high alchemy profit of an item.
@@ -383,7 +383,7 @@ Example:
 WriteLn ItemData.GetHighAlchProfit('Magic longbow');
 ```
 *)
-function TItemData.GetHighAlchProfit(item: TItem): Int32;
+function TItemData.GetHighAlchProfit(item: TRSItem): Int32;
 var
   alch: Int32;
 begin
@@ -395,7 +395,7 @@ end;
 (*
 ## ItemData.GetLowAlchProfit()
 ```pascal
-function ItemData.GetLowAlchProfit(Item: TItem): Int32;
+function ItemData.GetLowAlchProfit(Item: TRSItem): Int32;
 ```
 Method used to get the the low alchemy profit of an item.
 
@@ -408,7 +408,7 @@ Example:
 WriteLn ItemData.GetLowAlchProfit('Magic longbow');
 ```
 *)
-function TItemData.GetLowAlchProfit(item: TItem): Int32;
+function TItemData.GetLowAlchProfit(item: TRSItem): Int32;
 var
   alch: Int32;
 begin
@@ -422,33 +422,33 @@ var
 
 type
 (*
-(EAttackType)=
-## type EAttackType
+(ERSAttackType)=
+## type ERSAttackType
 ```pascal
-EAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
+ERSAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
 ```
 Enum of Attack types in game.
 Can be used to know what to pray for example.
 *)
-  EAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
+  ERSAttackType = (MELEE_ATTACK_TYPE, RANGED_ATTACK_TYPE, MAGIC_ATTACK_TYPE, TYPELESS_ATTACK_TYPE);
 (*
-(TMonsterDrop)=
-## type TMonsterDrop
+(TRSMonsterDrop)=
+## type TRSMonsterDrop
 ```pascal
 type
-  TMonsterDrop = record
+  TRSMonsterDrop = record
     Item: String;
     ID: String;
     Stackable: Boolean;
     Noted: Boolean;
     Quantity: Int32;
   end;
-  TMonsterDropArray = array of TMonsterDrop;
+  TRSMonsterDropArray = array of TRSMonsterDrop;
 ```
 Helper record to handle monster drops. Has several variable that hold information about monster
 drops such as wether it's stackable and/or noted and quantity.
 *)
-  TMonsterDrop = record
+  TRSMonsterDrop = record
     Item: String;
     ID: String;
     Stackable: Boolean;
@@ -456,7 +456,7 @@ drops such as wether it's stackable and/or noted and quantity.
     Quantity: Int32;
   end;
 
-function TMonsterDrop.Create(item: TItem): TMonsterDrop; static;
+function TRSMonsterDrop.Create(item: TRSItem): TRSMonsterDrop; static;
 begin
   Result.Item := item;
   Result.ID := '0';
@@ -465,7 +465,7 @@ begin
   Result.Quantity := 1;
 end;
 
-function TMonsterDrop.GetName(): String;
+function TRSMonsterDrop.GetName(): String;
 begin
   if Self.Noted then Result := 'noted ';
   Result += Self.Item;
@@ -474,9 +474,9 @@ begin
 end;
 
 type
-  TMonsterDropArray = array of TMonsterDrop;
+  TRSMonsterDropArray = array of TRSMonsterDrop;
 
-function TMonsterDropArray.Contains(drop: TMonsterDrop): Boolean;
+function TRSMonsterDropArray.Contains(drop: TRSMonsterDrop): Boolean;
 var
   i: Int32;
 begin
@@ -487,7 +487,7 @@ begin
   Result := False;
 end;
 
-function TMonsterDropArray.ContainsEx(drop: TMonsterDrop): Boolean;
+function TRSMonsterDropArray.ContainsEx(drop: TRSMonsterDrop): Boolean;
 var
   i: Int32;
 begin
@@ -498,7 +498,7 @@ begin
   Result := False;
 end;
 
-function TMonsterDropArray.FindItem(item: String): Int32;
+function TRSMonsterDropArray.FindItem(item: String): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Item = item then
@@ -507,17 +507,17 @@ begin
   Result := -1;
 end;
 
-function TMonsterDropArray.ContainsItem(item: String): Boolean;
+function TRSMonsterDropArray.ContainsItem(item: String): Boolean;
 begin
   Result := Self.FindItem(item) > -1;
 end;
 
 
-procedure TMonsterDropArray.ClearDuplicates();
+procedure TRSMonsterDropArray.ClearDuplicates();
 var
   i, j: Int32;
-  tmp: TMonsterDropArray;
-  best: TMonsterDrop;
+  tmp: TRSMonsterDropArray;
+  best: TRSMonsterDrop;
 begin
   for i := 0 to High(Self) do
   begin
@@ -779,11 +779,11 @@ end;
 (*
 ## TMonsterData.GetAttackTypes()
 ```pascal
-function TMonsterData.GetAttackTypes(Monster: String): array of EAttackType;
+function TMonsterData.GetAttackTypes(Monster: String): array of ERSAttackType;
 ```
-Method used to get an array of EAttackType used by the specified monster.
+Method used to get an array of ERSAttackType used by the specified monster.
 *)
-function TMonsterData.GetAttackTypes(monster: String): array of EAttackType;
+function TMonsterData.GetAttackTypes(monster: String): array of ERSAttackType;
 var
   json: TJSONArray;
   i: Int32;
@@ -792,21 +792,21 @@ begin
 
   for i := 0 to json.High() do
     case json.getString(i) of
-      'stab', 'slash', 'crush': Result += EAttackType.MELEE_ATTACK_TYPE;
-      'ranged':   Result += EAttackType.RANGED_ATTACK_TYPE;
-      'magic':    Result += EAttackType.MAGIC_ATTACK_TYPE;
-      'typeless': Result += EAttackType.TYPELESS_ATTACK_TYPE;
+      'stab', 'slash', 'crush': Result += ERSAttackType.MELEE_ATTACK_TYPE;
+      'ranged':   Result += ERSAttackType.RANGED_ATTACK_TYPE;
+      'magic':    Result += ERSAttackType.MAGIC_ATTACK_TYPE;
+      'typeless': Result += ERSAttackType.TYPELESS_ATTACK_TYPE;
     end;
 end;
 
 (*
 ## TMonsterData.GetDrop()
 ```pascal
-function TMonsterData.GetDrop(DropJSON: TJSONObject): TMonsterDrop;
+function TMonsterData.GetDrop(DropJSON: TJSONObject): TRSMonsterDrop;
 ```
-Method to convert a monster json object to a TMonsterDrop.
+Method to convert a monster json object to a TRSMonsterDrop.
 *)
-function TMonsterData.GetDrop(dropJSON: TJSONObject): TMonsterDrop;
+function TMonsterData.GetDrop(dropJSON: TJSONObject): TRSMonsterDrop;
 var
   str: String;
 begin
@@ -824,20 +824,20 @@ end;
 (*
 ## TMonsterData.GetDrops()
 ```pascal
-function TMonsterData.GetDrops(Monster: String): TMonsterDropArray;
+function TMonsterData.GetDrops(Monster: String): TRSMonsterDropArray;
 ```
-Method to return all monster drops as an array of TMonsterDrop.
+Method to return all monster drops as an array of TRSMonsterDrop.
 
 Example:
 ```pascal
 WriteLn TMonsterData.GetDrops('Abyssal demon'); //prints all monster drops.
 ```
 *)
-function TMonsterData.GetDrops(monster: String): TMonsterDropArray;
+function TMonsterData.GetDrops(monster: String): TRSMonsterDropArray;
 var
   JSONArray: TJSONArray;
   i: Int32;
-  drop: TMonsterDrop;
+  drop: TRSMonsterDrop;
 begin
   WriteLn('Loading ' + monster + ' drops, this might take up to a 1 minute.');
 
@@ -924,22 +924,22 @@ end;
 (*
 ## WeaponData.GetAttackType
 ```pascal
-function TWeaponData.GetAttackType(weapon: String): EAttackType;
+function TWeaponData.GetAttackType(weapon: String): ERSAttackType;
 ```
-Returns the EAttackType of the weapon specified.
+Returns the ERSAttackType of the weapon specified.
 
 Example:
 ```pascal
 WriteLn TWeaponData.GetAttackType('Abyssal whip'); //This will print MELEE_ATTACK_TYPE.
 ```
 *)
-function TWeaponData.GetAttackType(weapon: String): EAttackType;
+function TWeaponData.GetAttackType(weapon: String): ERSAttackType;
 begin
   Self.Setup();
   case Self.Data.getJSONObject(weapon).getString('type') of
-    'melee':  Result := EAttackType.MELEE_ATTACK_TYPE;
-    'ranged': Result := EAttackType.RANGED_ATTACK_TYPE;
-    'magic':  Result := EAttackType.MAGIC_ATTACK_TYPE;
+    'melee':  Result := ERSAttackType.MELEE_ATTACK_TYPE;
+    'ranged': Result := ERSAttackType.RANGED_ATTACK_TYPE;
+    'magic':  Result := ERSAttackType.MAGIC_ATTACK_TYPE;
   end;
 end;
 
@@ -1036,12 +1036,12 @@ end;
 (*
 ## GearData.GetItems
 ```pascal
-function TGearData.GetItems(key: String): TItemArray;
-function TGearData.GetItems(slot: EEquipmentSlot): TItemArray; overload;
+function TGearData.GetItems(key: String): TRSItemArray;
+function TGearData.GetItems(slot: ERSEquipmentSlot): TRSItemArray; overload;
 ```
 Method to fetch items under a key in gear.json.
 *)
-function TGearData.GetItems(key: String): TItemArray;
+function TGearData.GetItems(key: String): TRSItemArray;
 var
   i: Int32;
 begin
@@ -1051,10 +1051,10 @@ begin
     Result += Self.Data.getJSONArray(key).getString(i);
 end;
 
-function TGearData.GetItems(slot: EEquipmentSlot): TItemArray; overload;
+function TGearData.GetItems(slot: ERSEquipmentSlot): TRSItemArray; overload;
 begin
   Result := Self.GetItems(LowerCase(ToStr(slot)));
-  if slot = EEquipmentSlot.WEAPON then
+  if slot = ERSEquipmentSlot.WEAPON then
     Result += Self.GetItems('2h');
 end;
 
