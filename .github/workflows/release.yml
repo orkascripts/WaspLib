@@ -6,6 +6,12 @@ on:
       - ".github/**"
       - "docs/**"
       - "**.md"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag of a published release to post to Discord again, for example v20.5.1"
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -20,6 +26,7 @@ jobs:
           fetch-depth: 0
 
       - name: Next version from the conventional commits
+        if: github.event_name == 'push'
         id: changelog
         uses: TriPSs/conventional-changelog-action@v5
         with:
@@ -39,3 +46,29 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      # GitHub's own Discord webhook only shows the release title, so the notes are posted from here.
+      - name: Post the release to Discord
+        if: github.event_name == 'workflow_dispatch' || steps.changelog.outputs.skipped == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WEBHOOK: ${{ secrets.DISCORD_UPDATES_WEBHOOK }}
+          TAG: ${{ inputs.tag || steps.changelog.outputs.tag }}
+          COLOR: "16776960"
+        run: |
+          : "${WEBHOOK:?the DISCORD_UPDATES_WEBHOOK secret is not set}"
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" > release.json
+          author=$(gh api "repos/$GITHUB_REPOSITORY/commits/$TAG" --jq .commit.author.name)
+          icon=$(gh api "repos/$GITHUB_REPOSITORY" --jq .owner.avatar_url)
+          jq --arg repo "$GITHUB_REPOSITORY" --arg author "$author" --arg icon "$icon" --argjson color "$COLOR" '{
+            embeds: [{
+              author: {name: $repo, url: "https://github.com/\($repo)", icon_url: $icon},
+              title: "\($repo | split("/")[1]) \(.tag_name)",
+              url: .html_url,
+              description: ((.body // "") | if length > 4000 then .[:4000] + "\n..." else . end),
+              color: $color,
+              footer: {text: "Merged by \($author)"},
+              timestamp: .published_at
+            }]
+          }' release.json > payload.json
+          curl --fail-with-body -sS --retry 3 -H "Content-Type: application/json" --data @payload.json "$WEBHOOK"
