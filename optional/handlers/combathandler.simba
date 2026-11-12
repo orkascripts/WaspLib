@@ -22,7 +22,7 @@ const
     'Ghrazi rapier', 'Blade of saeldor (c)', 'Inquisitor''s mace',
     'Toktz-xil-ak', 'Abyssal whip', 'Abyssal bludgeon',
     'Abyssal dagger', 'Abyssal dagger (p++)', 'Saradomin sword',
-    'Dragon scimitar', 'Dragon sword', 'Dragon longsword',
+    'Dragon scimitar', 'Dragon shortsword', 'Dragon longsword',
     'Dharok''s greataxe', 'Sarachnis cudgel', 'Dinh''s bulwark',
     'Dragon hunter lance', 'Abyssal tentacle', 'Granite hammer',
     'Bow of faerdhinen (c)', 'Toxic blowpipe', 'Magic shortbow',
@@ -47,7 +47,7 @@ const
   SPEC_WEAPONS: TRSItemArray = [
     'Burning claws', 'Dragon claws', '4153', '12848', 'Granite maul', 'Abyssal dagger',
     'Abyssal dagger (p++)', 'Dragon dagger', 'Dragon dagger(p++)',
-    'Dragon sword', 'Dragon longsword', 'Dinh''s bulwark', 'Abyssal tentacle',
+    'Dragon shortsword', 'Dragon longsword', 'Dinh''s bulwark', 'Abyssal tentacle',
     'Saradomin godsword', 'Granite hammer', 'Toxic blowpipe', 'Magic shortbow',
     'Magic shortbow (i)', 'Armadyl crossbow', 'Dragon crossbow', 'Dragon thrownaxe',
     'Osmumten''s fang', 'Arkan blade', 'Null'
