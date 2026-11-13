@@ -135,7 +135,11 @@ WriteLn Magic.GetBookSpellCount();
 function TRSMagic.GetBookSpellCount(): Int32;
 begin
   case Self.GetSpellBook() of
-    ERSSpellBook.STANDARD: Result := Ord(RS_STANDARD_SPELL_LAST) - Ord(RS_STANDARD_SPELL_FIRST);
+    ERSSpellBook.STANDARD:
+      begin
+        Result := Ord(RS_STANDARD_SPELL_LAST) - Ord(RS_STANDARD_SPELL_FIRST);
+        Result -= Ord(ERSSpell.LVL7_ENCHANT) - Ord(ERSSpell.BACK) + 1;
+      end;
     ERSSpellBook.ARCEUUS:  Result := Ord(RS_ARCEUUS_SPELL_LAST) - Ord(RS_ARCEUUS_SPELL_FIRST);
     ERSSpellBook.LUNAR:    Result := Ord(RS_LUNAR_SPELL_LAST) - Ord(RS_LUNAR_SPELL_FIRST);
     ERSSpellBook.ANCIENT:  Result := Ord(RS_ANCIENT_SPELL_LAST) - Ord(RS_ANCIENT_SPELL_FIRST);
